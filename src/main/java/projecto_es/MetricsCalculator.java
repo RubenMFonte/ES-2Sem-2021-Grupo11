@@ -7,7 +7,9 @@ import java.util.List;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
+
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.stmt.IfStmt;
 import com.github.javaparser.ast.stmt.Statement;
@@ -37,6 +39,7 @@ public class MetricsCalculator {
 		return metricsCalculator;
 	}	
 	
+
 	
 	
 	public static int WMC_class(ClassOrInterfaceDeclaration classe) {
@@ -53,9 +56,7 @@ public class MetricsCalculator {
 		}
 		return sum_cyclo_class;
 	}
-	
-	
-	
+
 	public static int Cyclo_method(MethodDeclaration method) {
 		
 		int complexity=0;
@@ -86,9 +87,7 @@ public class MetricsCalculator {
 			complexity++;
 		}
 		return complexity;
-	}
-
-	
+	}	
 	
 	public void run(String filename) {
 		// Start of the metrics calculation process

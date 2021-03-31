@@ -13,6 +13,7 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 public class Main {
 	public static void main(String[] args) {
 		
+
 		JavaParser parser = new JavaParser();
 		CompilationUnit teste = parser.parse("public class Teste { public int teste(boolean t) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; }  public int teste2(boolean t) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; }  public int teste3(boolean t) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; } }").getResult().get();
 		
@@ -55,5 +56,6 @@ public class Main {
 			System.out.println("This is the Result: " + metric);
 			System.out.println(m.toString());
 		}*/
+
 	}
 }
