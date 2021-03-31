@@ -39,9 +39,6 @@ public class MetricsCalculator {
 		return metricsCalculator;
 	}	
 	
-
-	
-	
 	public static int WMC_class(ClassOrInterfaceDeclaration classe) {
 		List<Node> methods = classe.getChildNodes(); 
 		int sum_cyclo_class = 0;
