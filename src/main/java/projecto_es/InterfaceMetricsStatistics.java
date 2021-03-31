@@ -24,7 +24,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
-public class InterfaceMetricsEstatistics extends JFrame {
+public class InterfaceMetricsStatistics extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -37,7 +37,7 @@ public class InterfaceMetricsEstatistics extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					InterfaceMetricsEstatistics frame = new InterfaceMetricsEstatistics();
+					InterfaceMetricsStatistics frame = new InterfaceMetricsStatistics();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,7 +49,7 @@ public class InterfaceMetricsEstatistics extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public InterfaceMetricsEstatistics() {
+	public InterfaceMetricsStatistics() {
 		setTitle("Statistics");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 622, 371);
