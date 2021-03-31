@@ -1,12 +1,20 @@
 package projecto_es;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryIteratorException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
+
 
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 
@@ -20,9 +28,12 @@ import com.github.javaparser.ast.stmt.WhileStmt;
 import com.github.javaparser.ast.stmt.Statement;
 
 
+import com.github.javaparser.ast.body.MethodDeclaration;
+
+
 public class MetricsCalculator {
 	// Singleton instance
-	private static MetricsCalculator metricsCalculator = null;
+	private static MetricsCalculator metricsCalculator =null;
 	
 	// Class variables
 	private List<CompilationUnit> compilationUnits;
@@ -32,7 +43,7 @@ public class MetricsCalculator {
 		compilationUnits = new ArrayList<CompilationUnit>();
 	}
 	
-	public MetricsCalculator getMetricsCalculatorInstance()
+	public static MetricsCalculator getMetricsCalculatorInstance()
 	{
 		if(metricsCalculator == null) metricsCalculator = new MetricsCalculator();
 		
@@ -86,9 +97,44 @@ public class MetricsCalculator {
 		return complexity;
 	}	
 	
-	public void run(String filename) {
-		// Start of the metrics calculation process
 		
+
+	public Optional<String> getExtensionByStringHandling(String filename) {
+	    return Optional.ofNullable(filename)
+	    		.filter(f -> f.contains("."))
+	    		.map(f -> f.substring(filename.lastIndexOf(".") + 1));
+	}
+	
+	
+	public void getCompUnits(Path filename){
+		JavaParser parser = new JavaParser();
+		
+		Path dir = filename;
+		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+		    for (Path entry: stream) {
+		    	if(new File(entry.toString()).isDirectory()) {
+		    		getCompUnits(entry);
+		    	} else {
+		    		System.out.println(entry);
+		    		String entry2 = getExtensionByStringHandling(entry.toString()).get();
+		    		if(entry2.equals("java")) {
+		    			CompilationUnit unit = parser.parse(entry.toFile()).getResult().get();
+		    			if(compilationUnits.add(unit)) {
+		    				System.out.println("Success!");
+		    			};
+		    		}
+		    	}
+
+		    }
+		} catch (IOException | DirectoryIteratorException x) {
+		    System.err.println(x);
+		}
+	}
+	
+	
+	public void run(Path filename) {
+		
+		getCompUnits(filename);
 	}
 
 }
