@@ -48,7 +48,13 @@ public class MetricsCalculator {
 		if(metricsCalculator == null) metricsCalculator = new MetricsCalculator();
 		
 		return metricsCalculator;
-	}	
+	}
+	
+	public static int NOM_class(ClassOrInterfaceDeclaration classe) {
+		List<MethodDeclaration> methods = classe.getChildNodesByType(MethodDeclaration.class); 
+		int numberOfMethods = methods.size();	
+		return numberOfMethods;
+	}
 	
 	public static int WMC_class(ClassOrInterfaceDeclaration classe) {
 		List<Node> methods = classe.getChildNodes(); 
