@@ -57,16 +57,14 @@ public class MetricsCalculator {
 	}
 	
 	public static int WMC_class(ClassOrInterfaceDeclaration classe) {
-		List<Node> methods = classe.getChildNodes(); 
-		int sum_cyclo_class = 0;
-		for(Node meth : methods) {
-			//System.out.println("Obtained: " + meth);
-			if(meth.getClass() == MethodDeclaration.class) {
-				MethodDeclaration meth_cast = (MethodDeclaration)meth;
-				sum_cyclo_class += MetricsCalculator.Cyclo_method(meth_cast);
+		List<Node> methods = classe.getChildNodes();  // Cria uma lista de nós filhos do nó classe [ClasseOrInterfaceDeclaration]
+		int sum_cyclo_class = 0;					  // Cria um inteiro que irá acumular o valor da métrica [Cyclo_method] de cada método. Basicamente, a soma dos cyclo de cada método é a wmc_class 
+		for(Node meth : methods) {					  // Ciclo para andar de nó em nó
+			if(meth.getClass() == MethodDeclaration.class) {    				//Verificar se a classe do nó é uma [MethodDeclaration]
+				MethodDeclaration meth_cast = (MethodDeclaration)meth;   		//Como a condição anterior foi verificada, é feito um cast do nó para [MethodDeclaration]
+				sum_cyclo_class += MetricsCalculator.Cyclo_method(meth_cast);   //Calcula a métrica [Cyclo_method] para o método e adiciona ao inteiro 
 			}else {
-				//System.out.println("Não é instância: [MethodDeclaration]");
-			}
+			}  																	//Volta a repetir o processo 
 		}
 		return sum_cyclo_class;
 	}
