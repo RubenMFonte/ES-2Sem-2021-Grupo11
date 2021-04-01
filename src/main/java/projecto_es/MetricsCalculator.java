@@ -95,7 +95,13 @@ public class MetricsCalculator {
 			complexity++;
 		}
 		return complexity;
-	}	
+	}
+	
+	public static int LOC_method(MethodDeclaration method) {
+		int lines = 0;
+		
+		return lines;
+	}
 	
 		
 
