@@ -75,7 +75,8 @@ public class ClassDataStructure {
 	
 	private void calculateMetricsStoreMethods(ClassOrInterfaceDeclaration cid) {
 		this.wmc_class = MetricsCalculator.WMC_class(cid);
-		//Fazer mesma cena para outras métricas
+		this.loc_class = MetricsCalculator.getLOC_Class(cid);
+		this.nom_class = MetricsCalculator.NOM_class(cid);
 		List<MethodDeclaration> methods = cid.getMethods();
 		for(MethodDeclaration md : methods) {
 			MethodDataStructure mds_part = new MethodDataStructure(md);

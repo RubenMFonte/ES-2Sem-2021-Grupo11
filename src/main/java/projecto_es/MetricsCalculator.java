@@ -15,7 +15,10 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseException;
 import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.body.*;
+import com.github.javaparser.ast.nodeTypes.NodeWithBody;
+import com.github.javaparser.ast.nodeTypes.NodeWithCondition;
 import com.github.javaparser.ast.stmt.*;
+import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 
 public class MetricsCalculator {
 
@@ -37,58 +40,111 @@ public class MetricsCalculator {
 	}
 
 	public static int NOM_class(ClassOrInterfaceDeclaration classe) {
-		List<MethodDeclaration> methods = classe.getChildNodesByType(MethodDeclaration.class);
-		int numberOfMethods = methods.size();
+		
+		int numberOfMethods = 0;
+		List<Node> nodes = classe.getChildNodes(); 
+
+		for(Node n : nodes) {
+			if(n.getClass() == MethodDeclaration.class || n.getClass() == ConstructorDeclaration.class)
+				numberOfMethods++;
+		}
+		
 		return numberOfMethods;
 	}
 
 	public static int WMC_class(ClassOrInterfaceDeclaration classe) {
-		List<Node> methods = classe.getChildNodes(); // Cria uma lista de nós filhos do nó classe
-														// [ClasseOrInterfaceDeclaration]
-		int sum_cyclo_class = 0; // Cria um inteiro que irá acumular o valor da métrica [Cyclo_method] de cada
-									// método. Basicamente, a soma dos cyclo de cada método é a wmc_class
-		for (Node meth : methods) { // Ciclo para andar de nó em nó
-			if (meth.getClass() == MethodDeclaration.class) { // Verificar se a classe do nó é uma [MethodDeclaration]
-				MethodDeclaration meth_cast = (MethodDeclaration) meth; // Como a condição anterior foi verificada, é
-																		// feito um cast do nó para [MethodDeclaration]
-				sum_cyclo_class += MetricsCalculator.Cyclo_method(meth_cast); // Calcula a métrica [Cyclo_method] para o
-																				// método e adiciona ao inteiro
-			} else {
-			} // Volta a repetir o processo
+
+		List<Node> methods = classe.getChildNodes();  // Cria uma lista de nós filhos do nó classe [ClasseOrInterfaceDeclaration]
+		int sum_cyclo_class = 0;					  // Cria um inteiro que irá acumular o valor da métrica [Cyclo_method] de cada método. Basicamente, a soma dos cyclo de cada método é a wmc_class 
+		for(Node method : methods) {					  // Ciclo para andar de nó em nó
+			if(method.getClass() == MethodDeclaration.class || method.getClass() == ConstructorDeclaration.class)   				//Verificar se a classe do nó é uma [MethodDeclaration]
+				sum_cyclo_class += MetricsCalculator.Cyclo_method((CallableDeclaration)method);   //Calcula a métrica [Cyclo_method] para o método e adiciona ao inteiro 
+
 		}
 		return sum_cyclo_class;
 	}
 
-	public static int Cyclo_method(MethodDeclaration method) {
-
+	
+	public static int getStatementComplexity(Statement statement){
+		
 		int complexity = 0;
-		for (IfStmt ifstmt : method.getChildNodesByType(IfStmt.class)) {
-			complexity++;
-			if (ifstmt.getElseStmt().isPresent()) {
-				Statement elseStmt = ifstmt.getElseStmt().get();
-				if (elseStmt instanceof IfStmt) {
+		
+		if(statement.getClass() == IfStmt.class || statement.getClass() == WhileStmt.class || statement.getClass() == DoStmt.class)
+		{
+			NodeWithCondition<Node> node = (NodeWithCondition<Node>)statement;
+			complexity += node.getCondition().toString().split("&&|\\|\\|").length;
+		}
+		else if(statement.getClass() == ForStmt.class)
+		{
+			ForStmt f = (ForStmt)statement;
+			complexity += f.getCompare().get().toString().split("&&|\\|\\|").length;
+		}
+		else if(statement.getClass() == SwitchStmt.class)
+		{
+			SwitchStmt stmt = (SwitchStmt)statement;
+			complexity += stmt.getEntries().size();
+		}
+		else if(statement.getClass() == ForEachStmt.class) { complexity += 1; }
+		
+		List<Node> nodes = statement.getChildNodes(); 
 
-				} else {
-					complexity++;
-
+		for(Node n : nodes) {
+			if(n.getClass() == BlockStmt.class)
+				complexity += getCodeBodyComplexity((BlockStmt)n);
+			else if(n.getClass() == SwitchEntry.class)
+			{
+				SwitchEntry entry = (SwitchEntry)n;
+				
+				if(entry.getLabels().size() == 0) complexity--; // subtrai 1 do resultado devido ao default case
+				
+				List<Statement> statements = entry.getStatements();
+				
+				for(Statement s : statements)
+				{
+					if(s.isBlockStmt())
+						complexity += getCodeBodyComplexity(s.asBlockStmt());
+					else complexity += getStatementComplexity(s);
 				}
-
 			}
 		}
-
-		for (ForStmt forstmt : method.getChildNodesByType(ForStmt.class)) {
-			complexity++;
-		}
-		for (ForEachStmt forEach : method.getChildNodesByType(ForEachStmt.class)) {
-			complexity++;
-		}
-		for (SwitchStmt switchstmt : method.getChildNodesByType(SwitchStmt.class)) {
-			complexity++;
-		}
-		for (WhileStmt whilestmt : method.getChildNodesByType(WhileStmt.class)) {
-			complexity++;
-		}
+		
 		return complexity;
+	}
+	
+	private static int getCodeBodyComplexity(BlockStmt block) {
+		
+		int complexity = 0;
+		List<Statement> statements = block.getStatements();
+		
+		for(Statement s : statements)
+		{			
+			complexity += getStatementComplexity(s);
+		}
+		
+		return complexity;
+
+	}
+
+	public static int Cyclo_method(CallableDeclaration method) {
+		
+		int complexity=1;
+		
+		List<Node> nodes = method.getChildNodes(); 
+
+		for(Node n : nodes) {
+			if(n.getClass() == BlockStmt.class)
+				complexity += getCodeBodyComplexity((BlockStmt)n);
+		}
+		
+		return complexity;
+	}
+	
+	public int getLOC_Class(ClassOrInterfaceDeclaration classNode) {
+		String classBody = LexicalPreservingPrinter.print(LexicalPreservingPrinter.setup(classNode));
+		
+		String[] lines = classBody.toString().split("\\r?\\n");
+		
+		return lines.length;
 	}
 
 	public static int LOC_method(MethodDeclaration method) {
@@ -102,92 +158,45 @@ public class MetricsCalculator {
 		return lines;
 	}
 
-//	public static void main(String[] args) {
-//		JavaParser parser = new JavaParser();
-////		CompilationUnit teste = parser
-////				.parse("public class Teste { public static int ronaldo(int x) {\r\n" + "		int a = 0;\r\n"
-////						+ "		int b = 0;\r\n" + "		for (int i = 0; i < x; i++) {\r\n"
-////						+ "			if (i % 2 == 0) {\r\n" + "				System.out.println(\"i = \" + i);\r\n"
-////						+ "				a++;\r\n" + "			} else {\r\n"
-////						+ "				System.out.println(\"j = \" + i);\r\n" + "				b++;\r\n"
-////						+ "			}\r\n" + "		}\r\n" + "		// ronaldo\r\n" + "		if (a > b)\r\n"
-////						+ "			return a;\r\n" + "		else\r\n" + "			return b;\r\n" + "	} }")
-////				.getResult().get();
-//		CompilationUnit teste = parser
-//				.parse("public class Teste { public static int ronaldo(int x) {\r\n"
-//						+ "		int a = 0;\r\n"
-//						+ "		int b = 0;\r\n"
-//						+ "		for (int i = 0; i < x; i++) {\r\n"
-//						+ "			if (i % 2 == 0) {\r\n"
-//						+ "				System.out.println(\"i = \" + i);\r\n"
-//						+ "				a++;\r\n"
-//						+ "			} else {\r\n"
-//						+ "				System.out.println(\"j = \" + i);\r\n"
-//						+ "				b++;\r\n"
-//						+ "			}\r\n"
-//						+ "		}\r\n"
-//						+ "		\r\n"
-//						+ "		\r\n"
-//						+ "		\r\n"
-//						+ "		\r\n"
-//						+ "		// ronaldo\r\n"
-//						+ "		if (a > b)\r\n"
-//						+ "			return a;\r\n"
-//						+ "		else\r\n"
-//						+ "			return b;\r\n"
-//						+ "	} }")
-//				.getResult().get();
-//
-//		List<Node> class_teste = teste.getChildNodes();
-//
-//		for (Node n : class_teste) {
-//			List<Node> methods = n.getChildNodes();
-//
-//			MethodDeclaration m = (MethodDeclaration) methods.get(methods.size() - 1);
-//			System.out.println(m);
-//
-//			System.out.println("LOC_method = " + LOC_method(m));
-//		}
-//	}
-
-	private int getLOC_Class(ClassOrInterfaceDeclaration classNode) {
-		return classNode.toString().split("\r\n").length;
-	}
-
 	public Optional<String> getExtensionByStringHandling(String filename) {
 		return Optional.ofNullable(filename).filter(f -> f.contains("."))
 				.map(f -> f.substring(filename.lastIndexOf(".") + 1));
 	}
+	
 
 	public void getCompUnits(Path filename) {
 		JavaParser parser = new JavaParser();
 
 		Path dir = filename;
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
-			for (Path entry : stream) {
-				if (new File(entry.toString()).isDirectory()) {
-					getCompUnits(entry);
-				} else {
-					System.out.println(entry);
-					String entry2 = getExtensionByStringHandling(entry.toString()).get();
-					if (entry2.equals("java")) {
-						CompilationUnit unit = parser.parse(entry.toFile()).getResult().get();
-						if (compilationUnits.add(unit)) {
-							System.out.println("Success!");
-						}
-						;
-					}
-				}
+
+		    for (Path entry: stream) {
+		    	if(new File(entry.toString()).isDirectory()) {
+		    		getCompUnits(entry);
+		    	} else {
+		    		String entry2 = getExtensionByStringHandling(entry.toString()).get();
+		    		if(entry2.equals("java")) {
+		    			CompilationUnit unit = parser.parse(entry.toFile()).getResult().get();
+		    			if(compilationUnits.add(unit)) {
+		    				System.out.println("Success!");
+		    			};
+		    		}
+		    	}
 
 			}
 		} catch (IOException | DirectoryIteratorException x) {
 			System.err.println(x);
 		}
+		
+	}
+	
+	public List<CompilationUnit> getCompilationUnits(){
+		return compilationUnits;
 	}
 
 	public void run(Path filename) {
 
 		getCompUnits(filename);
-	}
 
+	}
 }
