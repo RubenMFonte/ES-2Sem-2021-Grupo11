@@ -1,9 +1,12 @@
 package projecto_es;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+
+import com.github.javaparser.ast.CompilationUnit;
 
 public class ListsToInterface {
 	
@@ -11,6 +14,18 @@ public class ListsToInterface {
 	private static ListsToInterface listsToInterface = null;
 
 	private List<ClassDataStructure> dataList;
+	
+	private ListsToInterface()
+	{
+		dataList = new ArrayList<ClassDataStructure>();
+	}
+	
+	public static ListsToInterface getListsToInterfaceInstance()
+	{
+		if(listsToInterface == null) listsToInterface = new ListsToInterface();
+		
+		return listsToInterface;
+	}
 	
 	public JList<String> getPackageJList() {
 		DefaultListModel<String> listTemp = new DefaultListModel<String>();
@@ -42,8 +57,27 @@ public class ListsToInterface {
 		JList<String> classJList = new JList<String>(listTemp);
 		return classJList;
 	}
+	
+	public JList<String> showClassMetrics(String className) {
+		DefaultListModel<String> metricsNamesList = new DefaultListModel<String>();
+		for(int i=0; i<this.dataList.size(); i++) {
+			if(dataList.get(i).getClassName().equals(className)) {
+				String wmc_metric = "WMC_metric: " + dataList.get(i).getWMCmetric();
+				String loc_metric = "LOC_metric: " + "5";
+				String nom_metric = "NOM_metric: " + "6";
+				metricsNamesList.addElement(wmc_metric);
+				metricsNamesList.addElement(loc_metric);
+				metricsNamesList.addElement(nom_metric);
+				break;
+			}else {
+				System.out.println("error");
+			}
+		}
+		JList<String> classJList = new JList<String>(metricsNamesList);
+		return classJList;
+	}
 /*	
-	public ClassDataStructure showMetrics(String className, String methodName) {
+	public ClassDataStructure showMethodMetrics(String className, String methodName) {
 		
 	}*/
 }

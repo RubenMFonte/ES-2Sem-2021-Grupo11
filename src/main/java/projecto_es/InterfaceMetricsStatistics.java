@@ -24,6 +24,8 @@ import javax.swing.SwingConstants;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class InterfaceMetricsStatistics extends JFrame {
 
@@ -34,7 +36,7 @@ public class InterfaceMetricsStatistics extends JFrame {
 	private JList packageJList;
 	private JList classJList;
 	private JList methodsJList;
-	private JList metricsJlist;
+	private JList metricsJlist= new JList<String>();
 	private JList statisticsJlist;
 	
 	private String packageString;
@@ -184,7 +186,7 @@ public class InterfaceMetricsStatistics extends JFrame {
 		
 		JButton goBackButton = new JButton("Go Back");
 		panel_1.add(goBackButton);
-/*		
+		
 //button actionListener
 		buttonShow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -193,9 +195,10 @@ public class InterfaceMetricsStatistics extends JFrame {
 	                    classString = (String) classJList.getSelectedValue(); 
 	                    methodsString = (String) methodsJList.getSelectedValue(); 
 	                 } 
-				 metricsJlist.setListData(COLOCAR a FUNÇÂO que devolve a lista de METRICAS);
+				 metricsJlist = ListsToInterface.getListsToInterfaceInstance().showClassMetrics(classString);
+				 System.out.println(ListsToInterface.getListsToInterfaceInstance().showClassMetrics(classString));
 			}
-		});  */
+		}); 
 	}
 
 
