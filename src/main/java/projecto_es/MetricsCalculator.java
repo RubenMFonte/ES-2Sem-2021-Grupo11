@@ -172,7 +172,6 @@ public static int getLOC_Class(ClassOrInterfaceDeclaration classNode) {
 		    	if(new File(entry.toString()).isDirectory()) {
 		    		getCompUnits(entry);
 		    	} else {
-		    		System.out.println(entry);
 		    		String entry2 = getExtensionByStringHandling(entry.toString()).get();
 		    		if(entry2.equals("java")) {
 		    			CompilationUnit unit = parser.parse(entry.toFile()).getResult().get();
