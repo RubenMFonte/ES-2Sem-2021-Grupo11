@@ -139,7 +139,7 @@ public class MetricsCalculator {
 		return complexity;
 	}
 	
-	public int getLOC_Class(ClassOrInterfaceDeclaration classNode) {
+	public static int getLOC_Class(ClassOrInterfaceDeclaration classNode) {
 		String classBody = LexicalPreservingPrinter.print(LexicalPreservingPrinter.setup(classNode));
 		
 		String[] lines = classBody.toString().split("\\r?\\n");
