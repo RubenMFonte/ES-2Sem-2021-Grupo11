@@ -13,19 +13,28 @@ public class ListsToInterface {
 	// Singleton instance
 	private static ListsToInterface listsToInterface = null;
 
-	private List<ClassDataStructure> dataList;
+	private List<ClassDataStructure> dataList = new ArrayList<ClassDataStructure>();
 	
-	private ListsToInterface()
-	{
-		dataList = new ArrayList<ClassDataStructure>();
+	public List<ClassDataStructure> getDataList() {
+		return dataList;
 	}
-	
+
+	public void setDataList(List<ClassDataStructure> dataList) {
+		this.dataList = dataList;
+	}
+
 	public static ListsToInterface getListsToInterfaceInstance()
 	{
 		if(listsToInterface == null) listsToInterface = new ListsToInterface();
 		
 		return listsToInterface;
 	}
+	
+	private ListsToInterface()
+	{
+		dataList = new ArrayList<ClassDataStructure>();
+	}
+	
 	
 	public JList<String> getPackageJList() {
 		DefaultListModel<String> listTemp = new DefaultListModel<String>();
@@ -76,8 +85,5 @@ public class ListsToInterface {
 		JList<String> classJList = new JList<String>(metricsNamesList);
 		return classJList;
 	}
-/*	
-	public ClassDataStructure showMethodMetrics(String className, String methodName) {
-		
-	}*/
+
 }
