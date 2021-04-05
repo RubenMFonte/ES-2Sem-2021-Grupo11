@@ -60,12 +60,12 @@ public class ClassDataStructure {
 		}
 	}
 	
-	public ClassDataStructure(String packageName, String className, int loc_class, int nom_class, int wmc_class) {
+	public ClassDataStructure(String packageName, String className, String loc_class,String nom_class, String wmc_class) {
 		this.packageName = packageName;
 		this.className = className;
-		this.loc_class = loc_class;
-		this.nom_class = nom_class;
-		this.wmc_class = wmc_class;
+		this.loc_class = (int)Double.parseDouble(loc_class);
+		this.nom_class = (int)Double.parseDouble(nom_class);
+		this.wmc_class =(int) Double.parseDouble(wmc_class);
 	}
 	
 	public void addMethod(String methodName, int loc_method, int cyclo_method) {
