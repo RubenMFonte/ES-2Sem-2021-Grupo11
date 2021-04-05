@@ -23,7 +23,8 @@ public class Main {
 			if(class_find.getClass() == ClassOrInterfaceDeclaration.class) {
 				//System.out.println("Yeah");
 				ClassOrInterfaceDeclaration class_cast = (ClassOrInterfaceDeclaration)class_find;
-				int wmc_class = MetricsCalculator.WMC_class(class_cast);
+				int wmc_class = MetricsCalculator.NOM_class(class_cast);
+				//NumberOfMethods.NOM_class(class_cast);
 				System.out.println("This is the value of [WMC_Class]: " + wmc_class);
 			} else {
 				System.out.println("Não é instância: [ClassOrInterfaceDeclaration]");
