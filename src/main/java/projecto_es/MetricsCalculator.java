@@ -15,7 +15,10 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseException;
 import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.body.*;
+import com.github.javaparser.ast.nodeTypes.NodeWithBody;
+import com.github.javaparser.ast.nodeTypes.NodeWithCondition;
 import com.github.javaparser.ast.stmt.*;
+import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 
 public class MetricsCalculator {
 
@@ -38,58 +41,128 @@ public class MetricsCalculator {
 	}
 	
 	public static int NOM_class(ClassOrInterfaceDeclaration classe) {
-		List<MethodDeclaration> methods = classe.getChildNodesByType(MethodDeclaration.class); 
-		int numberOfMethods = methods.size();	
+		int numberOfMethods = 0;
+		List<Node> nodes = classe.getChildNodes(); 
+
+		for(Node n : nodes) {
+			if(n.getClass() == MethodDeclaration.class || n.getClass() == ConstructorDeclaration.class)
+				numberOfMethods++;
+		}
+		
 		return numberOfMethods;
 	}
 	
 	public static int WMC_class(ClassOrInterfaceDeclaration classe) {
 		List<Node> methods = classe.getChildNodes();  // Cria uma lista de nós filhos do nó classe [ClasseOrInterfaceDeclaration]
 		int sum_cyclo_class = 0;					  // Cria um inteiro que irá acumular o valor da métrica [Cyclo_method] de cada método. Basicamente, a soma dos cyclo de cada método é a wmc_class 
-		for(Node meth : methods) {					  // Ciclo para andar de nó em nó
-			if(meth.getClass() == MethodDeclaration.class) {    				//Verificar se a classe do nó é uma [MethodDeclaration]
-				MethodDeclaration meth_cast = (MethodDeclaration)meth;   		//Como a condição anterior foi verificada, é feito um cast do nó para [MethodDeclaration]
-				sum_cyclo_class += MetricsCalculator.Cyclo_method(meth_cast);   //Calcula a métrica [Cyclo_method] para o método e adiciona ao inteiro 
-			}else {
-			}  																	//Volta a repetir o processo 
+		for(Node method : methods) {					  // Ciclo para andar de nó em nó
+			if(method.getClass() == MethodDeclaration.class || method.getClass() == ConstructorDeclaration.class)   				//Verificar se a classe do nó é uma [MethodDeclaration]
+				sum_cyclo_class += MetricsCalculator.Cyclo_method((CallableDeclaration)method);   //Calcula a métrica [Cyclo_method] para o método e adiciona ao inteiro 
 		}
 		return sum_cyclo_class;
 	}
-
-	public static int Cyclo_method(MethodDeclaration method) {
+	
+	public static int getStatementComplexity(Statement statement){
 		
-		int complexity=0;
-		for(IfStmt ifstmt : method.getChildNodesByType(IfStmt.class)) {
-			complexity++;
-			if(ifstmt.getElseStmt().isPresent()) {
-				Statement elseStmt= ifstmt.getElseStmt().get();
-				if (elseStmt instanceof IfStmt) {
-					
-				}else {
-					complexity++;
-					
-				}
+		int complexity = 0;
+		
+		if(statement.getClass() == IfStmt.class || statement.getClass() == WhileStmt.class || statement.getClass() == DoStmt.class)
+		{
+			NodeWithCondition<Node> node = (NodeWithCondition<Node>)statement;
+			complexity += node.getCondition().toString().split("&&|\\|\\|").length;
+		}
+		else if(statement.getClass() == ForStmt.class)
+		{
+			ForStmt f = (ForStmt)statement;
+			complexity += f.getCompare().get().toString().split("&&|\\|\\|").length;
+		}
+		else if(statement.getClass() == SwitchStmt.class)
+		{
+			SwitchStmt stmt = (SwitchStmt)statement;
+			complexity += stmt.getEntries().size();
+		}
+		else if(statement.getClass() == ForEachStmt.class) { complexity += 1; }
+		
+		List<Node> nodes = statement.getChildNodes(); 
+
+		for(Node n : nodes) {
+			if(n.getClass() == BlockStmt.class)
+				complexity += getCodeBodyComplexity((BlockStmt)n);
+			else if(n.getClass() == SwitchEntry.class)
+			{
+				SwitchEntry entry = (SwitchEntry)n;
 				
+				if(entry.getLabels().size() == 0) complexity--; // subtrai 1 do resultado devido ao default case
+				
+				List<Statement> statements = entry.getStatements();
+				
+				for(Statement s : statements)
+				{
+					if(s.isBlockStmt())
+						complexity += getCodeBodyComplexity(s.asBlockStmt());
+					else complexity += getStatementComplexity(s);
+				}
 			}
 		}
 		
-		for(ForStmt forstmt  : method.getChildNodesByType(ForStmt.class)) {
-			complexity++;
+		if(statement.isIfStmt()){
+			IfStmt ifStatement = (IfStmt)statement;
+			if(ifStatement.hasElseBranch())
+			{				
+				Statement elseStatement = ifStatement.getElseStmt().get();
+				
+				if(elseStatement.isBlockStmt())
+					complexity += getCodeBodyComplexity(elseStatement.asBlockStmt());
+				else {
+					complexity += getStatementComplexity(elseStatement);
+				}
+			}
 		}
-		for(ForEachStmt forEach : method.getChildNodesByType(ForEachStmt.class)) {
-			complexity++;
-		}
-		for(SwitchStmt switchstmt : method.getChildNodesByType(SwitchStmt.class)) {
-			complexity++;
-		}
-		for(WhileStmt whilestmt: method.getChildNodesByType(WhileStmt.class)) {
-			complexity++;
-		}
+		
 		return complexity;
 	}
 	
-	private int getLOC_Class(ClassOrInterfaceDeclaration classNode) {
-		return classNode.toString().split("\r\n").length;
+	private static int getCodeBodyComplexity(BlockStmt block) {
+		
+		int complexity = 0;
+		List<Statement> statements = block.getStatements();
+		
+		for(Statement s : statements)
+		{			
+			complexity += getStatementComplexity(s);
+		}
+		
+		return complexity;
+
+	}
+
+	public static int Cyclo_method(CallableDeclaration method) {
+		
+		int complexity=1;
+		
+		List<Node> nodes = method.getChildNodes(); 
+
+		for(Node n : nodes) {
+			if(n.getClass() == BlockStmt.class)
+				complexity += getCodeBodyComplexity((BlockStmt)n);
+		}
+		
+		/*List<BlockStmt> body = method.getChildNodesByType(BlockStmt.class);
+		
+		for(BlockStmt b : body)
+		{
+			complexity += getCodeBodyComplexity(b);
+		}*/
+		
+		return complexity;
+	}
+	
+	public int getLOC_Class(ClassOrInterfaceDeclaration classNode) {
+		String classBody = LexicalPreservingPrinter.print(LexicalPreservingPrinter.setup(classNode));
+		
+		String[] lines = classBody.toString().split("\\r?\\n");
+		
+		return lines.length;
 	}
 		
 
