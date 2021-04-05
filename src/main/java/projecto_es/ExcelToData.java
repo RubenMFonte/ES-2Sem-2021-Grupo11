@@ -17,6 +17,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 public class ExcelToData {
+	
+//	ClassDataStructure(String packageName, String className, String loc_class,String nom_class, String wmc_class)
 	public static List<ClassDataStructure> getallClass(String args) {
 		List<ClassDataStructure> allClass = new ArrayList<>();
 
@@ -35,7 +37,7 @@ public class ExcelToData {
 
 				cont++;
 
-				if (ReadCellData(cont - 1, 2, wb) != ReadCellData(cont, 2, wb)) {
+				if (!ReadCellData(cont-1,2,wb).equals(ReadCellData(cont,2,wb))) {
 
 					cds = new ClassDataStructure(ReadCellData(cont, 1, wb), ReadCellData(cont, 2, wb),
 							ReadCellData(cont, 4, wb), ReadCellData(cont, 5, wb), ReadCellData(cont, 6, wb));
@@ -67,6 +69,17 @@ public class ExcelToData {
 		default:
 		}
 		return value;
+	}
+
+	public static void main(String[] args) {
+		String path = "C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\MYCode_Smells.xlsx";
+		List<ClassDataStructure> teste = getallClass(path);
+		GeneralStatistics gs = new GeneralStatistics(teste);
+		System.out.println("n_packages = " + gs.getN_package());
+		System.out.println("n_lines = " + gs.getN_lines());
+		System.out.println("n_classes = " + gs.getN_classes());
+		System.out.println("n_methods = " + gs.getN_methods());
+	
 	}
 
 }

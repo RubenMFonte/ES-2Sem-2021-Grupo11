@@ -60,7 +60,7 @@ public class ClassDataStructure {
 		}
 	}
 	
-	public ClassDataStructure(String packageName, String className, String loc_class,String nom_class, String wmc_class) {
+	public ClassDataStructure(String packageName, String className, String nom_class,String loc_class, String wmc_class) {
 		this.packageName = packageName;
 		this.className = className;
 		this.loc_class = (int)Double.parseDouble(loc_class);
