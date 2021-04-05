@@ -1,72 +1,72 @@
 package projecto_es;
-  import java.io.File;  
-  	import java.io.FileInputStream;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.poi.ss.usermodel.Cell;  
-    import org.apache.poi.ss.usermodel.Row;  
-    import org.apache.poi.xssf.usermodel.XSSFSheet;  
-    import org.apache.poi.xssf.usermodel.XSSFWorkbook;   
-    import java.io.FileNotFoundException;  
-    import java.io.IOException; 
-    import org.apache.poi.ss.usermodel.*;  
-    import org.apache.poi.ss.usermodel.Sheet;  
-    import org.apache.poi.ss.usermodel.Workbook;  
-   
-    
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+
 public class ExcelToData {
-    public static List<ClassDataStructure> getallClass(String args)   {   
-    	List<ClassDataStructure> allClass = new ArrayList<>();
-		
-    	try  {
-    		File file = new File(args);  
-    		FileInputStream fis;
-		
-			fis = new FileInputStream(file); 
-			XSSFWorkbook wb = new XSSFWorkbook(fis);   
-			XSSFSheet sheet = wb.getSheetAt(0);     
-			int cont=0;
-			ExcelToData rc=new ExcelToData();
-			Iterator<Row> itr = sheet.iterator(); 
-			ClassDataStructure cds = null;		
-			while (itr.hasNext()) { 
-   			
-				cont ++;
-				
-				if(ReadCellData(cont-1,2,wb)!= ReadCellData(cont,2,wb)) {
-					
-					cds=new ClassDataStructure(ReadCellData(cont,1,wb),ReadCellData(cont,2,wb),ReadCellData(cont,4,wb),ReadCellData(cont,5,wb),ReadCellData(cont,6,wb));
-					
+	public static List<ClassDataStructure> getallClass(String args) {
+		List<ClassDataStructure> allClass = new ArrayList<>();
+
+		try {
+			File file = new File(args);
+			FileInputStream fis;
+
+			fis = new FileInputStream(file);
+			XSSFWorkbook wb = new XSSFWorkbook(fis);
+			XSSFSheet sheet = wb.getSheetAt(0);
+			int cont = 0;
+			ExcelToData rc = new ExcelToData();
+			Iterator<Row> itr = sheet.iterator();
+			ClassDataStructure cds = null;
+			while (itr.hasNext()) {
+
+				cont++;
+
+				if (ReadCellData(cont - 1, 2, wb) != ReadCellData(cont, 2, wb)) {
+
+					cds = new ClassDataStructure(ReadCellData(cont, 1, wb), ReadCellData(cont, 2, wb),
+							ReadCellData(cont, 4, wb), ReadCellData(cont, 5, wb), ReadCellData(cont, 6, wb));
+
 					allClass.add(cds);
 				}
-				cds.addMethod(ReadCellData(cont,3,wb),(int)Double.parseDouble(ReadCellData(cont,8,wb)),(int)Double.parseDouble(ReadCellData(cont,9,wb)));
+				cds.addMethod(ReadCellData(cont, 3, wb), (int) Double.parseDouble(ReadCellData(cont, 8, wb)),
+						(int) Double.parseDouble(ReadCellData(cont, 9, wb)));
 			}
-    	}  
-    	catch(Exception e)  {  
-    		e.printStackTrace();  
-    	}
-    	return allClass;
-    }  
-    
-    
-    public static String ReadCellData(int vRow, int vColumn,Workbook wb) {  
-    	String value=null;    
-    	Sheet sheet=wb.getSheetAt(0);     
-    	Row row=sheet.getRow(vRow);  
-    	Cell cell=row.getCell(vColumn); 
-    	
-    	switch (cell.getCellType()){  		
-			case Cell.CELL_TYPE_STRING:    
-				value=(cell.getStringCellValue() + "\t\t\t");  
-				break;  
-			case Cell.CELL_TYPE_NUMERIC:    
-				value=(cell.getNumericCellValue() + "\t\t\t");  
-				break;  
-			default:  			
-		}   
-    	return value;              
-    }  
-     
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return allClass;
+	}
+
+	public static String ReadCellData(int vRow, int vColumn, Workbook wb) {
+		String value = null;
+		Sheet sheet = wb.getSheetAt(0);
+		Row row = sheet.getRow(vRow);
+		Cell cell = row.getCell(vColumn);
+
+		switch (cell.getCellType()) {
+		case Cell.CELL_TYPE_STRING:
+			value = (cell.getStringCellValue() + "\t\t\t");
+			break;
+		case Cell.CELL_TYPE_NUMERIC:
+			value = (cell.getNumericCellValue() + "\t\t\t");
+			break;
+		default:
+		}
+		return value;
+	}
+
 }
