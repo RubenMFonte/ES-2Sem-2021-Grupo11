@@ -1,23 +1,75 @@
 package projecto_es;
 
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+
+import java.util.List;
+
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.Parameter;
+
 
 public class MethodDataStructure {
 	
-	private MethodDeclaration md;
+	/*Semelhança de funcionamento à classe [ClassDataStruture].
+	 * 
+	 * Só um pequeno adjuste: para além do nome do método é necessário a colocação dos respetivos types dos parâmetros (boolean,int,...).
+	 * 
+	 * Para tal, foi necessário percorrer os parâmetros presentes no método e para cada parâmetro composto pelos: type e nome, retirar apenas o campo 
+	 * relevante a inserir, sendo este o type. Por isso, é feita uma verificação para perceber se o pacote da classe dos nós filhos dos [Parameter] 
+	 * era o que acabava em "type" para depois se retirar o tipo do type (type tanto pode ser [PrimitiveType] -> (int,boolean,...); tanto como
+	 * [ClassOrInterfacetype -> (String,...)].
+	 * 
+	 *  Depois da extração, é feita uma manipulação de String de forma a aparecer como pretendido.
+	 * 
+	 * 
+	 */
+	
+	private String methodName;    //MethodDeclaration
+	private int loc_method;
 	private int cyclo_method;
 	
-	public MethodDataStructure (MethodDeclaration md_given) {
-		this.md = md_given;
-		this.cyclo_method = MetricsCalculator.Cyclo_method(md_given);
+	public MethodDataStructure (MethodDeclaration md_received) {
+		String methodName = md_received.getNameAsString();
+		String complementToMethodName = getParameterTypes(md_received);
+		this.methodName = methodName.concat(complementToMethodName);
+		calculateMetricsMethods(md_received);
+	}
+	
+	public MethodDataStructure (String methodName, int loc_method, int cyclo_method) {
+		this.methodName = methodName;
+		this.loc_method = loc_method;
+		this.cyclo_method = cyclo_method;
+	}
+	
+	private void calculateMetricsMethods(MethodDeclaration md_received) {
+		this.cyclo_method = MetricsCalculator.Cyclo_method(md_received);
+		//Fazer mesma cena para as outras métricas
+	}
+	
+	private String getParameterTypes (MethodDeclaration md_received){
+		String paramTypesComplement = "(";
+		List <Parameter> param = md_received.getChildNodesByType(Parameter.class);
+		for(Parameter param_find : param) {
+			List<Node> paramCamps = param_find.getChildNodes();
+			for(Node param_type_find : paramCamps) {
+				if(param_type_find.getClass().getPackageName().equals("com.github.javaparser.ast.type")) {
+					paramTypesComplement += param_type_find+",";					
+				}else {}
+			}
+		}
+		return paramTypesComplement.substring(0, paramTypesComplement.length()-1)+")";
 	}
 	
 	public String getMethodName() {
-		return md.getNameAsString();
+		return methodName;
+	}
+	
+	public int getLOCMetric () {
+		return loc_method;	
 	}
 	
 	public int getCYCLOMetric () {
 		return cyclo_method;	
 	}
+	
 }

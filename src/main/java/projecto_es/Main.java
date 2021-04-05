@@ -1,18 +1,13 @@
 package projecto_es;
 
-
-
+import java.io.FileNotFoundException;
+import com.github.javaparser.*;
 import java.util.List;
-
-import com.github.javaparser.JavaParser;
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.*;
+import com.github.javaparser.ast.body.*;
 
 public class Main {
 	public static void main(String[] args) {
-		
 
 		JavaParser parser = new JavaParser();
 		CompilationUnit teste = parser.parse("public class Teste { public int teste(boolean t) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; }  public int teste2(boolean t) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; }  public int teste3(boolean t) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; } }").getResult().get();
