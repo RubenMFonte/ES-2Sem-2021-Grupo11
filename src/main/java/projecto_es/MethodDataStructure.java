@@ -47,17 +47,23 @@ public class MethodDataStructure {
 	}
 	
 	private String getParameterTypes (MethodDeclaration md_received){
-		String paramTypesComplement = "(";
+		String paramTypesComplement = "";
 		List <Parameter> param = md_received.getChildNodesByType(Parameter.class);
 		for(Parameter param_find : param) {
 			List<Node> paramCamps = param_find.getChildNodes();
 			for(Node param_type_find : paramCamps) {
 				if(param_type_find.getClass().getPackageName().equals("com.github.javaparser.ast.type")) {
 					paramTypesComplement += param_type_find+",";					
+					
 				}else {}
 			}
 		}
-		return paramTypesComplement.substring(0, paramTypesComplement.length()-1)+")";
+		if(paramTypesComplement.equals("")) {
+			return "()";
+		}else {	
+			return "("+ paramTypesComplement.substring(0, paramTypesComplement.length()-1)+")";
+		}
+		
 	}
 	
 	public String getMethodName() {
