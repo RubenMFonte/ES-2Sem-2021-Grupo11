@@ -47,7 +47,7 @@ public class IMetricsCalculator {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 776, 287);
+		frame.setBounds(100, 100, 775, 287);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 

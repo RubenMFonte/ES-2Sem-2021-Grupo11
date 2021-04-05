@@ -31,7 +31,6 @@ public class GeneralStatistics {
 	}
 
 	public boolean package_counted(List<String> packages, String package_name) {
-		System.out.println("packages.size = " + packages.size());
 		for (int i = 0; i < packages.size(); i++) {
 			if (packages.get(i).equals(package_name))
 				return true;
