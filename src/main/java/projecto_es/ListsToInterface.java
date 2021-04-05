@@ -13,13 +13,21 @@ public class ListsToInterface {
 	// Singleton instance
 	private static ListsToInterface listsToInterface = null;
 
-	private List<ClassDataStructure> dataList;
+	private List<ClassDataStructure> dataList = new ArrayList<ClassDataStructure>();
 	
 	private ListsToInterface()
 	{
 		dataList = new ArrayList<ClassDataStructure>();
 	}
 	
+	public List<ClassDataStructure> getDataList() {
+		return dataList;
+	}
+
+	public void setDataList(List<ClassDataStructure> dataList) {
+		this.dataList = dataList;
+	}
+
 	public static ListsToInterface getListsToInterfaceInstance()
 	{
 		if(listsToInterface == null) listsToInterface = new ListsToInterface();
@@ -78,6 +86,27 @@ public class ListsToInterface {
 	}
 /*	
 	public ClassDataStructure showMethodMetrics(String className, String methodName) {
-		
+		DefaultListModel<String> metricsNamesList = new DefaultListModel<String>();
+		for(int i=0; i<this.dataList.size(); i++) {
+			if(dataList.get(i).getClassName().equals(className))
+				if(dataList.get(i)ListsTo)
+			
+			
+			
+			
+			{
+				String wmc_metric = "WMC_metric: " + dataList.get(i).getWMCmetric();
+				String loc_metric = "LOC_metric: " + "5";
+				String nom_metric = "NOM_metric: " + "6";
+				metricsNamesList.addElement(wmc_metric);
+				metricsNamesList.addElement(loc_metric);
+				metricsNamesList.addElement(nom_metric);
+				break;
+			}else {
+				System.out.println("error");
+			}
+		}
+		JList<String> classJList = new JList<String>(metricsNamesList);
+		return classJList;
 	}*/
 }

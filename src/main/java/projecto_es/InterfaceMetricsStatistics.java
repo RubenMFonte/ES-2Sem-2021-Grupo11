@@ -196,7 +196,7 @@ public class InterfaceMetricsStatistics extends JFrame {
 	                    methodsString = (String) methodsJList.getSelectedValue(); 
 	                 } 
 				 metricsJlist = ListsToInterface.getListsToInterfaceInstance().showClassMetrics(classString);
-				 System.out.println(ListsToInterface.getListsToInterfaceInstance().showClassMetrics(classString));
+				// System.out.println(ListsToInterface.getListsToInterfaceInstance().showClassMetrics(classString));
 			}
 		}); 
 	}
