@@ -1,6 +1,5 @@
 package projecto_es;
 
-
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,7 +38,7 @@ public class IMetricsCalculator {
 	/**
 	 * Create the application.
 	 */
-	 public IMetricsCalculator() {
+	public IMetricsCalculator() {
 		initialize();
 	}
 
@@ -62,7 +61,7 @@ public class IMetricsCalculator {
 		frame.getContentPane().add(text_path);
 		text_path.setColumns(10);
 		frame.setVisible(true);
-		
+
 		select_fileAction();
 	}
 
@@ -74,9 +73,13 @@ public class IMetricsCalculator {
 				choose_file.setDialogTitle("Selecionar Projeto");
 				choose_file.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				int result = choose_file.showSaveDialog(null);
-				String path = choose_file.getSelectedFile().getAbsolutePath();
-				text_path.setText(path);
-				System.out.println("path = " + path);
+				if (choose_file.getSelectedFile() == null) {
+					actionPerformed(e);
+				} else {
+					String path = choose_file.getSelectedFile().getAbsolutePath();
+					text_path.setText(path);
+//					System.out.println("path = " + path);
+				}
 
 			}
 		});

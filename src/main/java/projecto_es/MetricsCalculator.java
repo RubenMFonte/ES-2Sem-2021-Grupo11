@@ -23,24 +23,24 @@ import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinte
 public class MetricsCalculator {
 
 	// Singleton instance
-	private static MetricsCalculator metricsCalculator =null;
-	
+	private static MetricsCalculator metricsCalculator = null;
+
 	// Class variables
 	private List<CompilationUnit> compilationUnits;
-	
-	private MetricsCalculator()
-	{
+
+	private MetricsCalculator() {
 		compilationUnits = new ArrayList<CompilationUnit>();
 	}
-	
-	public static MetricsCalculator getMetricsCalculatorInstance()
-	{
-		if(metricsCalculator == null) metricsCalculator = new MetricsCalculator();
-		
+
+	public static MetricsCalculator getMetricsCalculatorInstance() {
+		if (metricsCalculator == null)
+			metricsCalculator = new MetricsCalculator();
+
 		return metricsCalculator;
 	}
-	
+
 	public static int NOM_class(ClassOrInterfaceDeclaration classe) {
+		
 		int numberOfMethods = 0;
 		List<Node> nodes = classe.getChildNodes(); 
 
@@ -51,16 +51,19 @@ public class MetricsCalculator {
 		
 		return numberOfMethods;
 	}
-	
+
 	public static int WMC_class(ClassOrInterfaceDeclaration classe) {
+
 		List<Node> methods = classe.getChildNodes();  // Cria uma lista de nós filhos do nó classe [ClasseOrInterfaceDeclaration]
 		int sum_cyclo_class = 0;					  // Cria um inteiro que irá acumular o valor da métrica [Cyclo_method] de cada método. Basicamente, a soma dos cyclo de cada método é a wmc_class 
 		for(Node method : methods) {					  // Ciclo para andar de nó em nó
 			if(method.getClass() == MethodDeclaration.class || method.getClass() == ConstructorDeclaration.class)   				//Verificar se a classe do nó é uma [MethodDeclaration]
 				sum_cyclo_class += MetricsCalculator.Cyclo_method((CallableDeclaration)method);   //Calcula a métrica [Cyclo_method] para o método e adiciona ao inteiro 
+
 		}
 		return sum_cyclo_class;
 	}
+
 	
 	public static int getStatementComplexity(Statement statement){
 		
@@ -105,20 +108,6 @@ public class MetricsCalculator {
 			}
 		}
 		
-		if(statement.isIfStmt()){
-			IfStmt ifStatement = (IfStmt)statement;
-			if(ifStatement.hasElseBranch())
-			{				
-				Statement elseStatement = ifStatement.getElseStmt().get();
-				
-				if(elseStatement.isBlockStmt())
-					complexity += getCodeBodyComplexity(elseStatement.asBlockStmt());
-				else {
-					complexity += getStatementComplexity(elseStatement);
-				}
-			}
-		}
-		
 		return complexity;
 	}
 	
@@ -147,13 +136,6 @@ public class MetricsCalculator {
 				complexity += getCodeBodyComplexity((BlockStmt)n);
 		}
 		
-		/*List<BlockStmt> body = method.getChildNodesByType(BlockStmt.class);
-		
-		for(BlockStmt b : body)
-		{
-			complexity += getCodeBodyComplexity(b);
-		}*/
-		
 		return complexity;
 	}
 	
@@ -164,20 +146,30 @@ public class MetricsCalculator {
 		
 		return lines.length;
 	}
-		
+
+	public static int LOC_method(MethodDeclaration method) {
+		int lines = 1;
+		int size = method.getChildNodes().size();
+		String last_node = method.getChildNodes().get(size - 1).toString();
+		for (int i = 0; i < last_node.length(); i++) {
+			if (last_node.charAt(i) == '\n')
+				lines++;
+		}
+		return lines;
+	}
 
 	public Optional<String> getExtensionByStringHandling(String filename) {
-	    return Optional.ofNullable(filename)
-	    		.filter(f -> f.contains("."))
-	    		.map(f -> f.substring(filename.lastIndexOf(".") + 1));
+		return Optional.ofNullable(filename).filter(f -> f.contains("."))
+				.map(f -> f.substring(filename.lastIndexOf(".") + 1));
 	}
 	
-	
-	public void getCompUnits(Path filename){
+
+	public void getCompUnits(Path filename) {
 		JavaParser parser = new JavaParser();
-		
+
 		Path dir = filename;
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+
 		    for (Path entry: stream) {
 		    	if(new File(entry.toString()).isDirectory()) {
 		    		getCompUnits(entry);
@@ -192,16 +184,20 @@ public class MetricsCalculator {
 		    		}
 		    	}
 
-		    }
+			}
 		} catch (IOException | DirectoryIteratorException x) {
-		    System.err.println(x);
+			System.err.println(x);
 		}
+		
 	}
 	
-	
-	public void run(Path filename) {
-		
-		getCompUnits(filename);
+	public List<CompilationUnit> getCompilationUnits(){
+		return compilationUnits;
 	}
 
+	public void run(Path filename) {
+
+		getCompUnits(filename);
+
+	}
 }
