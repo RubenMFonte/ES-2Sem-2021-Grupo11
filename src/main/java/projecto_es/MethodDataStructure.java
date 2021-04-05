@@ -43,7 +43,7 @@ public class MethodDataStructure {
 	
 	private void calculateMetricsMethods(MethodDeclaration md_received) {
 		this.cyclo_method = MetricsCalculator.Cyclo_method(md_received);
-		this.loc_method = MetricsCalculator.Loc_method(md_received);
+		this.loc_method = MetricsCalculator.LOC_method(md_received);
 	}
 	
 	private String getParameterTypes (MethodDeclaration md_received){
