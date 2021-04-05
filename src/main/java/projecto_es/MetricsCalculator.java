@@ -88,7 +88,7 @@ public class MetricsCalculator {
 		return complexity;
 	}
 	
-	private int getLOC_Class(ClassOrInterfaceDeclaration classNode) {
+	public static int getLOC_Class(ClassOrInterfaceDeclaration classNode) {
 		return classNode.toString().split("\r\n").length;
 	}
 		
@@ -100,14 +100,14 @@ public class MetricsCalculator {
 	}
 	
 	
-	public void getCompUnits(Path filename){
+	public void fillCompUnits(Path filename){
 		JavaParser parser = new JavaParser();
 		
 		Path dir = filename;
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
 		    for (Path entry: stream) {
 		    	if(new File(entry.toString()).isDirectory()) {
-		    		getCompUnits(entry);
+		    		fillCompUnits(entry);
 		    	} else {
 		    		System.out.println(entry);
 		    		String entry2 = getExtensionByStringHandling(entry.toString()).get();
@@ -123,12 +123,15 @@ public class MetricsCalculator {
 		} catch (IOException | DirectoryIteratorException x) {
 		    System.err.println(x);
 		}
+		
+	}
+	
+	public List<CompilationUnit> getCompilationUnits(){
+		return compilationUnits;
 	}
 	
 	
 	public void run(Path filename) {
-		
-		getCompUnits(filename);
+		fillCompUnits(filename);
 	}
-
 }
