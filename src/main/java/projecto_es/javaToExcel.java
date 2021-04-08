@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
@@ -96,14 +97,13 @@ public class javaToExcel {
 		System.out.println("Completed");
 	}
 	
-	public static void main(String[] args) throws IOException {
-		Path p = Paths.get("C:\\Users\\skarp\\git\\code_smells_app");
+	public void run(String path) throws IOException {
+		Path p = Paths.get(path);
 		MetricsCalculator mc  = MetricsCalculator.getMetricsCalculatorInstance();
 		mc.run(p);
 		javaToExcel j = new javaToExcel(mc);
 		j.makeLines();
-		j.writeToExcel();
-		
+		j.writeToExcel();	
 	}
 	
 }

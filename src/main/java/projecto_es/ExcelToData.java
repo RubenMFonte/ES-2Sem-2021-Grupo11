@@ -72,7 +72,7 @@ public class ExcelToData {
 	}
 
 	public static void main(String[] args) {
-		String path = "C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\MYCode_Smells.xlsx";
+		String path = "C:\\Users\\skarp\\teste.xlsx";
 		List<ClassDataStructure> teste = getallClass(path);
 		GeneralStatistics gs = new GeneralStatistics(teste);
 		System.out.println("n_packages = " + gs.getN_package());
