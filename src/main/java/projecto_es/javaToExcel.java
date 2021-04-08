@@ -26,16 +26,16 @@ import com.github.javaparser.ast.CompilationUnit;
 
 public class javaToExcel {
 	
-	private MetricsCalculator mc;
+	private String path;
 	private ArrayList<String[]> lines; 
 	
 	
-	public javaToExcel(MetricsCalculator mc) {
-		this.mc = mc;
+	public javaToExcel(String path) {
+		this.path=path;
 		lines = new ArrayList<String[]>();
 	}
 	
-	public void makeLines(){
+	public void makeLines(MetricsCalculator mc){
 		List<CompilationUnit> compUnits = mc.getCompilationUnits();
 		int i = 1;
 		for (CompilationUnit comp: compUnits) {
@@ -97,13 +97,12 @@ public class javaToExcel {
 		System.out.println("Completed");
 	}
 	
-	public void run(String path) throws IOException {
+	public void run() throws IOException {
 		Path p = Paths.get(path);
 		MetricsCalculator mc  = MetricsCalculator.getMetricsCalculatorInstance();
 		mc.run(p);
-		javaToExcel j = new javaToExcel(mc);
-		j.makeLines();
-		j.writeToExcel();	
+		makeLines(mc);
+		writeToExcel();	
 	}
 	
 }
