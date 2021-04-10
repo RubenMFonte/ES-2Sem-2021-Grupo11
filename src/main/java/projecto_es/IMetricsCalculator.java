@@ -3,8 +3,10 @@ package projecto_es;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -18,6 +20,7 @@ public class IMetricsCalculator {
 	private JFrame frame;
 	private JTextField text_path;
 	private JButton select_file;
+	private JButton b_executar;
 
 	/**
 	 * Launch the application.
@@ -47,22 +50,29 @@ public class IMetricsCalculator {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 775, 287);
+		frame.setBounds(100, 100, 557, 287);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
 		select_file = new JButton("Selecionar Projeto");
 
-		select_file.setBounds(91, 105, 147, 43);
+		select_file.setBounds(77, 152, 147, 43);
 		frame.getContentPane().add(select_file);
 
 		text_path = new JTextField();
-		text_path.setBounds(269, 109, 390, 35);
+		text_path.setBounds(77, 112, 390, 35);
 		frame.getContentPane().add(text_path);
 		text_path.setColumns(10);
+
+		b_executar = new JButton("Executar");
+		b_executar.setBounds(234, 152, 136, 43);
+		frame.getContentPane().add(b_executar);
+		frame.setTitle("Selecionar Projeto");
 		frame.setVisible(true);
 
 		select_fileAction();
+		b_executarAction();
+
 	}
 
 	public void select_fileAction() {
@@ -73,15 +83,49 @@ public class IMetricsCalculator {
 				choose_file.setDialogTitle("Selecionar Projeto");
 				choose_file.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				int result = choose_file.showSaveDialog(null);
-				if (choose_file.getSelectedFile() == null) {
-					actionPerformed(e);
-				} else {
+				if (choose_file.getSelectedFile() != null) {
 					String path = choose_file.getSelectedFile().getAbsolutePath();
 					text_path.setText(path);
-//					System.out.println("path = " + path);
 				}
 
 			}
 		});
+	}
+
+	public void b_executarAction() {
+		b_executar.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				javaToExcel jte = new javaToExcel(text_path.getText());
+				if (!text_path.getText().equals("")) {
+					JFileChooser save_exel = new JFileChooser();
+					save_exel.setDialogTitle("Salvar ficheiro exel");
+//					save_exel.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+					int result = save_exel.showSaveDialog(null);
+					if (save_exel.getSelectedFile() == null) {
+						actionPerformed(e);
+					} else {
+						String exel_file = save_exel.getSelectedFile().getAbsolutePath();
+						jte.setPath_exel(exel_file);
+					}
+					try {
+						jte.run();
+					} catch (IOException e1) {
+						System.out.println("IOException");
+						// e1.printStackTrace();
+					}
+
+				} else {
+					popUp("Escolha um projeto java antes de executar");
+				}
+			}
+		});
+
+	}
+	public void popUp(String popUp) {
+		JFrame parent = new JFrame();
+
+	    JOptionPane.showMessageDialog(parent, popUp);
 	}
 }

@@ -25,23 +25,49 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.github.javaparser.ast.CompilationUnit;
 
 public class javaToExcel {
-	
-	private String path;
-	private ArrayList<String[]> lines; 
-	
-	
-	public javaToExcel(String path) {
-		this.path=path;
+
+	private String path_java;
+	private ArrayList<String[]> lines;
+	private String path_exel;
+
+	public String getPath_java() {
+		return path_java;
+	}
+
+	public void setPath_java(String path_java) {
+		this.path_java = path_java;
+	}
+
+	public String getPath_exel() {
+		return path_exel;
+	}
+
+	public void setPath_exel(String path_exel) {
+		String extension = "";
+		for (int i = path_exel.length() - 5; i < path_exel.length(); i++) {
+			extension += path_exel.charAt(i);
+		}
+		System.out.println(extension);
+		if (extension.equals(".xlsx"))
+			this.path_exel = path_exel;
+		else {
+			path_exel += ".xlsx";
+			this.path_exel = path_exel;
+		}
+	}
+
+	public javaToExcel(String path_java) {
+		this.path_java = path_java;
 		lines = new ArrayList<String[]>();
 	}
-	
-	public void makeLines(MetricsCalculator mc){
+
+	public void makeLines(MetricsCalculator mc) {
 		List<CompilationUnit> compUnits = mc.getCompilationUnits();
 		int i = 1;
-		for (CompilationUnit comp: compUnits) {
-			ClassDataStructure struct  = new ClassDataStructure(comp);
+		for (CompilationUnit comp : compUnits) {
+			ClassDataStructure struct = new ClassDataStructure(comp);
 			List<MethodDataStructure> lmds = struct.getMethodDataStructureList();
-			for(MethodDataStructure mds : lmds) {
+			for (MethodDataStructure mds : lmds) {
 				String[] lineData = new String[9];
 				lineData[0] = String.valueOf(i);
 				lineData[1] = struct.getPackageName();
@@ -57,52 +83,53 @@ public class javaToExcel {
 			}
 		}
 	}
-	
-	public List<String[]> getLineS(){
+
+	public List<String[]> getLineS() {
 		return lines;
 	}
-	
+
 	public void writeToExcel() throws IOException {
 
-		Workbook excel = new XSSFWorkbook();	
+		Workbook excel = new XSSFWorkbook();
 		Sheet sh = excel.createSheet("Code Smells");
-		String[] columnHeadings = {"MethodID","package","class","method","NOM_class","LOC_class", "WMC_class","is_God_class","LOC_method","CYCLO:_method","is_Long_Method"};
+		String[] columnHeadings = { "MethodID", "package", "class", "method", "NOM_class", "LOC_class", "WMC_class",
+				"is_God_class", "LOC_method", "CYCLO:_method", "is_Long_Method" };
 		Font headerFont = excel.createFont();
 		headerFont.setBold(true);
 		CellStyle headerStyle = excel.createCellStyle();
 		headerStyle.setFont(headerFont);
 		Row headerRow = sh.createRow(0);
-		for(int i=0;i<columnHeadings.length;i++) {
+		for (int i = 0; i < columnHeadings.length; i++) {
 			Cell cell = headerRow.createCell(i);
 			cell.setCellValue(columnHeadings[i]);
 			cell.setCellStyle(headerStyle);
 		}
 		sh.createFreezePane(0, 1);
-		int rownum =1;
-		for(String[] lineData : lines) {
+		int rownum = 1;
+		for (String[] lineData : lines) {
 			Row row = sh.createRow(rownum++);
-			for(int i = 0;i<7; i++) {
+			for (int i = 0; i < 7; i++) {
 				row.createCell(i).setCellValue(lineData[i]);
 			}
 			row.createCell(8).setCellValue(lineData[7]);
 			row.createCell(9).setCellValue(lineData[8]);
 		}
-		for(int i=0;i<columnHeadings.length;i++) {
+		for (int i = 0; i < columnHeadings.length; i++) {
 			sh.autoSizeColumn(i);
 		}
-		FileOutputStream fileOut = new FileOutputStream("C:\\Users\\skarp\\teste.xlsx");
+		FileOutputStream fileOut = new FileOutputStream(path_exel);
 		excel.write(fileOut);
 		fileOut.close();
 		excel.close();
 		System.out.println("Completed");
 	}
-	
+
 	public void run() throws IOException {
-		Path p = Paths.get(path);
-		MetricsCalculator mc  = MetricsCalculator.getMetricsCalculatorInstance();
+		Path p = Paths.get(path_java);
+		MetricsCalculator mc = MetricsCalculator.getMetricsCalculatorInstance();
 		mc.run(p);
 		makeLines(mc);
-		writeToExcel();	
+		writeToExcel();
 	}
-	
+
 }
