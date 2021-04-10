@@ -17,6 +17,9 @@ import javax.swing.JLabel;
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.border.EtchedBorder;
@@ -26,6 +29,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EventObject;
 
 public class InterfaceMetricsStatistics extends JFrame {
 
@@ -34,9 +38,10 @@ public class InterfaceMetricsStatistics extends JFrame {
 	private JTable table_1;
 	
 	private JList packageJList;
-	private JList classJList;
-	private JList methodsJList;
-	private JList metricsJlist= new JList<String>();
+	private JList classJList= new JList<String>();
+	private JList methodsJList= new JList<String>();
+	private JList metricsClassJlist= new JList<String>();
+	private JList metricsMethodsJlist= new JList<String>();
 	private JList statisticsJlist;
 	
 	private String packageString;
@@ -45,7 +50,7 @@ public class InterfaceMetricsStatistics extends JFrame {
 
 	/**
 	 * Launch the application. */
-	 
+/*	 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -82,14 +87,17 @@ public class InterfaceMetricsStatistics extends JFrame {
 			}
 		});
 	}
-
+*/
 	/**
 	 * Create the frame.
 	 */
-	public InterfaceMetricsStatistics(JList packageJList, JList classJList, JList methodsJList, JList statisticsJlist) {
+	
+	
+	
+	public InterfaceMetricsStatistics(JList packageJList, JList classJList, JList statisticsJlist) {
 		this.packageJList = packageJList;
 		this.classJList = classJList;
-		this.methodsJList = methodsJList;
+		this.methodsJList = ListsToInterface.getListsToInterfaceInstance().getMethodsJList();
 		this.statisticsJlist = statisticsJlist;
 		
 		setTitle("Statistics");
@@ -114,7 +122,6 @@ public class InterfaceMetricsStatistics extends JFrame {
 		JScrollPane scrollPane_1 = new JScrollPane();
 		contentPane_Package.add(scrollPane_1);
 		
-		//JList list_1 = new JList();
 		scrollPane_1.setViewportView(packageJList);
 		
 //class JList		
@@ -131,7 +138,6 @@ public class InterfaceMetricsStatistics extends JFrame {
 		JScrollPane scrollPane_2 = new JScrollPane();
 		contentPane_Classes.add(scrollPane_2);
 		
-		//JList list_2 = new JList();
 		scrollPane_2.setViewportView(classJList);
 
 //methods JList
@@ -148,26 +154,36 @@ public class InterfaceMetricsStatistics extends JFrame {
 		JScrollPane scrollPane_3 = new JScrollPane();
 		contentPane_Methods.add(scrollPane_3);
 		
-		//JList list_3 = new JList();
-		scrollPane_3.setViewportView(methodsJList);
-//metrics JList		
+		JButton buttonShowMethods = new JButton("Show Methods");
+		contentPane_Methods.add(buttonShowMethods);
+		
+//metrics JList	
 		JPanel contentPane_Metrics = new JPanel();
 		contentPane.add(contentPane_Metrics);
 		contentPane_Metrics.setLayout(new BoxLayout(contentPane_Metrics, BoxLayout.Y_AXIS));
 		
-		JLabel lblNewLabel_4 = new JLabel("Metrics");
+	//class metrics
+		JLabel lblNewLabel_4 = new JLabel("Class Metrics");
 		lblNewLabel_4.setBackground(Color.WHITE);
 		lblNewLabel_4.setAlignmentX(0.5f);
 		contentPane_Metrics.add(lblNewLabel_4);
-		
+			
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane_Metrics.add(scrollPane);
+		scrollPane.setViewportView(metricsClassJlist);
 		
-		//JList metricsJlist = new JList();
-		scrollPane.setViewportView(metricsJlist);
+	//methods metrics	
+		JLabel lblNewLabel_41 = new JLabel("Method Metrics");
+		lblNewLabel_41.setBackground(Color.WHITE);
+		lblNewLabel_41.setAlignmentX(0.5f);
+		contentPane_Metrics.add(lblNewLabel_41);
 		
-		JButton buttonShow = new JButton("Show");
-		contentPane_Metrics.add(buttonShow);
+		JScrollPane scrollPane_methodsMetrics = new JScrollPane();
+		contentPane_Metrics.add(scrollPane_methodsMetrics);
+		scrollPane_methodsMetrics.setViewportView(metricsMethodsJlist);
+		
+		JButton buttonShowMetrics = new JButton("Show Metrics");
+		contentPane_Metrics.add(buttonShowMetrics);
 		
 //statistics JList		
 		JPanel panel_1 = new JPanel();
@@ -187,19 +203,39 @@ public class InterfaceMetricsStatistics extends JFrame {
 		JButton goBackButton = new JButton("Go Back");
 		panel_1.add(goBackButton);
 		
-//button actionListener
-		buttonShow.addActionListener(new ActionListener() {
+//buttonShowMetrics actionListener
+		buttonShowMetrics.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 if (packageJList.getSelectedIndex() != -1 && classJList.getSelectedIndex() != -1 &&  methodsJList.getSelectedIndex() != -1) {                       
-	                    packageString = (String) packageJList.getSelectedValue(); 
+System.out.println("show class metrics"); 
 	                    classString = (String) classJList.getSelectedValue(); 
-	                    methodsString = (String) methodsJList.getSelectedValue(); 
-	                 } 
-				 metricsJlist = ListsToInterface.getListsToInterfaceInstance().showClassMetrics(classString);
-
+	                    methodsString = (String) methodsJList.getSelectedValue();
+System.out.println("methodString: " + methodsString);	                    
+	                    metricsClassJlist = ListsToInterface.getListsToInterfaceInstance().showClassMetrics(classString);
+	                    scrollPane.setViewportView(metricsClassJlist);															
+	                    metricsMethodsJlist = ListsToInterface.getListsToInterfaceInstance().showMethodMetrics(classString,methodsString);
+	                    scrollPane_methodsMetrics.setViewportView(metricsMethodsJlist);
+//	                 }
+System.out.println("botão showMetrics premido");
 			}
 		}); 
+		
+//buttonShowMethods actionListener
+		buttonShowMethods.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 if (packageJList.getSelectedIndex() != -1 && classJList.getSelectedIndex() != -1) {
+	                    classString = (String) classJList.getSelectedValue();	                
+						JList<String> methodsJList_Temp= ListsToInterface.getListsToInterfaceInstance().showMethods(classString);
+						setMethodsJList(methodsJList_Temp);
+	                    scrollPane_3.setViewportView(methodsJList_Temp);
+	                 }
+			}
+		}); 
+		
+		
+		
 	}
 
-
+	public void setMethodsJList(JList methodsJList) {
+		this.methodsJList = methodsJList;
+	}
 }
