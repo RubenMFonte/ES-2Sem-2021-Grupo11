@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -14,6 +15,8 @@ import javax.swing.JTextArea;
 import java.awt.Color;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
+
+import com.github.javaparser.ast.CompilationUnit;
 
 public class IMetricsCalculator {
 
@@ -99,21 +102,33 @@ public class IMetricsCalculator {
 			public void actionPerformed(ActionEvent e) {
 				javaToExcel jte = new javaToExcel(text_path.getText());
 				if (!text_path.getText().equals("")) {
-					JFileChooser save_exel = new JFileChooser();
-					save_exel.setDialogTitle("Salvar ficheiro exel");
-//					save_exel.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-					int result = save_exel.showSaveDialog(null);
-					if (save_exel.getSelectedFile() == null) {
-						actionPerformed(e);
-					} else {
-						String exel_file = save_exel.getSelectedFile().getAbsolutePath();
-						jte.setPath_exel(exel_file);
-					}
 					try {
 						jte.run();
 					} catch (IOException e1) {
 						System.out.println("IOException");
-						// e1.printStackTrace();
+					}
+					if (jte.getMetricsCalculator().getCompilationUnits().size() == 0) {
+						popUp("O projeto selecionado não é um projeto Java. Por favor selecione um projeto Java");
+					} else {
+						JFileChooser save_exel = new JFileChooser();
+						save_exel.setDialogTitle("Salvar ficheiro exel");
+						int result = save_exel.showSaveDialog(null);
+						if (save_exel.getSelectedFile() == null) {
+							int dialogResult = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja cancelar a Execucao? O ficheiro Exel não será gravado!");
+							if (dialogResult == 0) {
+								return;
+							} else {
+								actionPerformed(e);;
+							}
+						} else {
+							String exel_file = save_exel.getSelectedFile().getAbsolutePath();
+							jte.setPath_exel(exel_file);
+							try {
+								jte.writeToExcel();
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+						}
 					}
 
 				} else {
@@ -123,9 +138,9 @@ public class IMetricsCalculator {
 		});
 
 	}
+
 	public void popUp(String popUp) {
 		JFrame parent = new JFrame();
-
-	    JOptionPane.showMessageDialog(parent, popUp);
+		JOptionPane.showMessageDialog(parent, popUp);
 	}
 }

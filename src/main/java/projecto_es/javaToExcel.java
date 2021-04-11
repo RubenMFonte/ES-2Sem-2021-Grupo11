@@ -29,6 +29,7 @@ public class javaToExcel {
 	private String path_java;
 	private ArrayList<String[]> lines;
 	private String path_exel;
+	private MetricsCalculator mc;
 
 	public String getPath_java() {
 		return path_java;
@@ -40,6 +41,10 @@ public class javaToExcel {
 
 	public String getPath_exel() {
 		return path_exel;
+	}
+	
+	public MetricsCalculator getMetricsCalculator() {
+		return this.mc;
 	}
 
 	public void setPath_exel(String path_exel) {
@@ -126,10 +131,10 @@ public class javaToExcel {
 
 	public void run() throws IOException {
 		Path p = Paths.get(path_java);
-		MetricsCalculator mc = MetricsCalculator.getMetricsCalculatorInstance();
+		mc = MetricsCalculator.getMetricsCalculatorInstance();
 		mc.run(p);
 		makeLines(mc);
-		writeToExcel();
+//		writeToExcel();
 	}
 
 }
