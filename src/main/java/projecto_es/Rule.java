@@ -6,8 +6,6 @@ import org.apache.poi.util.SystemOutLogger;
 
 public class Rule {
 	
-	private int id;
-	private boolean active;
 	//Este array é do formato ArrayList[(id),(active),(condition1),(logicalOperator),(condition2),...]
 	private ArrayList<String> list;
 	
@@ -16,8 +14,8 @@ public class Rule {
 	public Rule(String rule) {
 		list = new ArrayList<>();
 		String[] values = rule.split(":");
-		id = Integer.parseInt(values[0]);
-		active = Boolean.parseBoolean(values[1]);
+		list.add(values[0]);
+		list.add(values[1]);
 		LogicalOperator operator;
 		Condition condition;
 		for(int i = 2; i<values.length;i++) {
@@ -55,6 +53,18 @@ public class Rule {
 		return list.get(index*2+1);
 	}
 	
+	public String onlyConditions() {
+		String string = "";
+		for(int i = 2; i<list.size();i++) {
+			if(i%2==0) {
+				string = string + list.get(i);
+			}else{
+				string = string + ":" + list.get(i)+":";				
+			}
+		}
+		return string;
+	}
+	
 	@Override
 	public String toString() {
 		String string;
@@ -79,6 +89,7 @@ public class Rule {
 		String d = a+":"+"AND"+":"+b+":"+"OR"+":"+c;
 		Rule rule = new Rule(d);
 		System.out.println(rule.toString());
+		System.out.println(rule.onlyConditions());
 
 	}
 
