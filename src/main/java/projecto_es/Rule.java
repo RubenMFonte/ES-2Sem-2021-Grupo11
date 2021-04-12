@@ -35,23 +35,11 @@ public class Rule {
 		}
 	}
 
-
 	public void addCondition(LogicalOperator operator, Condition condition) {
 		list.add(operator.toString());
 		list.add(condition.toString());
 	}
 	
-	public ArrayList<String> getList() {
-		return list;
-	}
-	
-	public String getCondition(int index) {
-		return list.get(index*2);
-	}
-	
-	public String getLogicalOperator(int index){
-		return list.get(index*2+1);
-	}
 	
 	public String onlyConditions() {
 		String string = "";
@@ -64,6 +52,37 @@ public class Rule {
 		}
 		return string;
 	}
+	
+	public void changeID(int id) {
+		list.set(0,Integer.toString(id));
+	}
+	
+	public ArrayList<String> getList() {
+		return list;
+	}
+	
+	public int numberOfConditions() {
+		return (list.size()-1)/2;
+	}
+	
+	public String getCondition(int index) {
+		if(index<list.size())
+			return list.get(index*2);
+		else {
+			System.out.println("Erro: Index maior do que o tamanho da lista de condições");
+			return null;
+		}
+	}
+	
+	public String getLogicalOperator(int index){
+		if(index<list.size())
+			return list.get(index*2+1);
+		else {
+			System.out.println("Erro: Index maior do que o tamanho da lista de condições");
+			return null;
+		}
+	}
+	
 	
 	@Override
 	public String toString() {
@@ -81,15 +100,19 @@ public class Rule {
 	
 	
 	
-	//teste
+	//teste de exemplo
 	public static void main(String[] args) {
-		String a = "2:false:WMC_CLASS:LT:4";
+		String a = "0:false:WMC_CLASS:LT:4";
 		String b = "LOC_METHOD:EQ:6";
 		String c = "CYCLO_METHOD:GT:7";
 		String d = a+":"+"AND"+":"+b+":"+"OR"+":"+c;
 		Rule rule = new Rule(d);
 		System.out.println(rule.toString());
 		System.out.println(rule.onlyConditions());
+		System.out.println(rule.getCondition(2));
+		System.out.println(rule.numberOfConditions());
+		rule.changeID(2);
+		System.out.println(rule.toString());
 
 	}
 
