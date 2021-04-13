@@ -14,28 +14,23 @@ public class StaticFunctions {
 
 	
 	
-	public static Boolean saveRule( Boolean active, Enum metric, Enum numeric,int limit ,Enum logic, String fileName) throws IOException {
-		 File myObj = new File(fileName);
+	public static Boolean saveRule(Rule rule, File file) throws IOException {
 		 int cont=0;
-		 Scanner myReader = new Scanner(myObj);
+		 Scanner myReader = new Scanner(file);
 		 while (myReader.hasNextLine()) {
 		   String data = myReader.nextLine();
-		  // System.out.println(data);
 		   cont++;
 		 }
 		 myReader.close();	
-		
-		
-		
-		String rule = String.valueOf(cont+1)+":"+ String.valueOf(active)+":"+metric.toString()+":"+numeric.toString()+":"+String.valueOf(limit)+":"+logic.toString();
-		//System.out.println(rule);
-		if(rule==null|| rule.equals(" ")) {
+	
+		if(rule==null) {
 			return false;
 		}
+		rule.changeID(cont+1);
 		try {
-			FileWriter fileWriter = new FileWriter(fileName,true);
+			FileWriter fileWriter = new FileWriter(file,true);
 			PrintWriter out = new PrintWriter(fileWriter);		
-			out.println(rule);
+			out.println(rule.toString());
 			out.close();
 			
 		} catch (FileNotFoundException e) {
@@ -48,14 +43,19 @@ public class StaticFunctions {
 	
 	public static void main(String[] args) {
 		///EXEMPLO DE USO DA FUNÇÃO saveRule
-		try {
-		NumericOperator equal = NumericOperator.EQ;
-		LogicalOperator and= LogicalOperator.AND;
-		Metrics metric = Metrics.LOC_CLASS;
-			Boolean go=saveRule(true,metric,equal,2,and,"C:\\Users\\catar\\Desktop\\saveRule.txt");
+		try {		
+		String a = "0:false:WMC_CLASS:LT:4";
+		String b = "LOC_METHOD:EQ:6";
+		String c = "CYCLO_METHOD:GT:7";
+		String d = a+":"+"AND"+":"+b+":"+"OR"+":"+c;
+		String f = a+":"+"OR"+":"+b+":"+"OR"+":"+c;
+		Rule rule = new Rule(d);
+		Rule rule2 = new Rule (f);
+		File myObj = new File("C:\\Users\\catar\\Desktop\\saveRule.txt");
+			Boolean go=saveRule(rule,myObj);
 		//	System.out.print(go);
-			saveRule(false,metric,equal,5,and,"C:\\Users\\catar\\Desktop\\saveRule.txt");
-			 File myObj = new File("C:\\Users\\catar\\Desktop\\saveRule.txt");
+			saveRule(rule2,myObj);
+			 //File myObj = new File("C:\\Users\\catar\\Desktop\\saveRule.txt");
 			 Scanner myReader = new Scanner(myObj);
 			// System.out.print(myObj.getPath());
 			 while (myReader.hasNextLine()) {
@@ -71,3 +71,4 @@ public class StaticFunctions {
 		
 	}
 }
+
