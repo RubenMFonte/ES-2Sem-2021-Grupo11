@@ -36,7 +36,7 @@ import java.util.List;
 
 public class InterfaceMetricsStatistics extends JFrame {
 
-	public JList getPackageJList() {
+	public JList<String> getPackageJList() {
 		return packageJList;
 	}
 
@@ -44,31 +44,31 @@ public class InterfaceMetricsStatistics extends JFrame {
 		this.packageJList = packageJList;
 	}
 
-	public JList getClassJList() {
+	public JList<String> getClassJList() {
 		return classJList;
 	}
 
-	public void setClassJList(JList classJList) {
+	public void setClassJList(JList<String> classJList) {
 		this.classJList = classJList;
 	}
 
-	public JList getMetricsClassJlist() {
+	public JList<String> getMetricsClassJlist() {
 		return metricsClassJlist;
 	}
 
-	public void setMetricsClassJlist(JList metricsClassJlist) {
+	public void setMetricsClassJlist(JList<String> metricsClassJlist) {
 		this.metricsClassJlist = metricsClassJlist;
 	}
 
-	public JList getStatisticsJlist() {
+	public JList<String> getStatisticsJlist() {
 		return statisticsJlist;
 	}
 
-	public void setStatisticsJlist(JList statisticsJlist) {
+	public void setStatisticsJlist(JList<String> statisticsJlist) {
 		this.statisticsJlist = statisticsJlist;
 	}
 
-	public JList getMethodsJList() {
+	public JList<String> getMethodsJList() {
 		return methodsJList;
 	}
 
@@ -83,14 +83,14 @@ public class InterfaceMetricsStatistics extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private JTable table_1;
-
-	private JList packageJList;
-	private JList classJList = new JList<String>();
-	private JList methodsJList = new JList<String>();
-	private JList metricsClassJlist = new JList<String>();
-	private JList metricsMethodsJlist = new JList<String>();
-	private JList statisticsJlist;
-
+	
+	private JList<String> packageJList;
+	private JList<String> classJList= new JList<String>();
+	private JList<String> methodsJList= new JList<String>();
+	private JList<String> metricsClassJlist= new JList<String>();
+	private JList<String> metricsMethodsJlist= new JList<String>();
+	private JList<String> statisticsJlist;
+	
 	private String packageString;
 	private String classString;
 	private String methodsString;
@@ -98,12 +98,17 @@ public class InterfaceMetricsStatistics extends JFrame {
 
 	private String excelPath;
 	
-	List<ClassDataStructure> allClass;
+	private List<ClassDataStructure> allClass;
 	private GeneralStatistics statisticsGeneral;
 
 	/**
-	 * Launch the application.
-	 */
+	 * Launch the application. */
+	 
+	public static void main(String[] args) {
+		InterfaceMetricsStatistics i = new InterfaceMetricsStatistics();
+		i.setVisible(true);
+	}
+
 
 	/**
 	 * Create the frame.
@@ -132,7 +137,7 @@ public class InterfaceMetricsStatistics extends JFrame {
 		panel_2.add(panel_4);
 		
 		textField = new JTextField();
-		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setHorizontalAlignment(SwingConstants.LEFT);
 		textField.setColumns(50);
 		panel_4.add(textField);
 		
@@ -251,18 +256,22 @@ public class InterfaceMetricsStatistics extends JFrame {
 
 //buttonShowMetrics actionListener
 		buttonShowMetrics.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("show class metrics");
-				classString = (String) classJList.getSelectedValue();
-				methodsString = (String) methodsJList.getSelectedValue();
-				System.out.println("methodString: " + methodsString);
-				metricsClassJlist = ListsToInterface.getListsToInterfaceInstance().showClassMetrics(classString);
-				scrollPane.setViewportView(metricsClassJlist);
-				metricsMethodsJlist = ListsToInterface.getListsToInterfaceInstance().showMethodMetrics(classString,
-						methodsString);
-				scrollPane_methodsMetrics.setViewportView(metricsMethodsJlist);
-//	                 }
-				System.out.println("botão showMetrics premido");
+			public void actionPerformed(ActionEvent e) {					                
+				classString = (String) classJList.getSelectedValue();	
+				JList<String> methodsJList_Temp= ListsToInterface.getListsToInterfaceInstance().showMethods(classString);
+				Boolean EqualJLists = ListsToInterface.getListsToInterfaceInstance().compareTwoJLists(methodsJList_Temp, methodsJList);
+	                    
+	                    if(EqualJLists) {
+	                    	methodsString = (String) methodsJList.getSelectedValue();						
+						}else {
+							methodsString = "";
+							setMethodsJList(new JList<String>());
+						}
+	                    
+	                    metricsClassJlist = ListsToInterface.getListsToInterfaceInstance().showClassMetrics(classString);
+	                    scrollPane.setViewportView(metricsClassJlist);															
+	                    metricsMethodsJlist = ListsToInterface.getListsToInterfaceInstance().showMethodMetrics(classString,methodsString);
+	                    scrollPane_methodsMetrics.setViewportView(metricsMethodsJlist);
 			}
 		});
 
