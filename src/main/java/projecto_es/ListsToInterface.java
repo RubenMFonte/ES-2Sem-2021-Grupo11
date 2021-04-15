@@ -114,23 +114,28 @@ public class ListsToInterface {
 	}
 	
 	public JList<String> showMethodMetrics(String className, String methodName) {
-		DefaultListModel<String> metricsNamesList = new DefaultListModel<String>();
-		for(int i=0; i<this.dataList.size(); i++) {
-				if(dataList.get(i).getClassName().equals(className))
-					for(int j=0; i<dataList.get(i).getMethodDataStructureList().size(); j++) {
-						if(dataList.get(i).getMethodDataStructureList().get(j).getMethodName().equals(methodName)){
-							String loc_metric = "LOC_metric: " + dataList.get(i).getMethodDataStructureList().get(j).getLOCMetric();
-							String cyclo_method = "Cyclo_method: " + dataList.get(i).getMethodDataStructureList().get(j).getCYCLOMetric();
-							metricsNamesList.addElement(loc_metric);
-							metricsNamesList.addElement(cyclo_method);
-							break;
-						}else {
-							System.out.println("error showMethodMetrics");
+		if(methodName.equals("")) {
+			JList<String> methodsMetricsJList = new JList<String>();
+			return methodsMetricsJList;
+		}else {
+			DefaultListModel<String> metricsNamesList = new DefaultListModel<String>();
+			for(int i=0; i<this.dataList.size(); i++) {
+					if(dataList.get(i).getClassName().equals(className))
+						for(int j=0; i<dataList.get(i).getMethodDataStructureList().size(); j++) {
+							if(dataList.get(i).getMethodDataStructureList().get(j).getMethodName().equals(methodName)){
+								String loc_metric = "LOC_metric: " + dataList.get(i).getMethodDataStructureList().get(j).getLOCMetric();
+								String cyclo_method = "Cyclo_method: " + dataList.get(i).getMethodDataStructureList().get(j).getCYCLOMetric();
+								metricsNamesList.addElement(loc_metric);
+								metricsNamesList.addElement(cyclo_method);
+								break;
+							}else {
+								System.out.println("error showMethodMetrics");
+							}
 						}
-					}
+				}
+				JList<String> methodsMetricsJList = new JList<String>(metricsNamesList);
+				return methodsMetricsJList;
 		}
-		JList<String> classJList = new JList<String>(metricsNamesList);
-		return classJList;
 	}  
 	
 	public JList<String> showMethods(String className) {
@@ -148,6 +153,19 @@ public class ListsToInterface {
 			JList<String> methodsJList = new JList<String>(methodsNamesList);
 			return methodsJList;
 		}
+	
+	public boolean compareTwoJLists(JList<String> JL1, JList<String> JL2 ) {
+		if(JL1.getModel().getSize() == JL2.getModel().getSize()) {
+			for(int i=0; i<JL1.getModel().getSize(); i++) {
+				if(!(JL1.getModel().getElementAt(i).equals(JL1.getModel().getElementAt(i)))) {
+					return false;
+				}
+			}
+		}else {
+			return false;
+		}
+		return true;
+	}
 			
 
 }
