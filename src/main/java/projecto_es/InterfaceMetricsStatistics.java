@@ -109,11 +109,10 @@ public class InterfaceMetricsStatistics extends JFrame {
 		i.setVisible(true);
 	}
 
+
 	/**
 	 * Create the frame.
 	 */
-	
-	
 	
 	public InterfaceMetricsStatistics() {
 		this.packageJList = ListsToInterface.getListsToInterfaceInstance().getPackageJList();
@@ -156,36 +155,37 @@ public class InterfaceMetricsStatistics extends JFrame {
 		JPanel panel = new JPanel();
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(1, 5, 5, 5));
+
 //package JList		
 		JPanel contentPane_Package = new JPanel();
 		panel.add(contentPane_Package);
 		contentPane_Package.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		contentPane_Package.setLayout(new BoxLayout(contentPane_Package, BoxLayout.Y_AXIS));
-		
+
 		JLabel lblNewLabel_1 = new JLabel("Packages");
 		lblNewLabel_1.setAlignmentX(Component.CENTER_ALIGNMENT);
 		lblNewLabel_1.setBackground(Color.WHITE);
 		contentPane_Package.add(lblNewLabel_1);
-		
+
 		JScrollPane scrollPane_1 = new JScrollPane();
 		contentPane_Package.add(scrollPane_1);
-		
+
 		scrollPane_1.setViewportView(packageJList);
-		
+
 //class JList		
 		JPanel contentPane_Classes = new JPanel();
 		panel.add(contentPane_Classes);
 		contentPane_Classes.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		contentPane_Classes.setLayout(new BoxLayout(contentPane_Classes, BoxLayout.Y_AXIS));
-		
+
 		JLabel lblNewLabel_2 = new JLabel("Classes");
 		lblNewLabel_2.setAlignmentX(Component.CENTER_ALIGNMENT);
 		lblNewLabel_2.setBackground(Color.WHITE);
 		contentPane_Classes.add(lblNewLabel_2);
-		
+
 		JScrollPane scrollPane_2 = new JScrollPane();
 		contentPane_Classes.add(scrollPane_2);
-		
+
 		scrollPane_2.setViewportView(classJList);
 
 //methods JList
@@ -193,67 +193,66 @@ public class InterfaceMetricsStatistics extends JFrame {
 		panel.add(contentPane_Methods);
 		contentPane_Methods.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		contentPane_Methods.setLayout(new BoxLayout(contentPane_Methods, BoxLayout.Y_AXIS));
-		
+
 		JLabel lblNewLabel_3 = new JLabel("Methods");
 		lblNewLabel_3.setAlignmentX(Component.CENTER_ALIGNMENT);
 		lblNewLabel_3.setBackground(Color.WHITE);
 		contentPane_Methods.add(lblNewLabel_3);
-		
+
 		JScrollPane scrollPane_3 = new JScrollPane();
 		contentPane_Methods.add(scrollPane_3);
-		
+
 		JButton buttonShowMethods = new JButton("Show Methods");
 		buttonShowMethods.setAlignmentX(Component.CENTER_ALIGNMENT);
 		contentPane_Methods.add(buttonShowMethods);
-		
+
 //metrics JList	
 		JPanel contentPane_Metrics = new JPanel();
 		panel.add(contentPane_Metrics);
 		contentPane_Metrics.setLayout(new BoxLayout(contentPane_Metrics, BoxLayout.Y_AXIS));
-		
-	//class metrics
+
+		// class metrics
 		JLabel lblNewLabel_4 = new JLabel("Class Metrics");
 		lblNewLabel_4.setBackground(Color.WHITE);
 		lblNewLabel_4.setAlignmentX(0.5f);
 		contentPane_Metrics.add(lblNewLabel_4);
-		
+    
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane_Metrics.add(scrollPane);
 		scrollPane.setViewportView(metricsClassJlist);
-		
-	//methods metrics	
+
+		// methods metrics
 		JLabel lblNewLabel_41 = new JLabel("Method Metrics");
 		lblNewLabel_41.setBackground(Color.WHITE);
 		lblNewLabel_41.setAlignmentX(0.5f);
 		contentPane_Metrics.add(lblNewLabel_41);
-		
+
 		JScrollPane scrollPane_methodsMetrics = new JScrollPane();
 		contentPane_Metrics.add(scrollPane_methodsMetrics);
 		scrollPane_methodsMetrics.setViewportView(metricsMethodsJlist);
-		
+
 		JButton buttonShowMetrics = new JButton("Show Metrics");
 		buttonShowMetrics.setAlignmentX(Component.CENTER_ALIGNMENT);
 		contentPane_Metrics.add(buttonShowMetrics);
-		
+
 //statistics JList		
 		JPanel panel_1 = new JPanel();
 		panel.add(panel_1);
 		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
-		
+
 		JLabel lblNewLabel_4_1 = new JLabel("Statistics");
 		lblNewLabel_4_1.setBackground(Color.WHITE);
 		lblNewLabel_4_1.setAlignmentX(0.5f);
 		panel_1.add(lblNewLabel_4_1);
-		
+
 		JScrollPane scrollPane_4 = new JScrollPane();
 		panel_1.add(scrollPane_4);
-		
+
 		scrollPane_4.setViewportView(statisticsJlist);
-		
+
 		JButton goBackButton = new JButton("Go Back");
 		goBackButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel_1.add(goBackButton);
-		
 
 //buttonShowMetrics actionListener
 		buttonShowMetrics.addActionListener(new ActionListener() {
@@ -274,17 +273,18 @@ public class InterfaceMetricsStatistics extends JFrame {
 	                    metricsMethodsJlist = ListsToInterface.getListsToInterfaceInstance().showMethodMetrics(classString,methodsString);
 	                    scrollPane_methodsMetrics.setViewportView(metricsMethodsJlist);
 			}
-		}); 
-		
+		});
+
 //buttonShowMethods actionListener
 		buttonShowMethods.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 if (packageJList.getSelectedIndex() != -1 && classJList.getSelectedIndex() != -1) {
-	                    classString = (String) classJList.getSelectedValue();	                
-						JList<String> methodsJList_Temp= ListsToInterface.getListsToInterfaceInstance().showMethods(classString);
-						setMethodsJList(methodsJList_Temp);
-	                    scrollPane_3.setViewportView(methodsJList_Temp);
-	                 }
+				if (packageJList.getSelectedIndex() != -1 && classJList.getSelectedIndex() != -1) {
+					classString = (String) classJList.getSelectedValue();
+					JList<String> methodsJList_Temp = ListsToInterface.getListsToInterfaceInstance()
+							.showMethods(classString);
+					setMethodsJList(methodsJList_Temp);
+					scrollPane_3.setViewportView(methodsJList_Temp);
+				}
 			}
 		}); 
 		
@@ -323,8 +323,7 @@ public class InterfaceMetricsStatistics extends JFrame {
 					setVisible(true);
 				}
 			});
-		
-		
+	
 	}
 
 	public void setMethodsJList(JList methodsJList) {
