@@ -36,6 +36,10 @@ import java.util.List;
 
 public class InterfaceMetricsStatistics extends JFrame {
 
+	public void setTextField(JTextField textField) {
+		this.textField = textField;
+	}
+
 	public JList<String> getPackageJList() {
 		return packageJList;
 	}
@@ -105,8 +109,15 @@ public class InterfaceMetricsStatistics extends JFrame {
 	 * Launch the application. */
 	 
 	public static void main(String[] args) {
-		InterfaceMetricsStatistics i = new InterfaceMetricsStatistics();
-		i.setVisible(true);
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					InterfaceMetricsStatistics interfaceMetricasEstatisticas = new InterfaceMetricsStatistics();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 
@@ -115,6 +126,17 @@ public class InterfaceMetricsStatistics extends JFrame {
 	 */
 	
 	public InterfaceMetricsStatistics() {
+		initialize();
+		setVisible(true);
+	}
+	
+	public InterfaceMetricsStatistics(String excelPath) {
+		initialize();
+		setVisible(true);
+		textField.setText(excelPath);
+	}
+	
+	private void initialize() {
 		this.packageJList = ListsToInterface.getListsToInterfaceInstance().getPackageJList();
 		this.classJList = ListsToInterface.getListsToInterfaceInstance().getClassJList();
 		this.methodsJList = ListsToInterface.getListsToInterfaceInstance().getMethodsJList();

@@ -149,6 +149,7 @@ public class IMetricsCalculator {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				/*Correr interface do SA*/
+				InterfaceMetricsStatistics interfaceMetricasEstatisticas = new InterfaceMetricsStatistics(path_Exel.getText());
 			}
 		});
 	}
