@@ -177,9 +177,7 @@ public class MetricsCalculator {
 		    		String entry2 = getExtensionByStringHandling(entry.toString()).get();
 		    		if(entry2.equals("java")) {
 		    			CompilationUnit unit = parser.parse(entry.toFile()).getResult().get();
-		    			if(compilationUnits.add(unit)) {
-		    				System.out.println("Success!");
-		    			};
+		    			compilationUnits.add(unit);
 		    		}
 		    	}
 
