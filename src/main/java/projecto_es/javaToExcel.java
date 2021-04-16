@@ -42,12 +42,16 @@ public class javaToExcel {
 	public String getPath_exel() {
 		return path_exel;
 	}
-	
+
 	public MetricsCalculator getMetricsCalculator() {
 		return this.mc;
 	}
 
 	public void setPath_exel(String path_exel) {
+		this.path_exel = path_exel;
+	}
+
+	public void add_xslx(String path_exel) {
 		String extension = "";
 		for (int i = path_exel.length() - 5; i < path_exel.length(); i++) {
 			extension += path_exel.charAt(i);
@@ -113,7 +117,11 @@ public class javaToExcel {
 		int rownum = 1;
 		for (String[] lineData : lines) {
 			Row row = sh.createRow(rownum++);
-			for (int i = 0; i < 7; i++) {
+			row.createCell(0).setCellValue(lineData[0]);
+			if (lineData[1] == null)
+				lineData[1] = "Default Package";
+			row.createCell(1).setCellValue(lineData[1]);
+			for (int i = 2; i < 7; i++) {
 				row.createCell(i).setCellValue(lineData[i]);
 			}
 			row.createCell(8).setCellValue(lineData[7]);

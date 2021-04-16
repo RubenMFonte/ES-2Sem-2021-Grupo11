@@ -62,7 +62,7 @@ public class IMetricsCalculator {
 		frame.setBounds(100, 100, 625, 287);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		frame.setTitle("Selecionar Projeto");
+		frame.setTitle("Criar Exel com métricas");
 
 		path_Java = new JTextField();
 		path_Java.setBounds(116, 38, 390, 35);
@@ -111,7 +111,7 @@ public class IMetricsCalculator {
 	}
 
 	public void setExecutar_Button() {
-		b_executar = new JButton("Executar");
+		b_executar = new JButton("Salvar Exel");
 		b_executar.setBounds(116, 181, 147, 43);
 		frame.getContentPane().add(b_executar);
 
@@ -148,8 +148,12 @@ public class IMetricsCalculator {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				/*Correr interface do SA*/
-				InterfaceMetricsStatistics interfaceMetricasEstatisticas = new InterfaceMetricsStatistics(path_Exel.getText());
+				/* Correr interface do SA */
+				System.out.println("Minha interface: " + path_Exel.getText());
+				InterfaceMetricsStatistics ims = new InterfaceMetricsStatistics(
+						path_Exel.getText());
+				ims.getButtonShowStatistics().doClick();;			
+				frame.dispose();
 			}
 		});
 	}
@@ -162,6 +166,7 @@ public class IMetricsCalculator {
 	public void saveFile(javaToExcel jte) {
 		JFileChooser save_exel = new JFileChooser();
 		save_exel.setDialogTitle("Salvar ficheiro exel");
+		save_exel.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		int result = save_exel.showSaveDialog(null);
 		if (save_exel.getSelectedFile() == null) {
 			int dialogResult = JOptionPane.showConfirmDialog(null,
@@ -173,9 +178,11 @@ public class IMetricsCalculator {
 			}
 		} else {
 			String exel_file = save_exel.getSelectedFile().getAbsolutePath();
-			path_Exel.setText(exel_file);
+			exel_file += generate_nameFile(path_Java.getText());
+//			path_Exel.setText(exel_file);
 			show_Statistics.setEnabled(true);
 			jte.setPath_exel(exel_file);
+			path_Exel.setText(jte.getPath_exel());
 			try {
 				jte.writeToExcel();
 			} catch (IOException e1) {
@@ -183,4 +190,22 @@ public class IMetricsCalculator {
 			}
 		}
 	}
+
+	public String generate_nameFile(String project) {
+		boolean stop = false;
+		int i;
+		for (i = project.length() - 1; !stop; i--) {
+			if (project.charAt(i) == '\\') {
+				stop = true;
+				i++;
+			}
+		}
+		String name_exel = "";
+		for (int j = i; j < project.length(); j++) {
+			name_exel += project.charAt(j);
+		}
+		name_exel += "_metrics.xslx";
+		return name_exel;
+	}
+
 }
