@@ -381,8 +381,8 @@ public class InterfaceMetricsStatistics extends JFrame {
 //buttonShowCarateristics
 		goBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				IMenu window = new IMenu();
-//				window.frame.setVisible(true);
+			IMenu window = new IMenu();
+				window.frame.setVisible(true);
 				dispose();
 			}
 		});

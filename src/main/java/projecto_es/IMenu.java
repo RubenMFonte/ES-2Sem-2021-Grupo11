@@ -20,7 +20,7 @@ import java.awt.Font;
 public class IMenu {
 
 
-		private JFrame frame;
+		public JFrame frame;
 		private JButton create_excel;
 		private JButton show_statistics;
 		private JButton code_rules;
