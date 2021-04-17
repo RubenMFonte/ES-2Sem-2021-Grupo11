@@ -140,7 +140,6 @@ public class InterfaceMetricsStatistics extends JFrame {
 		initialize();
 		setVisible(true);
 		textField.setText(excelPath);
-		System.out.println("interface do sa: " + textField.getText());
 	}
 
 	private void initialize() {
@@ -148,8 +147,9 @@ public class InterfaceMetricsStatistics extends JFrame {
 		this.classJList = ListsToInterface.getListsToInterfaceInstance().getClassJList();
 		this.methodsJList = ListsToInterface.getListsToInterfaceInstance().getMethodsJList();
 //		this.statisticsJlist = ListsToInterface.getListsToInterfaceInstance().showGeneralMetrics(statisticsGeneral);
-
-		setTitle("Statistics");
+		
+		
+		setTitle("Visualizar Estatísticas");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 668, 438);
 
@@ -216,6 +216,10 @@ public class InterfaceMetricsStatistics extends JFrame {
 		contentPane_Classes.add(scrollPane_2);
 
 		scrollPane_2.setViewportView(classJList);
+		
+		JButton btnShowClasses = new JButton("Show Classes");
+		btnShowClasses.setAlignmentX(0.5f);
+		contentPane_Classes.add(btnShowClasses);
 
 //methods JList
 		JPanel contentPane_Methods = new JPanel();
@@ -307,6 +311,20 @@ public class InterfaceMetricsStatistics extends JFrame {
 			}
 		});
 
+//buttonShowClasses actionListener
+		btnShowClasses.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (packageJList.getSelectedIndex() != -1) {
+					packageString = (String)packageJList.getSelectedValue();
+					JList<String> classesJList_Temp = ListsToInterface.getListsToInterfaceInstance().showClasses(packageString);
+					setClassJList(classesJList_Temp);
+					scrollPane_2.setViewportView(classesJList_Temp);
+				}else {
+					System.out.println("error: Package not selected!");
+				}
+			}
+		});
+		
 //buttonShowMethods actionListener
 		buttonShowMethods.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -344,13 +362,12 @@ public class InterfaceMetricsStatistics extends JFrame {
 				setAllClass(ExcelToData.getallClass(textField.getText()));
 				ListsToInterface.getListsToInterfaceInstance().setDataList(allClass);
 				setPackageJList(ListsToInterface.getListsToInterfaceInstance().getPackageJList());
-				setClassJList(ListsToInterface.getListsToInterfaceInstance().getClassJList());
+				//setClassJList(ListsToInterface.getListsToInterfaceInstance().getClassJList());
 
 				scrollPane_1.setViewportView(packageJList);
-				scrollPane_2.setViewportView(classJList);
+				//scrollPane_2.setViewportView(classJList);
 				statisticsGeneral = new GeneralStatistics(allClass);
-				scrollPane_4.setViewportView(
-						ListsToInterface.getListsToInterfaceInstance().showGeneralMetrics(statisticsGeneral));
+				scrollPane_4.setViewportView(ListsToInterface.getListsToInterfaceInstance().showGeneralMetrics(statisticsGeneral));
 
 				// InterfaceMetricsStatistics i = new
 				// InterfaceMetricsStatistics(ListsToInterface.getListsToInterfaceInstance().getPackageJList(),
@@ -361,6 +378,15 @@ public class InterfaceMetricsStatistics extends JFrame {
 			}
 		});
 
+//buttonShowCarateristics
+		goBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				IMenu window = new IMenu();
+//				window.frame.setVisible(true);
+				dispose();
+			}
+		});
+		
 	}
 
 	public void setMethodsJList(JList methodsJList) {

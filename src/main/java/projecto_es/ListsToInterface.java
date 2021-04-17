@@ -57,14 +57,36 @@ public class ListsToInterface {
 //ligar ao clique dos packages	
 	public JList<String> getClassJList() {
 		DefaultListModel<String> listTemp = new DefaultListModel<String>();
+		List<String> tempListClasses = new ArrayList<String>();
 //criar string do package 		
 		for(int i=0; i<this.dataList.size(); i++) {
-			//if this.dataList.get(i).getpakacgename
-			listTemp.add(i, this.dataList.get(i).getClassName());
+			tempListClasses.add(this.dataList.get(i).getClassName());
 		}
+		
+		tempListClasses = tempListClasses.stream().distinct().collect(Collectors.toList());
+		for(int j=0; j<tempListClasses.size(); j++) {
+			listTemp.addElement(tempListClasses.get(j));
+		}
+		
 		JList<String> classJList = new JList<String>(listTemp);
 		return classJList;
 	}
+	
+	public JList<String> showClasses(String packageName) {
+		DefaultListModel<String> classesNamesList = new DefaultListModel<String>();
+		List<String> tempListClasses = new ArrayList<String>();
+		for(int i=0; i<this.dataList.size(); i++) {
+			if(dataList.get(i).getPackageName().equals(packageName)) {
+				tempListClasses.add(this.dataList.get(i).getClassName());
+			}
+		}
+		tempListClasses = tempListClasses.stream().distinct().collect(Collectors.toList());
+		for(int j=0; j<tempListClasses.size(); j++) {
+			classesNamesList.addElement(tempListClasses.get(j));
+		}
+		JList<String> classesJList = new JList<String>(classesNamesList);
+		return classesJList;
+		}
 	
 	public JList<String> getMethodsJList() {
 		DefaultListModel<String> listTemp = new DefaultListModel<String>();
@@ -105,8 +127,6 @@ public class ListsToInterface {
 				metricsNamesList.addElement(loc_metric);
 				metricsNamesList.addElement(nom_metric);
 				break;
-			}else {
-				System.out.println("error showClassMetrics");
 			}
 		}
 		JList<String> metricsJList = new JList<String>(metricsNamesList);
@@ -121,15 +141,13 @@ public class ListsToInterface {
 			DefaultListModel<String> metricsNamesList = new DefaultListModel<String>();
 			for(int i=0; i<this.dataList.size(); i++) {
 					if(dataList.get(i).getClassName().equals(className))
-						for(int j=0; i<dataList.get(i).getMethodDataStructureList().size(); j++) {
+						for(int j=0; j<dataList.get(i).getMethodDataStructureList().size(); j++) {
 							if(dataList.get(i).getMethodDataStructureList().get(j).getMethodName().equals(methodName)){
 								String loc_metric = "LOC_metric: " + dataList.get(i).getMethodDataStructureList().get(j).getLOCMetric();
 								String cyclo_method = "Cyclo_method: " + dataList.get(i).getMethodDataStructureList().get(j).getCYCLOMetric();
 								metricsNamesList.addElement(loc_metric);
 								metricsNamesList.addElement(cyclo_method);
 								break;
-							}else {
-								System.out.println("error showMethodMetrics");
 							}
 						}
 				}
@@ -146,8 +164,6 @@ public class ListsToInterface {
 					methodsNamesList.addElement(dataList.get(i).getMethodDataStructureList().get(j).getMethodName());
 				}
 					break;
-				}else {
-					System.out.println("error showMethods");
 				}
 			}
 			JList<String> methodsJList = new JList<String>(methodsNamesList);
