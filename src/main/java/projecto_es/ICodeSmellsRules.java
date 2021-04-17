@@ -56,6 +56,7 @@ public class ICodeSmellsRules {
 	 */
 	public ICodeSmellsRules() {
 		initialize();
+		frmCodeSmells.setVisible(true);
 	}
 
 	/**
