@@ -2,7 +2,8 @@ package projecto_es;
 import java.awt.EventQueue;
 	import java.awt.event.ActionEvent;
 	import java.awt.event.ActionListener;
-	import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 	import javax.swing.JButton;
 	import javax.swing.JFileChooser;
@@ -112,7 +113,12 @@ public class IMenu {
 				public void actionPerformed(ActionEvent e) {
 					/*Correr interface ICodeRules*/
 					frame.dispose();
-					ICodeSmellsRules windowCodeRules= new ICodeSmellsRules();
+					try {
+						ICodeSmellsRules windowCodeRules= new ICodeSmellsRules();
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					
 				}
 			});
