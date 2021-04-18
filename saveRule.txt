@@ -1,1 +1,4 @@
-1:false:LOC_CLASS:EQ:5:AND
+1:God_class:false:LOC_CLASS:EQ:5
+2:God_class:true:LOC_CLASS:EQ:5
+3:God_class:false:WMC_CLASS:LT:4:AND:LOC_METHOD:EQ:6:OR:CYCLO_METHOD:GT:7
+4:God_class:false:LOC_CLASS:EQ:5
