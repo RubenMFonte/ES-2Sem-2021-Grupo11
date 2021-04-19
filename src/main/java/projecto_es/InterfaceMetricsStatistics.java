@@ -329,7 +329,8 @@ public class InterfaceMetricsStatistics extends JFrame {
 					methodsString = "";
 					setMethodsJList(new JList<String>());
 				}
-				
+				scrollPane_2.setViewportView(classJList);
+				scrollPane_3.setViewportView(methodsJList);
 				metricsClassJlist = ListsToInterface.getListsToInterfaceInstance().showClassMetrics(classString);
 				scrollPane.setViewportView(metricsClassJlist);
 				metricsMethodsJlist = ListsToInterface.getListsToInterfaceInstance().showMethodMetrics(classString,
