@@ -93,7 +93,7 @@ public class InterfaceMetricsStatistics extends JFrame {
 	private JList<String> methodsJList = new JList<String>();
 	private JList<String> metricsClassJlist = new JList<String>();
 	private JList<String> metricsMethodsJlist = new JList<String>();
-	private JList<String> statisticsJlist;
+	private JList<String> statisticsJlist = new JList<String>();
 
 	private String packageString;
 	private String classString;
@@ -234,6 +234,8 @@ public class InterfaceMetricsStatistics extends JFrame {
 
 		JScrollPane scrollPane_3 = new JScrollPane();
 		contentPane_Methods.add(scrollPane_3);
+		
+		scrollPane_3.setViewportView(methodsJList);
 
 		JButton buttonShowMethods = new JButton("Show Methods");
 		buttonShowMethods.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -282,27 +284,52 @@ public class InterfaceMetricsStatistics extends JFrame {
 		panel_1.add(scrollPane_4);
 
 		scrollPane_4.setViewportView(statisticsJlist);
-
-		JButton goBackButton = new JButton("Go Back");
-		goBackButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panel_1.add(goBackButton);
+				
+				JPanel panel_5 = new JPanel();
+				FlowLayout flowLayout = (FlowLayout) panel_5.getLayout();
+				flowLayout.setAlignment(FlowLayout.LEFT);
+				contentPane.add(panel_5);
+		
+				JButton goBackButton = new JButton("<");
+				panel_5.add(goBackButton);
+				goBackButton.setHorizontalAlignment(SwingConstants.LEFT);
+				
+				//goBackButton
+						goBackButton.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+							IMenu window = new IMenu();
+								window.frame.setVisible(true);
+								dispose();
+							}
+						});
 
 //buttonShowMetrics actionListener
 		buttonShowMetrics.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				classString = (String) classJList.getSelectedValue();
-				JList<String> methodsJList_Temp = ListsToInterface.getListsToInterfaceInstance()
-						.showMethods(classString);
-				Boolean EqualJLists = ListsToInterface.getListsToInterfaceInstance().compareTwoJLists(methodsJList_Temp,
-						methodsJList);
-
-				if (EqualJLists) {
-					methodsString = (String) methodsJList.getSelectedValue();
+			//	String packageString_old = packageString;
+				packageString = (String) packageJList.getSelectedValue();
+				
+				JList<String> classJList_Temp = ListsToInterface.getListsToInterfaceInstance().showClasses(packageString);
+				Boolean EqualJLists_classes = ListsToInterface.getListsToInterfaceInstance().compareTwoJLists(classJList_Temp,classJList);
+				
+				if (EqualJLists_classes) {
+					classString = (String) classJList.getSelectedValue();
+					JList<String> methodsJList_Temp = ListsToInterface.getListsToInterfaceInstance().showMethods(classString);
+					Boolean EqualJLists_methods = ListsToInterface.getListsToInterfaceInstance().compareTwoJLists(methodsJList_Temp,
+							methodsJList);
+					if (EqualJLists_methods) {
+						methodsString = (String) methodsJList.getSelectedValue();
+					} else {
+						methodsString = "";
+						setMethodsJList(new JList<String>());
+					}
 				} else {
+					classString = "";
+					setClassJList(new JList<String>());
 					methodsString = "";
 					setMethodsJList(new JList<String>());
 				}
-
+				
 				metricsClassJlist = ListsToInterface.getListsToInterfaceInstance().showClassMetrics(classString);
 				scrollPane.setViewportView(metricsClassJlist);
 				metricsMethodsJlist = ListsToInterface.getListsToInterfaceInstance().showMethodMetrics(classString,
@@ -375,15 +402,6 @@ public class InterfaceMetricsStatistics extends JFrame {
 				// ListsToInterface.getListsToInterfaceInstance().showGeneralMetrics(statisticsGeneral)
 				// );
 				setVisible(true);
-			}
-		});
-
-//buttonShowCarateristics
-		goBackButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			IMenu window = new IMenu();
-				window.frame.setVisible(true);
-				dispose();
 			}
 		});
 		
