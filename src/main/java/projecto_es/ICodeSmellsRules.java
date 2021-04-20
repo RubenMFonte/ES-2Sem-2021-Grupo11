@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagConstraints;
 import javax.swing.JTextPane;
 import java.awt.Insets;
@@ -45,6 +47,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.ListSelectionModel;
 
 public class ICodeSmellsRules {
 
@@ -56,8 +59,8 @@ public class ICodeSmellsRules {
 	private JButton export;
 	private JButton activateRule;
 	private JList codeSmells;
-	private JScrollPane scrollPane;
-	private JScrollPane scrollPane_1;
+	private JScrollPane rulesScrollPane;
+	private JScrollPane activatedRuleScrollPane;
 	private JLabel labelCodeSmellsDisp;
 	private JLabel ruleHistory;
 	private JLabel activeRule;
@@ -135,9 +138,9 @@ public class ICodeSmellsRules {
 		codeSmells.setBorder(new LineBorder(new Color(0, 0, 0)));
 		codeSmells.setSelectedIndex(0);
 
-		scrollPane = new JScrollPane();
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane_1 = new JScrollPane();
+		rulesScrollPane = new JScrollPane();
+		rulesScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		activatedRuleScrollPane = new JScrollPane();
 
 		labelCodeSmellsDisp = new JLabel("Code Smells disponiveis");
 		labelCodeSmellsDisp.setFont(new Font("Arial", Font.PLAIN, 17));
@@ -162,7 +165,22 @@ public class ICodeSmellsRules {
 		createTable(allRules);
 		createActivedRule(null);
 
+		String[] columnNames = { "Regra", "Condição" };
+		String[][] activeRule = new String[1][2];
+		for (int i = 0; i < allRules.size(); i++) {
+			if (allRules.get(i).isActive())
+				activeRule[0][0] = allRules.get(i).getID();
+			activeRule[0][1] = allRules.get(i).onlyConditions();
+		}
+		activatedRule = new JTable(activeRule, columnNames);
+		activatedRule.setFillsViewportHeight(true);
+		activatedRuleScrollPane.setViewportView(activatedRule);
+		rulesScrollPane.setViewportView(rules);
+
+
 		selectAction();
+		createRule();
+		editRule();
 	}
 
 //	public List<Integer> filterRule(String codeSmell) {
@@ -191,12 +209,13 @@ public class ICodeSmellsRules {
 			allRulesJT[i][1] = rulesList.get(i).onlyConditions();
 		}
 		rules = new JTable(allRulesJT, columnNames);
+		rules.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		rules.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		rules.setFillsViewportHeight(true);
 		rules.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 //		printRows();
-		scrollPane.setViewportView(rules);
+		rulesScrollPane.setViewportView(rules);
 
 	}
 
@@ -213,7 +232,7 @@ public class ICodeSmellsRules {
 		activatedRule = new JTable(activeRule,columnNames);
 		activatedRule.setEnabled(false);
 		activatedRule.setFillsViewportHeight(true);
-		scrollPane_1.setViewportView(activatedRule);
+		activatedRuleScrollPane.setViewportView(activatedRule);
 	}
 
 	public void printRows() {
@@ -262,8 +281,8 @@ public class ICodeSmellsRules {
 						.addGap(18))
 						.addComponent(activeRule, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE))
 				.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE))
+						.addComponent(activatedRuleScrollPane, GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
+						.addComponent(rulesScrollPane, GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE))
 				.addPreferredGap(ComponentPlacement.UNRELATED)
 				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(newRule, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE)
@@ -289,9 +308,9 @@ public class ICodeSmellsRules {
 												GroupLayout.PREFERRED_SIZE)
 										.addGap(500).addComponent(export, GroupLayout.PREFERRED_SIZE, 23,
 												GroupLayout.PREFERRED_SIZE))
-								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE)).addGap(18)
+								.addComponent(rulesScrollPane, GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE)).addGap(18)
 								.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-										.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 48,
+										.addComponent(activatedRuleScrollPane, GroupLayout.PREFERRED_SIZE, 48,
 												GroupLayout.PREFERRED_SIZE)
 										.addComponent(activateRule, GroupLayout.PREFERRED_SIZE, 23,
 												GroupLayout.PREFERRED_SIZE))
@@ -300,4 +319,39 @@ public class ICodeSmellsRules {
 
 		frmCodeSmells.getContentPane().setLayout(groupLayout);
 	}
+
+	public void popUp(String popUp) {
+		JFrame parent = new JFrame();
+		JOptionPane.showMessageDialog(parent, popUp);
+	}
+	
+	public void createRule() {
+		newRule.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(codeSmells.getSelectedIndex()>0) {
+					String codeSmell = allCodeSmells.get(codeSmells.getSelectedIndex());
+					frmCodeSmells.dispose();
+//					IDetetionParameters frame = new IDetetionParameters(codeSmell);
+				}else popUp("Escolha um Code Smell antes de criar uma regra.");
+			}
+		});
+		
+	}
+	
+	public void editRule() {
+		editRule.addActionListener(new ActionListener () {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(rules.getSelectedRow()>-1) {
+					Rule rule = allRules.get(rules.getSelectedRow());
+					frmCodeSmells.dispose();
+//					IDetetionParameters frame = new IDetetionParameters(rule);
+				}else popUp("Escolha a regra que pretende editar.");
+				
+			}
+			
+		});
+	}	
 }
