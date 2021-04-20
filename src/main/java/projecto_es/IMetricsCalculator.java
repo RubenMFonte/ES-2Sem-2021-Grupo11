@@ -223,7 +223,7 @@ public class IMetricsCalculator {
 		for (int j = i; j < project.length(); j++) {
 			name_exel += project.charAt(j);
 		}
-		name_exel += "_metrics.xslx";
+		name_exel += "_metrics.xlsx";
 		return name_exel;
 	}
 

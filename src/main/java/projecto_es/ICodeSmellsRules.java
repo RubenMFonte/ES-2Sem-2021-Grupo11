@@ -53,7 +53,6 @@ public class ICodeSmellsRules {
 	private JButton editRule;
 	private JButton export;
 	private JButton activateRule;
-	private JButton filter;
 	private JList codeSmells;
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
@@ -155,11 +154,9 @@ public class ICodeSmellsRules {
 
 		activeRule = new JLabel("Regra Activa:");
 		activeRule.setFont(new Font("Arial", Font.PLAIN, 24));
-		
-		setFilterButton();
-		
-//		draw();
-		
+
+		draw();
+
 		createTable(allRules);
 		String[] columnNames = { "Regra", "Condição" };
 		String[][] activeRule = new String[1][2];
@@ -184,7 +181,7 @@ public class ICodeSmellsRules {
 //		}
 //		return listFiltered;
 //	}
-	
+
 	public List<Rule> filterRule(String codeSmell) {
 		List<Rule> listFiltered = new ArrayList<>();
 		for (int i = 0; i < allRules.size(); i++) {
@@ -204,18 +201,17 @@ public class ICodeSmellsRules {
 		rules = new JTable(allRulesJT, columnNames);
 		rules.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		rules.setFillsViewportHeight(true);
-		printRows();;
-		frmCodeSmells.add(rules);
-		System.out.println("add");
-		draw();
-//		frmCodeSmells.add(rules);
+//		printRows();
+		scrollPane.setViewportView(rules);
+
 	}
-	
+
 	public void printRows() {
-		for(int i = 0; i < rules.getRowCount(); i++) {
+		for (int i = 0; i < rules.getRowCount(); i++) {
 			System.out.println("linha " + i + " = " + rules.getValueAt(i, 0) + ":" + rules.getValueAt(i, 1));
 		}
 	}
+
 	public void selectAction() {
 		codeSmells.addListSelectionListener(new ListSelectionListener() {
 
@@ -224,95 +220,62 @@ public class ICodeSmellsRules {
 				System.out.println("to aqui");
 				int index = codeSmells.getSelectedIndex();
 				String cs = allCodeSmells.get(index);
-				createTable(filterRule(cs));
+				if(cs.equals("All"))
+					createTable(allRules);
+				else
+					createTable(filterRule(cs));
 			}
 		});
 		;
 	}
- 
-	public void setFilterButton() {
-		filter = new JButton("filtrar");
-		
-//		filter.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				System.out.println("to aqui");
-//				int index = codeSmells.getSelectedIndex();
-//				String cs = allCodeSmells.get(index);
-//				updateTable(filterRule(cs));
-//				System.out.println(filterRule(cs));
-//				
-//			}
-//		});
-	}
-	
+
 	public void draw() {
 		GroupLayout groupLayout = new GroupLayout(frmCodeSmells.getContentPane());
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(23)
-							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(labelCodeSmellsDisp)
-										.addComponent(codeSmells, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE))
-									.addGap(18))
-								.addComponent(activeRule, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(34)
-							.addComponent(filter)))
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
+				.createSequentialGroup().addGap(23)
+				.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
+						.createSequentialGroup()
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(labelCodeSmellsDisp)
+								.addComponent(codeSmells, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE))
+						.addGap(18))
+						.addComponent(activeRule, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
 						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+				.addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(newRule, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE)
 						.addComponent(editRule, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE)
 						.addComponent(export, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE)
 						.addComponent(activateRule, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap())
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(592, Short.MAX_VALUE)
-					.addComponent(ruleHistory, GroupLayout.PREFERRED_SIZE, 159, GroupLayout.PREFERRED_SIZE)
-					.addGap(345))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(6)
-					.addComponent(ruleHistory)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(labelCodeSmellsDisp, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(codeSmells, GroupLayout.PREFERRED_SIZE, 496, GroupLayout.PREFERRED_SIZE)
-							.addGap(28)
-							.addComponent(filter)
-							.addGap(72)
-							.addComponent(activeRule)
-							.addGap(10))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(newRule)
-									.addGap(18)
-									.addComponent(editRule, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-									.addGap(500)
-									.addComponent(export, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE))
-							.addGap(18)
-							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
-								.addComponent(activateRule, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED)))
-					.addGap(45))
-		);
-		
+				.addContainerGap())
+				.addGroup(groupLayout.createSequentialGroup().addContainerGap(592, Short.MAX_VALUE)
+						.addComponent(ruleHistory, GroupLayout.PREFERRED_SIZE, 159, GroupLayout.PREFERRED_SIZE)
+						.addGap(345)));
+		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
+				.createSequentialGroup().addGap(6).addComponent(ruleHistory).addPreferredGap(ComponentPlacement.RELATED)
+				.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
+						.createSequentialGroup()
+						.addComponent(labelCodeSmellsDisp, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(codeSmells, GroupLayout.PREFERRED_SIZE, 496, GroupLayout.PREFERRED_SIZE)
+						.addGap(121).addComponent(activeRule).addGap(10))
+						.addGroup(groupLayout.createSequentialGroup().addGroup(groupLayout
+								.createParallelGroup(Alignment.TRAILING)
+								.addGroup(groupLayout.createSequentialGroup().addComponent(newRule).addGap(18)
+										.addComponent(editRule, GroupLayout.PREFERRED_SIZE, 23,
+												GroupLayout.PREFERRED_SIZE)
+										.addGap(500).addComponent(export, GroupLayout.PREFERRED_SIZE, 23,
+												GroupLayout.PREFERRED_SIZE))
+								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE)).addGap(18)
+								.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+										.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 48,
+												GroupLayout.PREFERRED_SIZE)
+										.addComponent(activateRule, GroupLayout.PREFERRED_SIZE, 23,
+												GroupLayout.PREFERRED_SIZE))
+								.addPreferredGap(ComponentPlacement.RELATED)))
+				.addGap(45)));
+
 		frmCodeSmells.getContentPane().setLayout(groupLayout);
 		frmCodeSmells.repaint();
 		System.out.println("drawed");
