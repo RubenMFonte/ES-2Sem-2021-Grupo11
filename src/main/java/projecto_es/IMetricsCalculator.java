@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 
 import com.github.javaparser.ast.CompilationUnit;
 import javax.swing.JLabel;
+import java.awt.Font;
 
 public class IMetricsCalculator {
 
@@ -60,6 +61,7 @@ public class IMetricsCalculator {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 10));
 		frame.setBounds(100, 100, 684, 219);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -94,6 +96,7 @@ public class IMetricsCalculator {
 
 	public void setSelecionarProjeto_Button() {
 		select_file = new JButton("Selecionar Projeto");
+		select_file.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		select_file.setBounds(516, 38, 119, 35);
 		frame.getContentPane().add(select_file);
 		select_file.addActionListener(new ActionListener() {
@@ -114,6 +117,7 @@ public class IMetricsCalculator {
 
 	public void setExecutar_Button() {
 		b_executar = new JButton("Salvar Exel");
+		b_executar.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		b_executar.setBounds(516, 83, 119, 35);
 		frame.getContentPane().add(b_executar);
 
@@ -143,6 +147,7 @@ public class IMetricsCalculator {
 
 	public void setShowStatisitcs_Button() {
 		show_Statistics = new JButton("Ver Estatisiticas");
+		show_Statistics.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		show_Statistics.setBounds(516, 128, 119, 35);
 		frame.getContentPane().add(show_Statistics);
 		show_Statistics.setEnabled(false);

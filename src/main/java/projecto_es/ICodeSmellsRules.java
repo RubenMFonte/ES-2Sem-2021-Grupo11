@@ -21,6 +21,8 @@ import javax.swing.UIManager;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ListSelectionModel;
+
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -158,17 +160,7 @@ public class ICodeSmellsRules {
 		draw();
 
 		createTable(allRules);
-		String[] columnNames = { "Regra", "Condição" };
-		String[][] activeRule = new String[1][2];
-		for (int i = 0; i < allRules.size(); i++) {
-			if (allRules.get(i).isActive())
-				activeRule[0][0] = allRules.get(i).getID();
-			activeRule[0][1] = allRules.get(i).onlyConditions();
-		}
-		activatedRule = new JTable(activeRule, columnNames);
-		activatedRule.setFillsViewportHeight(true);
-		scrollPane_1.setViewportView(activatedRule);
-		scrollPane.setViewportView(rules);
+		createActivedRule(null);
 
 		selectAction();
 	}
@@ -201,9 +193,27 @@ public class ICodeSmellsRules {
 		rules = new JTable(allRulesJT, columnNames);
 		rules.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		rules.setFillsViewportHeight(true);
+		rules.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
 //		printRows();
 		scrollPane.setViewportView(rules);
 
+	}
+
+	public void createActivedRule(Rule rule) {
+		String[] columnNames = { "Regra", "Condição" };
+		String[][] activeRule = new String[1][2];
+		if (rule == null) {
+			activeRule[0][0] = "Selecione um CodeSmell";
+			activeRule[0][1] = "";
+		} else {
+			activeRule[0][0] = rule.getID();
+			activeRule[0][1] = rule.onlyConditions();
+		}
+		activatedRule = new JTable(activeRule,columnNames);
+		activatedRule.setEnabled(false);
+		activatedRule.setFillsViewportHeight(true);
+		scrollPane_1.setViewportView(activatedRule);
 	}
 
 	public void printRows() {
@@ -217,16 +227,28 @@ public class ICodeSmellsRules {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				System.out.println("to aqui");
 				int index = codeSmells.getSelectedIndex();
 				String cs = allCodeSmells.get(index);
-				if(cs.equals("All"))
+				List<Rule> list_CS = filterRule(cs);
+				if (cs.equals("All")) {
 					createTable(allRules);
-				else
-					createTable(filterRule(cs));
+					createActivedRule(null);
+				} else {
+					createTable(list_CS);
+					createActivedRule(findActiveCodeSmell(list_CS));
+				}
+
 			}
 		});
 		;
+	}
+
+	public Rule findActiveCodeSmell(List<Rule> filterRule) {
+		for (int i = 0; i < filterRule.size(); i++) {
+			if (filterRule.get(i).isActive() == true)
+				return filterRule.get(i);
+		}
+		return null;
 	}
 
 	public void draw() {
@@ -277,7 +299,5 @@ public class ICodeSmellsRules {
 				.addGap(45)));
 
 		frmCodeSmells.getContentPane().setLayout(groupLayout);
-		frmCodeSmells.repaint();
-		System.out.println("drawed");
 	}
 }

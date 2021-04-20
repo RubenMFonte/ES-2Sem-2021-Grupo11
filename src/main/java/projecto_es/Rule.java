@@ -93,7 +93,7 @@ public class Rule {
 			return null;
 		}
 	}
-
+	
 	public String getCodeSmell() {
 		return list.get(1);
 	}
