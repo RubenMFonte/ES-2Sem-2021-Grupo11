@@ -64,8 +64,11 @@ public class Rule {
 		return Boolean.parseBoolean(list.get(2));
 	}
 
-	public void activateRule() {
-
+	public void switchActive() {
+		if(list.get(2).equals("true")) {
+			list.set(2, "false");
+		}
+		list.set(2, "true");
 	}
 
 	public ArrayList<String> getList() {
@@ -130,5 +133,4 @@ public class Rule {
 		System.out.println(rule.toString());
 
 	}
-
 }

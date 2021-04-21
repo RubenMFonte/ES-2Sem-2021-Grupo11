@@ -26,8 +26,12 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
 
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -56,8 +60,8 @@ public class ICodeSmellsRules {
 	private JTable activatedRule;
 	private JButton newRule;
 	private JButton editRule;
-	private JButton export;
 	private JButton activateRule;
+	private JButton goBack;
 	private JList codeSmells;
 	private JScrollPane rulesScrollPane;
 	private JScrollPane activatedRuleScrollPane;
@@ -66,6 +70,7 @@ public class ICodeSmellsRules {
 	private JLabel activeRule;
 	private List<Rule> allRules;
 	private List<String> allCodeSmells;
+	private List<Rule> rulesOnDisplay;
 
 	/**
 	 * Launch the application.
@@ -89,14 +94,7 @@ public class ICodeSmellsRules {
 	 * @throws FileNotFoundException
 	 */
 	public ICodeSmellsRules() throws FileNotFoundException {
-		allRules = new ArrayList<>();
-		File saveRule = new File("saveRule.txt");
-		Scanner myReader = new Scanner(saveRule);
-		while (myReader.hasNextLine()) {
-			String data = myReader.nextLine();
-			allRules.add(new Rule(data));
-		}
-		myReader.close();
+		updateRules();
 		initialize();
 		frmCodeSmells.setVisible(true);
 	}
@@ -148,9 +146,6 @@ public class ICodeSmellsRules {
 		editRule = new JButton("Editar Regra");
 		editRule.setFont(new Font("Arial", Font.PLAIN, 12));
 
-		export = new JButton("Exportar");
-		export.setFont(new Font("Arial", Font.PLAIN, 12));
-
 		activateRule = new JButton("Activar regra");
 		activateRule.setFont(new Font("Arial", Font.PLAIN, 12));
 
@@ -159,39 +154,27 @@ public class ICodeSmellsRules {
 
 		activeRule = new JLabel("Regra Activa:");
 		activeRule.setFont(new Font("Arial", Font.PLAIN, 24));
-
 		draw();
-
 		createTable(allRules);
 		createActivedRule(null);
-
-		String[] columnNames = { "Regra", "Condição" };
-		String[][] activeRule = new String[1][2];
-		for (int i = 0; i < allRules.size(); i++) {
-			if (allRules.get(i).isActive())
-				activeRule[0][0] = allRules.get(i).getID();
-			activeRule[0][1] = allRules.get(i).onlyConditions();
-		}
-		activatedRule = new JTable(activeRule, columnNames);
-		activatedRule.setFillsViewportHeight(true);
-		activatedRuleScrollPane.setViewportView(activatedRule);
-		rulesScrollPane.setViewportView(rules);
-
-
 		selectAction();
 		createRule();
 		editRule();
+		activatedRule();
+		goBack();
 	}
 
-//	public List<Integer> filterRule(String codeSmell) {
-//		List<Integer> listFiltered = new ArrayList<>();
-//		for (int i = 0; i < allRules.size(); i++) {
-//			if (allRules.get(i).getCodeSmell().equals(codeSmell))
-//				listFiltered.add(Integer.parseInt(allRules.get(i).getID()));
-//		}
-//		return listFiltered;
-//	}
-
+	public void updateRules() throws FileNotFoundException {
+		allRules = new ArrayList<>();
+		File saveRule = new File("saveRule.txt");
+		Scanner myReader = new Scanner(saveRule);
+		while (myReader.hasNextLine()) {
+			String data = myReader.nextLine();
+			allRules.add(new Rule(data));
+		}
+		myReader.close();
+	}
+	
 	public List<Rule> filterRule(String codeSmell) {
 		List<Rule> listFiltered = new ArrayList<>();
 		for (int i = 0; i < allRules.size(); i++) {
@@ -211,10 +194,7 @@ public class ICodeSmellsRules {
 		rules = new JTable(allRulesJT, columnNames);
 		rules.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		rules.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		rules.setFillsViewportHeight(true);
 		rules.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-//		printRows();
 		rulesScrollPane.setViewportView(rules);
 
 	}
@@ -248,13 +228,14 @@ public class ICodeSmellsRules {
 			public void valueChanged(ListSelectionEvent e) {
 				int index = codeSmells.getSelectedIndex();
 				String cs = allCodeSmells.get(index);
-				List<Rule> list_CS = filterRule(cs);
+//				List<Rule> list_CS = filterRule(cs);
+				rulesOnDisplay = filterRule(cs);
 				if (cs.equals("All")) {
 					createTable(allRules);
 					createActivedRule(null);
 				} else {
-					createTable(list_CS);
-					createActivedRule(findActiveCodeSmell(list_CS));
+					createTable(rulesOnDisplay);
+					createActivedRule(findActiveCodeSmell(rulesOnDisplay));
 				}
 
 			}
@@ -271,51 +252,70 @@ public class ICodeSmellsRules {
 	}
 
 	public void draw() {
+		
+		goBack = new JButton("<");
+		goBack.setFont(new Font("Arial", Font.PLAIN, 12));
 		GroupLayout groupLayout = new GroupLayout(frmCodeSmells.getContentPane());
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
-				.createSequentialGroup().addGap(23)
-				.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
-						.createSequentialGroup()
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(labelCodeSmellsDisp)
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(23)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(labelCodeSmellsDisp)
 								.addComponent(codeSmells, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE))
-						.addGap(18))
+							.addGap(18))
 						.addComponent(activeRule, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE))
-				.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addComponent(activatedRuleScrollPane, GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
 						.addComponent(rulesScrollPane, GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE))
-				.addPreferredGap(ComponentPlacement.UNRELATED)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(newRule, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE)
 						.addComponent(editRule, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE)
-						.addComponent(export, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE)
 						.addComponent(activateRule, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE))
-				.addContainerGap())
-				.addGroup(groupLayout.createSequentialGroup().addContainerGap(592, Short.MAX_VALUE)
-						.addComponent(ruleHistory, GroupLayout.PREFERRED_SIZE, 159, GroupLayout.PREFERRED_SIZE)
-						.addGap(345)));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
-				.createSequentialGroup().addGap(6).addComponent(ruleHistory).addPreferredGap(ComponentPlacement.RELATED)
-				.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
-						.createSequentialGroup()
-						.addComponent(labelCodeSmellsDisp, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(codeSmells, GroupLayout.PREFERRED_SIZE, 496, GroupLayout.PREFERRED_SIZE)
-						.addGap(121).addComponent(activeRule).addGap(10))
-						.addGroup(groupLayout.createSequentialGroup().addGroup(groupLayout
-								.createParallelGroup(Alignment.TRAILING)
-								.addGroup(groupLayout.createSequentialGroup().addComponent(newRule).addGap(18)
-										.addComponent(editRule, GroupLayout.PREFERRED_SIZE, 23,
-												GroupLayout.PREFERRED_SIZE)
-										.addGap(500).addComponent(export, GroupLayout.PREFERRED_SIZE, 23,
-												GroupLayout.PREFERRED_SIZE))
-								.addComponent(rulesScrollPane, GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE)).addGap(18)
-								.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-										.addComponent(activatedRuleScrollPane, GroupLayout.PREFERRED_SIZE, 48,
-												GroupLayout.PREFERRED_SIZE)
-										.addComponent(activateRule, GroupLayout.PREFERRED_SIZE, 23,
-												GroupLayout.PREFERRED_SIZE))
-								.addPreferredGap(ComponentPlacement.RELATED)))
-				.addGap(45)));
+					.addContainerGap())
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap(592, Short.MAX_VALUE)
+					.addComponent(ruleHistory, GroupLayout.PREFERRED_SIZE, 159, GroupLayout.PREFERRED_SIZE)
+					.addGap(345))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(goBack, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(977, Short.MAX_VALUE))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(6)
+					.addComponent(ruleHistory)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(labelCodeSmellsDisp, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(codeSmells, GroupLayout.PREFERRED_SIZE, 496, GroupLayout.PREFERRED_SIZE)
+							.addGap(121)
+							.addComponent(activeRule)
+							.addGap(10))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(newRule)
+									.addGap(18)
+									.addComponent(editRule, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+									.addGap(523))
+								.addComponent(rulesScrollPane, GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE))
+							.addGap(18)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(activatedRuleScrollPane, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
+								.addComponent(activateRule, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)))
+					.addGap(12)
+					.addComponent(goBack, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
+		);
 
 		frmCodeSmells.getContentPane().setLayout(groupLayout);
 	}
@@ -345,7 +345,7 @@ public class ICodeSmellsRules {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(rules.getSelectedRow()>-1) {
-					Rule rule = allRules.get(rules.getSelectedRow());
+					Rule rule = rulesOnDisplay.get(rules.getSelectedRow());
 					frmCodeSmells.dispose();
 //					IDetetionParameters frame = new IDetetionParameters(rule);
 				}else popUp("Escolha a regra que pretende editar.");
@@ -353,5 +353,62 @@ public class ICodeSmellsRules {
 			}
 			
 		});
-	}	
+	}
+	
+	public void goBack() {
+		goBack.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				frmCodeSmells.dispose();
+				IMenu menu = new IMenu();
+				
+			}
+		});
+	}
+	public void activatedRule() {
+		activateRule.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(rules.getSelectedRow()<0) {
+					popUp("Escolha a regra que pretende activar.");
+				}else {
+					Rule ruleToActivate = rulesOnDisplay.get(rules.getSelectedRow());
+					System.out.println(ruleToActivate.toString());
+					for(Rule ruleToDeactivate : allRules) {
+						if(ruleToDeactivate.getCodeSmell().equals(ruleToActivate.getCodeSmell()) && ruleToDeactivate.isActive()) {
+							try {
+								replaceRule(ruleToDeactivate);
+								replaceRule(ruleToActivate);
+								updateRules();
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+							createActivedRule(ruleToActivate);
+							break;
+						}
+					}
+				}
+			}	
+		});
+	}
+	
+	public void replaceRule(Rule rule) throws IOException{
+		BufferedReader file = new BufferedReader(new FileReader("saveRule.txt"));
+        StringBuffer inputBuffer = new StringBuffer();
+        String line;
+        while ((line = file.readLine()) != null) {
+        	if(line.equals(rule.toString())) {
+        		rule.switchActive();
+        		inputBuffer.append(rule.toString());
+        	}else inputBuffer.append(line);
+            inputBuffer.append('\n');
+        }
+        file.close();
+        String inputStr = inputBuffer.toString();
+        FileOutputStream fileOut = new FileOutputStream("saveRule.txt");
+        fileOut.write(inputStr.getBytes());
+        fileOut.close();
+	}
 }
