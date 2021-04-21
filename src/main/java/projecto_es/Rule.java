@@ -7,6 +7,8 @@ public class Rule {
 	// Este array é do formato ArrayList[(id),(code
 	// smell),(active),(condition1),(logicalOperator),(condition2),...]
 	private ArrayList<String> list;
+	private ArrayList<Condition> conditions;
+	private ArrayList<LogicalOperator> logicalOperator;
 
 	// Assume-se que a string que entra nesta função +e do formato
 	// "id:codeSmell:active:Metrics:NumericOperator:threshold:LogicalOperator:Metrics:NumericOperator:threshold:LogicalOperator:..."
@@ -18,9 +20,12 @@ public class Rule {
 		list.add(values[2]);
 		LogicalOperator operator;
 		Condition condition;
+		conditions = new ArrayList<>();
+		logicalOperator = new ArrayList<>();
 		for (int i = 3; i < values.length; i++) {
 			if (i == 5) {
 				condition = new Condition(values[i - 2] + ":" + values[i - 1] + ":" + values[i]);
+				conditions.add(condition);
 				list.add(condition.toString());
 			} else if ((i - 1) % 4 == 0) {
 				if (values[i - 3].equals("AND")) {
@@ -29,6 +34,8 @@ public class Rule {
 					operator = LogicalOperator.OR;
 				}
 				condition = new Condition(values[i - 2] + ":" + values[i - 1] + ":" + values[i]);
+				logicalOperator.add(operator);
+				conditions.add(condition);
 				addCondition(operator, condition);
 
 			}
@@ -76,21 +83,21 @@ public class Rule {
 	}
 
 	public int numberOfConditions() {
-		return (list.size() - 1) / 2;
+		return conditions.size();
 	}
 
-	public String getCondition(int index) {
-		if (index < list.size())
-			return list.get(index * 2 + 1);
+	public Condition getCondition(int index) {
+		if (index < conditions.size())
+			return conditions.get(index);
 		else {
 			System.out.println("Erro: Index maior do que o tamanho da lista de condições");
 			return null;
 		}
 	}
 
-	public String getLogicalOperator(int index) {
-		if (index < list.size())
-			return list.get(index + 1);
+	public LogicalOperator getLogicalOperator(int index) {
+		if (index < logicalOperator.size())
+			return logicalOperator.get(index);
 		else {
 			System.out.println("Erro: Index maior do que o tamanho da lista de condições");
 			return null;
@@ -126,10 +133,9 @@ public class Rule {
 		System.out.println(rule.toString());
 		System.out.println(rule.onlyConditions());
 		System.out.println(rule.getCondition(2));
-		System.out.println(rule.numberOfConditions());
+		System.out.println("Numero de conditions: " + rule.numberOfConditions());
 		rule.changeID(2);
 		System.out.println(rule.getCodeSmell());
-		;
 		System.out.println(rule.toString());
 
 	}

@@ -46,7 +46,7 @@ public class Condition {
 		return metric;
 	}
 
-	public NumericOperator getNo() {
+	public NumericOperator getNumericOperator() {
 		return no;
 	}
 
@@ -57,5 +57,9 @@ public class Condition {
 	@Override
 	public String toString() {
 		return metric + ":" + no + ":" + threshold;
+	}
+	
+	public String toStringFormatted() {
+		return metric + " " + no.getComparator() + " " + threshold;
 	}
 }

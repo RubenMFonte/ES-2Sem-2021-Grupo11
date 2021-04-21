@@ -188,8 +188,14 @@ public class ICodeSmellsRules {
 		String[] columnNames = { "Regra", "Condição" };
 		String[][] allRulesJT = new String[rulesList.size()][2];
 		for (int i = 0; i < rulesList.size(); i++) {
-			allRulesJT[i][0] = rulesList.get(i).getID();
-			allRulesJT[i][1] = rulesList.get(i).onlyConditions();
+			allRulesJT[i][0] = "Regra " +rulesList.get(i).getID();
+			allRulesJT[i][1]="";
+			for(int j=0;j<rulesList.get(i).numberOfConditions();j++) {
+				allRulesJT[i][1] += rulesList.get(i).getCondition(j).toStringFormatted();
+				if(j+1<rulesList.get(i).numberOfConditions()) {
+					allRulesJT[i][1] +=" "+rulesList.get(i).getLogicalOperator(j).toString()+" ";
+				}
+			}
 		}
 		rules = new JTable(allRulesJT, columnNames);
 		rules.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -206,8 +212,14 @@ public class ICodeSmellsRules {
 			activeRule[0][0] = "Selecione um CodeSmell";
 			activeRule[0][1] = "";
 		} else {
-			activeRule[0][0] = rule.getID();
-			activeRule[0][1] = rule.onlyConditions();
+			activeRule[0][0] = "Regra " + rule.getID();
+			activeRule[0][1]="";
+			for(int i=0;i<rule.numberOfConditions();i++) {
+				activeRule[i][1] += rule.getCondition(i).toStringFormatted();
+				if(i+1<rule.numberOfConditions()) {
+					activeRule[0][1] +=" "+rule.getLogicalOperator(i).toString()+" ";
+				}
+			}
 		}
 		activatedRule = new JTable(activeRule,columnNames);
 		activatedRule.setEnabled(false);
@@ -228,7 +240,6 @@ public class ICodeSmellsRules {
 			public void valueChanged(ListSelectionEvent e) {
 				int index = codeSmells.getSelectedIndex();
 				String cs = allCodeSmells.get(index);
-//				List<Rule> list_CS = filterRule(cs);
 				rulesOnDisplay = filterRule(cs);
 				if (cs.equals("All")) {
 					createTable(allRules);
