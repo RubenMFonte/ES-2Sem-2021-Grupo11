@@ -343,7 +343,7 @@ public class ICodeSmellsRules {
 				if(codeSmells.getSelectedIndex()>0) {
 					String codeSmell = allCodeSmells.get(codeSmells.getSelectedIndex());
 					frmCodeSmells.dispose();
-//					IDetetionParameters frame = new IDetetionParameters(codeSmell);
+					IDetetionParameters frame = new IDetetionParameters(codeSmell);
 				}else popUp("Escolha um Code Smell antes de criar uma regra.");
 			}
 		});
@@ -358,7 +358,7 @@ public class ICodeSmellsRules {
 				if(rules.getSelectedRow()>-1) {
 					Rule rule = rulesOnDisplay.get(rules.getSelectedRow());
 					frmCodeSmells.dispose();
-//					IDetetionParameters frame = new IDetetionParameters(rule);
+					IDetetionParameters frame = new IDetetionParameters(rule);
 				}else popUp("Escolha a regra que pretende editar.");
 				
 			}
