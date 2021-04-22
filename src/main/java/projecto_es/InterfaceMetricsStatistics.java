@@ -88,12 +88,12 @@ public class InterfaceMetricsStatistics extends JFrame {
 	private JTable table;
 	private JTable table_1;
 
-	private JList<String> packageJList;
+	private JList<String> packageJList = new JList<String>();
 	private JList<String> classJList = new JList<String>();
 	private JList<String> methodsJList = new JList<String>();
 	private JList<String> metricsClassJlist = new JList<String>();
 	private JList<String> metricsMethodsJlist = new JList<String>();
-	private JList<String> statisticsJlist;
+	private JList<String> statisticsJlist = new JList<String>();
 
 	private String packageString;
 	private String classString;
@@ -143,9 +143,9 @@ public class InterfaceMetricsStatistics extends JFrame {
 	}
 
 	private void initialize() {
-		this.packageJList = ListsToInterface.getListsToInterfaceInstance().getPackageJList();
-		this.classJList = ListsToInterface.getListsToInterfaceInstance().getClassJList();
-		this.methodsJList = ListsToInterface.getListsToInterfaceInstance().getMethodsJList();
+//		this.packageJList = ListsToInterface.getListsToInterfaceInstance().getPackageJList();
+//		this.classJList = ListsToInterface.getListsToInterfaceInstance().getClassJList();
+//		this.methodsJList = ListsToInterface.getListsToInterfaceInstance().getMethodsJList();
 //		this.statisticsJlist = ListsToInterface.getListsToInterfaceInstance().showGeneralMetrics(statisticsGeneral);
 		
 		
@@ -234,6 +234,8 @@ public class InterfaceMetricsStatistics extends JFrame {
 
 		JScrollPane scrollPane_3 = new JScrollPane();
 		contentPane_Methods.add(scrollPane_3);
+		
+		scrollPane_3.setViewportView(methodsJList);
 
 		JButton buttonShowMethods = new JButton("Show Methods");
 		buttonShowMethods.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -282,32 +284,73 @@ public class InterfaceMetricsStatistics extends JFrame {
 		panel_1.add(scrollPane_4);
 
 		scrollPane_4.setViewportView(statisticsJlist);
-
-		JButton goBackButton = new JButton("Go Back");
-		goBackButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panel_1.add(goBackButton);
+				
+				JPanel panel_5 = new JPanel();
+				FlowLayout flowLayout = (FlowLayout) panel_5.getLayout();
+				flowLayout.setAlignment(FlowLayout.LEFT);
+				contentPane.add(panel_5);
+		
+				JButton goBackButton = new JButton("<");
+				panel_5.add(goBackButton);
+				goBackButton.setHorizontalAlignment(SwingConstants.LEFT);
+				
+				//goBackButton
+						goBackButton.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+							IMenu window = new IMenu();
+								window.frame.setVisible(true);
+								dispose();
+							}
+						});
 
 //buttonShowMetrics actionListener
 		buttonShowMetrics.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				classString = (String) classJList.getSelectedValue();
-				JList<String> methodsJList_Temp = ListsToInterface.getListsToInterfaceInstance()
-						.showMethods(classString);
-				Boolean EqualJLists = ListsToInterface.getListsToInterfaceInstance().compareTwoJLists(methodsJList_Temp,
-						methodsJList);
-
-				if (EqualJLists) {
-					methodsString = (String) methodsJList.getSelectedValue();
-				} else {
+				String packageString_old = packageString;
+				packageString = (String) packageJList.getSelectedValue();
+			//packages iguais???	
+				if(packageString_old.equals(packageString)) {
+					JList<String> classJList_Temp = ListsToInterface.getListsToInterfaceInstance().showClasses(packageString);
+					Boolean EqualJLists_classes = ListsToInterface.getListsToInterfaceInstance().compareTwoJLists(classJList_Temp,classJList);
+				//classes iguais???
+					if (EqualJLists_classes) {
+						classString = (String) classJList.getSelectedValue();
+						JList<String> methodsJList_Temp = ListsToInterface.getListsToInterfaceInstance().showMethods(classString);
+						Boolean EqualJLists_methods = ListsToInterface.getListsToInterfaceInstance().compareTwoJLists(methodsJList_Temp,
+								methodsJList);
+					//métodos iguais???	
+						if (EqualJLists_methods) {
+							methodsString = (String) methodsJList.getSelectedValue();
+						} else {
+							methodsString = "";
+							setMethodsJList(new JList<String>());
+						}
+					} else {
+						classString = "";
+						setClassJList(new JList<String>());
+						methodsString = "";
+						setMethodsJList(new JList<String>());
+					}
+					
+					metricsClassJlist = ListsToInterface.getListsToInterfaceInstance().showClassMetrics(classString);
+					scrollPane.setViewportView(metricsClassJlist);
+					metricsMethodsJlist = ListsToInterface.getListsToInterfaceInstance().showMethodMetrics(classString,methodsString);
+					scrollPane_methodsMetrics.setViewportView(metricsMethodsJlist);
+					scrollPane_3.setViewportView(methodsJList);
+				}else {
+					classString = "";
+					setClassJList(new JList<String>());
+					metricsClassJlist = ListsToInterface.getListsToInterfaceInstance().showClassMetrics(classString);
 					methodsString = "";
 					setMethodsJList(new JList<String>());
+					metricsMethodsJlist = ListsToInterface.getListsToInterfaceInstance().showMethodMetrics(classString,methodsString);
+					scrollPane.setViewportView(metricsClassJlist);
+					scrollPane_methodsMetrics.setViewportView(metricsMethodsJlist);
+					scrollPane_2.setViewportView(classJList);
+					scrollPane_3.setViewportView(methodsJList);
 				}
-
-				metricsClassJlist = ListsToInterface.getListsToInterfaceInstance().showClassMetrics(classString);
-				scrollPane.setViewportView(metricsClassJlist);
-				metricsMethodsJlist = ListsToInterface.getListsToInterfaceInstance().showMethodMetrics(classString,
-						methodsString);
-				scrollPane_methodsMetrics.setViewportView(metricsMethodsJlist);
+				
+				
 			}
 		});
 
@@ -375,15 +418,6 @@ public class InterfaceMetricsStatistics extends JFrame {
 				// ListsToInterface.getListsToInterfaceInstance().showGeneralMetrics(statisticsGeneral)
 				// );
 				setVisible(true);
-			}
-		});
-
-//buttonShowCarateristics
-		goBackButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			IMenu window = new IMenu();
-				window.frame.setVisible(true);
-				dispose();
 			}
 		});
 		
