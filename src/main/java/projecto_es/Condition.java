@@ -27,17 +27,25 @@ public class Condition {
 			metric = Metrics.CYCLO_METHOD;
 		}else System.out.println("Erro no metrics");	
 		
-		if(values[1].equals("=") || values[1].equals("EQ")) {
+		if(values[1].equals("==") || values[1].equals("EQ")) {
 			no = NumericOperator.EQ;
-		}else if(values[2].equals(">") || values[1].equals("GT")) {
+		}
+		else if(values[1].equals(">") || values[1].equals("GT")) {
 			no = NumericOperator.GT;
-		}else if(values[2].equals("<") || values[1].equals("LT")) {
+		}
+		else if(values[1].equals("<") || values[1].equals("LT")) {
 			no = NumericOperator.LT;
-		}else if(values[2].equals(">=") || values[1].equals("GE")) {
+		}
+		else if(values[1].equals(">=") || values[1].equals("GE")) {
 			no = NumericOperator.GE;
-		}else if(values[2].equals("<=") || values[1].equals("LE")) {
+		}
+		else if(values[1].equals("<=") || values[1].equals("LE")) {
 			no = NumericOperator.LE;
-		}else System.out.println("Erro no Numeric Operator");
+		}
+		else if(values[1].equals("!=") || values[1].equals("NE")) {
+			no = NumericOperator.NE;
+		}
+		else System.out.println("Erro no Numeric Operator");
 		
 		threshold = Integer.parseInt(values[2]);
 	}

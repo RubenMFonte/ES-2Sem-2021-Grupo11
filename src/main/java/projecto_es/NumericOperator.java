@@ -1,7 +1,8 @@
 package projecto_es;
 
 public enum NumericOperator {
-	EQ ("="),
+	EQ ("=="),
+	NE ("!="),
 	GT (">"),
 	LT ("<"),
 	GE (">="),

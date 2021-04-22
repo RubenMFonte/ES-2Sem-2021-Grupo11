@@ -1,6 +1,7 @@
 package projecto_es;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Rule {
@@ -85,6 +86,22 @@ public class Rule {
 		}
 	}
 	
+	public List<String> getConditionsArray()
+	{		
+		ArrayList<String> conditions = new ArrayList<>();
+		
+		for(int i = 3; i < list.size(); i += 2)
+		{
+			String condition = "" + list.get(i);
+			
+			if(i < list.size()-1) condition += ":" + list.get(i+1);
+			
+			conditions.add(condition);
+		}
+		
+		return conditions;
+	}
+	
 	public String getLogicalOperator(int index){
 		if(index<list.size())
 			return list.get(index+1);
@@ -96,6 +113,11 @@ public class Rule {
 	
 	public String getCodeSmell() {
 		return list.get(1);
+	}
+	
+	public String getHeader()
+	{
+		return list.get(0) + ":" + list.get(1) + ":" + list.get(2);
 	}
 	
 	

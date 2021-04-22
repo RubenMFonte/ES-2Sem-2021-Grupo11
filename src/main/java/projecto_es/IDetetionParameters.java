@@ -3,19 +3,23 @@ package projecto_es;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.awt.BorderLayout;
 import java.awt.Component;
 
-import javax.swing.SwingConstants;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 public class IDetetionParameters {
 
@@ -23,41 +27,43 @@ public class IDetetionParameters {
 	private JPanel panel;
 	private JPanel panelSOUTH;
 	private JScrollPane scrollPane;
-	private List<JPanel> conditionPanels = new ArrayList<JPanel>();
+	private List<ConditionJPanel> conditionPanels = new ArrayList<ConditionJPanel>();
 	private JPanel panelsouthLEFT;
 	private JPanel panelsouthRIGHT;
 	private JButton insertCond = new JButton("Insert New Condition");
 	private JButton removeCond = new JButton("Remove Last Condition");
-	private JButton saveAlt = new JButton("Save Alterations");
-
+	private JButton cancelButton = new JButton("Cancel");
+	private JButton saveButton = new JButton("Save");
 	
+	private boolean newRule = false;
+	private Rule rule;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					IDetetionParameters window = new IDetetionParameters();
+					IDetetionParameters window = new IDetetionParameters("God_class");
+					
 					window.frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
 	}
+	
+	public IDetetionParameters(String code_smell) {
+		this(new Rule(":" + code_smell + ":false::::"));
+		newRule = true;
+		saveButton.setEnabled(false);
+	}
 
-	/**
-	 * Create the application.
-	 */
-	public IDetetionParameters() {
+	public IDetetionParameters(Rule rule_arg) {
+		this.rule = rule_arg;
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		frame = new JFrame("Detetion Parameters");
 		frame.setBounds(100, 100, 800, 500);
@@ -74,39 +80,195 @@ public class IDetetionParameters {
         panelSOUTH.add(panelsouthLEFT, BorderLayout.WEST);
         
         panelsouthRIGHT = new JPanel();
-        panelsouthRIGHT.add(saveAlt);
+        panelsouthRIGHT.add(cancelButton);
+        panelsouthRIGHT.add(saveButton);
         panelSOUTH.add(panelsouthRIGHT, BorderLayout.EAST); 
        
         scrollPane = new JScrollPane(panel);
 
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        ConditionJPanel iic = new ConditionJPanel("Condition 1");
-        panel.add(iic);
-        conditionPanels.add(iic);
-
+        
+        List<String> conditionList = rule.getConditionsArray();
+        
+        for(int i = 0; i < conditionList.size(); i++)
+        {
+        	addConditionPanel(conditionList.get(i));
+        }
         
         checkForNewCond();
         checkForRemCond();
         
+        cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				exitWindow();
+        	}
+        });
+        
+        saveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if(!validateValues()) return;
+				
+				if(newRule) saveNewRule();
+				else updateRule();
+				
+				exitWindow();
+        	}
+        });
+        
         frame.getContentPane().add(scrollPane);
         frame.getContentPane().add(panelSOUTH, BorderLayout.SOUTH);
         
-        //frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+	}
+	
+	private void exitWindow()
+	{
+		frame.dispose();
+		try
+		{
+			ICodeSmellsRules newFrame = new ICodeSmellsRules();
+		}
+		catch(FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	private void updateRule()
+	{
+		File rulesFile = new File("saveRule.txt");
+		
+		Scanner myReader;
+		StringBuffer stringBuffer = new StringBuffer();
+		
+		try {
+			myReader = new Scanner(rulesFile);
+			
+			while (myReader.hasNextLine()) {
+				String line = myReader.nextLine();
+				Rule ruleInFile = new Rule(line);
+				
+				if(rule.getID().equals(ruleInFile.getID()))
+				{
+					line = getRuleString();
+				}
+				
+				stringBuffer.append(line + "\n");
+			}
+			
+			myReader.close();
+				
+			FileWriter writer;
+			
+			try {
+				
+				writer = new FileWriter(rulesFile);
+				writer.write(stringBuffer.toString());
+				writer.close();
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+		
+	private void saveNewRule()
+	{
+		File rulesFile = new File("saveRule.txt");
+		
+		Scanner myReader;
+		StringBuffer stringBuffer = new StringBuffer();
+		
+		try {
+			myReader = new Scanner(rulesFile);
+			
+			int newId = -1;
+			String line = "";
+			
+			while (myReader.hasNextLine()) {
+				line = myReader.nextLine();				
+				stringBuffer.append(line + "\n");
+			}
+			
+			myReader.close();
+			
+			Rule ruleInFile = new Rule(line);
+			
+			newId = Integer.parseInt(ruleInFile.getID()) + 1;
+			
+			stringBuffer.append(newId + getRuleString());
+				
+			FileWriter writer;
+			
+			try {
+				
+				writer = new FileWriter(rulesFile);
+				writer.write(stringBuffer.toString());
+				writer.close();
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	private String getRuleString()
+	{
+		StringBuffer stringBuffer = new StringBuffer();
+		
+		stringBuffer.append(rule.getHeader());
+		
+		for(int i = 0; i < conditionPanels.size(); i++)
+		{
+			stringBuffer.append(":" + conditionPanels.get(i).getConditionAsString());
+		}
+		
+		return stringBuffer.toString();
+	}
+	
+	private void addConditionPanel(String condition)
+	{
+		if(conditionPanels.size() == 0) saveButton.setEnabled(true);
+		
+		String conditionNumber = "Condition " + (conditionPanels.size() + 1);
+		String conditionElements[] = condition.split(":");
+		
+		ConditionJPanel iic;
+		
+		if(conditionElements.length > 1)
+		{
+		    iic = new ConditionJPanel(conditionNumber, conditionElements[0], conditionElements[1], conditionElements[2],
+		    				conditionElements.length > 3 ? conditionElements[3] : "");
+		}
+		else
+		{
+		    iic = new ConditionJPanel(conditionNumber);
+		}
+	    
+	    panel.add(iic);
+	    conditionPanels.add(iic);		
 	}
 	
 	private void checkForNewCond() {
 		insertCond.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String conditionNumber = "Condition " + (conditionPanels.size() + 1);
-    		    ConditionJPanel iic = new ConditionJPanel(conditionNumber);    		   
-    		    panel.add(iic);
-    		    conditionPanels.add(iic);
+
+				if(validateValues())
+					addConditionPanel("");
     		        
-    		panel.revalidate();
-    			 			
+				panel.revalidate(); 			
         	}
         });
 	}
@@ -130,6 +292,19 @@ public class IDetetionParameters {
         });
 	}
 	
-
+	private boolean validateValues(){
+	  
+		boolean isValid = true;
+		
+		for(int i = 0; i < conditionPanels.size(); i++)
+		{
+			if(!conditionPanels.get(i).validatePanel(true)) isValid = false;
+		}
+		
+		if(!isValid)
+			JOptionPane.showMessageDialog(frame, "Please fill in the required values.", "Missing Values", JOptionPane.ERROR_MESSAGE);
+		
+		return isValid;
+	}
 
 }
