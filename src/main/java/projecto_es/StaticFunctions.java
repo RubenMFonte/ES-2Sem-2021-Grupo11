@@ -42,20 +42,6 @@ public class StaticFunctions {
 		return true;
 	}
 	
-	public static ArrayList<Rule> getCodeSmellsActiveRules() throws FileNotFoundException{
-		ArrayList<Rule> activeRules = new ArrayList<>();
-		File saveRule = new File("saveRule.txt");
-		Scanner myReader = new Scanner(saveRule);
-		while (myReader.hasNextLine()) {
-			String data = myReader.nextLine();
-			Rule ruleData = new Rule(data);
-			if(ruleData.isActive())	
-				activeRules.add(new Rule(data));
-		}
-		myReader.close();
-		return activeRules;
-	}
-	
 	public static void main(String[] args) {
 		///EXEMPLO DE USO DA FUNÇÃO saveRule
 		try {		
@@ -82,17 +68,6 @@ public class StaticFunctions {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		//EXEMPLO DO USO DA FUNÇÃO getCodeSmellsActiveRules
-		try {
-			ArrayList<Rule> teste = getCodeSmellsActiveRules();
-			for(Rule rule : teste) {
-				System.out.println(rule.toString());
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
 	}
 }
 
