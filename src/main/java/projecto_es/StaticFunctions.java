@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.awt.List;
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.util.ArrayList;
 import java.util.Scanner; // Import the Scanner class to read text files
 
 public class StaticFunctions {
@@ -41,17 +42,31 @@ public class StaticFunctions {
 		return true;
 	}
 	
+	public static ArrayList<Rule> getCodeSmellsActiveRules() throws FileNotFoundException{
+		ArrayList<Rule> activeRules = new ArrayList<>();
+		File saveRule = new File("saveRule.txt");
+		Scanner myReader = new Scanner(saveRule);
+		while (myReader.hasNextLine()) {
+			String data = myReader.nextLine();
+			Rule ruleData = new Rule(data);
+			if(ruleData.isActive())	
+				activeRules.add(new Rule(data));
+		}
+		myReader.close();
+		return activeRules;
+	}
+	
 	public static void main(String[] args) {
 		///EXEMPLO DE USO DA FUNÇÃO saveRule
 		try {		
-		String a = "0:false:WMC_CLASS:LT:4";
+		String a = "0:Long_method:false:WMC_CLASS:LT:4";
 		String b = "LOC_METHOD:EQ:6";
 		String c = "CYCLO_METHOD:GT:7";
 		String d = a+":"+"AND"+":"+b+":"+"OR"+":"+c;
 		String f = a+":"+"OR"+":"+b+":"+"OR"+":"+c;
 		Rule rule = new Rule(d);
 		Rule rule2 = new Rule (f);
-		File myObj = new File("C:\\Users\\catar\\Desktop\\saveRule.txt");
+		File myObj = new File("saveRule.txt");
 			Boolean go=saveRule(rule,myObj);
 		//	System.out.print(go);
 			saveRule(rule2,myObj);
@@ -65,7 +80,16 @@ public class StaticFunctions {
 			 myReader.close();			
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//EXEMPLO DO USO DA FUNÇÃO getCodeSmellsActiveRules
+		try {
+			ArrayList<Rule> teste = getCodeSmellsActiveRules();
+			for(Rule rule : teste) {
+				System.out.println(rule.toString());
+			}
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		
