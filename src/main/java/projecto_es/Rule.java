@@ -75,8 +75,7 @@ public class Rule {
 	public void switchActive() {
 		if(list.get(2).equals("true")) {
 			list.set(2, "false");
-		}
-		list.set(2, "true");
+		}else list.set(2, "true");
 	}
 
 	public ArrayList<String> getList() {

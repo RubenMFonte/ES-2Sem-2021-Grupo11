@@ -114,7 +114,6 @@ public class ICodeSmellsRules {
 
 		boolean isUniq;
 		allCodeSmells = new ArrayList<>();
-		allCodeSmells.add("All");
 		for (int i = 0; i < allRules.size(); i++) {
 			isUniq = true;
 			for (int j = 0; j < allCodeSmells.size(); j++) {
@@ -155,7 +154,9 @@ public class ICodeSmellsRules {
 		activeRule = new JLabel("Regra Activa:");
 		activeRule.setFont(new Font("Arial", Font.PLAIN, 24));
 		draw();
-		createTable(allRules);
+		String cs = allCodeSmells.get(codeSmells.getSelectedIndex());
+		rulesOnDisplay = filterRule(cs);
+		createTable(rulesOnDisplay);
 		createActivedRule(null);
 		selectAction();
 		createRule();
@@ -188,7 +189,7 @@ public class ICodeSmellsRules {
 		String[] columnNames = { "Regra", "Condição" };
 		String[][] allRulesJT = new String[rulesList.size()][2];
 		for (int i = 0; i < rulesList.size(); i++) {
-			allRulesJT[i][0] = "Regra " +rulesList.get(i).getID();
+			allRulesJT[i][0] = "Regra " +i;
 			allRulesJT[i][1]="";
 			for(int j=0;j<rulesList.get(i).numberOfConditions();j++) {
 				allRulesJT[i][1] += rulesList.get(i).getCondition(j).toStringFormatted();
@@ -212,10 +213,10 @@ public class ICodeSmellsRules {
 			activeRule[0][0] = "Selecione um CodeSmell";
 			activeRule[0][1] = "";
 		} else {
-			activeRule[0][0] = "Regra " + rule.getID();
+			activeRule[0][0] = "Regra " + rulesOnDisplay.indexOf(rule);
 			activeRule[0][1]="";
 			for(int i=0;i<rule.numberOfConditions();i++) {
-				activeRule[i][1] += rule.getCondition(i).toStringFormatted();
+				activeRule[0][1] += rule.getCondition(i).toStringFormatted();
 				if(i+1<rule.numberOfConditions()) {
 					activeRule[0][1] +=" "+rule.getLogicalOperator(i).toString()+" ";
 				}
@@ -241,14 +242,8 @@ public class ICodeSmellsRules {
 				int index = codeSmells.getSelectedIndex();
 				String cs = allCodeSmells.get(index);
 				rulesOnDisplay = filterRule(cs);
-				if (cs.equals("All")) {
-					createTable(allRules);
-					createActivedRule(null);
-				} else {
-					createTable(rulesOnDisplay);
-					createActivedRule(findActiveCodeSmell(rulesOnDisplay));
-				}
-
+				createTable(rulesOnDisplay);
+				createActivedRule(findActiveCodeSmell(rulesOnDisplay));
 			}
 		});
 		;
@@ -386,7 +381,6 @@ public class ICodeSmellsRules {
 					popUp("Escolha a regra que pretende activar.");
 				}else {
 					Rule ruleToActivate = rulesOnDisplay.get(rules.getSelectedRow());
-					System.out.println(ruleToActivate.toString());
 					for(Rule ruleToDeactivate : allRules) {
 						if(ruleToDeactivate.getCodeSmell().equals(ruleToActivate.getCodeSmell()) && ruleToDeactivate.isActive()) {
 							try {
