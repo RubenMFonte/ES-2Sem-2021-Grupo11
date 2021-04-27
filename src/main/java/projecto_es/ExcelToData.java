@@ -41,11 +41,23 @@ public class ExcelToData {
 
 					cds = new ClassDataStructure(ReadCellData(cont, 1, wb), ReadCellData(cont, 2, wb),
 							ReadCellData(cont, 4, wb), ReadCellData(cont, 5, wb), ReadCellData(cont, 6, wb));
-
+					
+					String codeSmellEvaluation = ReadCellData(cont, 7, wb);
+					
+					if(codeSmellEvaluation.equals("true")) cds.setCodeSmellsEvaluation("God_class", true);
+					else if(codeSmellEvaluation.equals("false")) cds.setCodeSmellsEvaluation("God_class", false);
+					
 					allClass.add(cds);
 				}
-				cds.addMethod(ReadCellData(cont, 3, wb), (int) Double.parseDouble(ReadCellData(cont, 8, wb)),
+				MethodDataStructure newMethod = new MethodDataStructure(ReadCellData(cont, 3, wb), (int) Double.parseDouble(ReadCellData(cont, 8, wb)),
 						(int) Double.parseDouble(ReadCellData(cont, 9, wb)));
+				
+				String codeSmellEvaluation = ReadCellData(cont, 10, wb);
+				
+				if(codeSmellEvaluation.equals("true")) newMethod.setCodeSmellsEvaluation("Long_method", true);
+				else if(codeSmellEvaluation.equals("false")) newMethod.setCodeSmellsEvaluation("Long_method", false);
+				
+				cds.addMethod(newMethod);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -66,13 +78,16 @@ public class ExcelToData {
 		case Cell.CELL_TYPE_NUMERIC:
 			value = (cell.getNumericCellValue() + "\t\t\t");
 			break;
+        case Cell.CELL_TYPE_BOOLEAN:
+			value = (cell.getBooleanCellValue() + "");
+            break;
 		default:
 		}
 		return value;
 	}
 
 	public static void main(String[] args) {
-		String path = "C:\\Users\\skarp\\teste.xlsx";
+		String path = "C:\\Users\\ruben\\Downloads\\Code_Smells.xlsx";
 		List<ClassDataStructure> teste = getallClass(path);
 		GeneralStatistics gs = new GeneralStatistics(teste);
 		System.out.println("n_packages = " + gs.getN_package());
