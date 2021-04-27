@@ -111,23 +111,27 @@ public class ConditionJPanel extends JPanel {
 		
 	}
 	
-	public boolean validatePanel(boolean validateLogicalOperator)
+	public boolean validatePanel(boolean validateLogicalOperator, StringBuilder errorMessage, int conditionIndex)
 	{
 		boolean validation = true;
+		String missingValues = "";
 		
 		if(metricsAvailable.getSelectedIndex() == 0)
 		{
 			validation = false;
+			missingValues += "- Metric\n";
 		}
 		
 		if(noperatorsAvailable.getSelectedIndex() == 0)
 		{
 			validation = false;
+			missingValues += "- Numeric Operator\n";
 		}
 		
 		if(limit.getText().length() == 0 || !limit.getText().matches("[0-9]+"))
 		{
 			validation = false;
+			missingValues += "- Threshold\n";
 		}
 		
 		if(validateLogicalOperator)
@@ -135,8 +139,11 @@ public class ConditionJPanel extends JPanel {
 			if(loperatorsAvailable.getSelectedIndex() == 0)
 			{
 				validation = false;
+				missingValues += "- Logic Operator\n";
 			}
 		}
+		
+		if(validation == false) errorMessage.append("Condition " + conditionIndex + "\n" + missingValues);
 		
 		return validation;
 	}

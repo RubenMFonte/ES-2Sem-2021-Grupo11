@@ -299,13 +299,20 @@ public class IDetetionParameters {
 	  
 		boolean isValid = true;
 		
+		StringBuilder errorMessage = new StringBuilder();
+		errorMessage.append("Please fill in the required values:\n");
+		
 		for(int i = 0; i < conditionPanels.size(); i++)
 		{
-			if(!conditionPanels.get(i).validatePanel(true)) isValid = false;
+			boolean validateLogicOperator = true;
+			
+			if(i == conditionPanels.size() - 1) validateLogicOperator = false;
+			
+			if(!conditionPanels.get(i).validatePanel(validateLogicOperator, errorMessage, i + 1)) isValid = false;
 		}
 		
 		if(!isValid)
-			JOptionPane.showMessageDialog(frame, "Please fill in the required values.", "Missing Values", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(frame, errorMessage.toString(), "Missing Values", JOptionPane.ERROR_MESSAGE);
 		
 		return isValid;
 	}
