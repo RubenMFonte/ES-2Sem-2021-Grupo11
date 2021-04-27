@@ -1,6 +1,7 @@
 package projecto_es;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.github.javaparser.ast.CompilationUnit;
@@ -48,6 +49,8 @@ public class ClassDataStructure {
 	private int loc_class;
 	private int wmc_class;
 	private List<MethodDataStructure> lmds = new ArrayList<>();
+	
+	private HashMap<String, Boolean> codeSmellsEvaluation = new HashMap<>();
 
 	public ClassDataStructure(CompilationUnit javaFile) {
 		List<Node> children = javaFile.getChildNodes();
@@ -78,6 +81,10 @@ public class ClassDataStructure {
 
 	public void addMethod(String methodName, int loc_method, int cyclo_method) {
 		MethodDataStructure mds = new MethodDataStructure(methodName, loc_method, cyclo_method);
+		this.addMethod(mds);
+	}
+	
+	public void addMethod(MethodDataStructure mds) {
 		this.lmds.add(mds);
 	}
 
@@ -90,6 +97,15 @@ public class ClassDataStructure {
 			MethodDataStructure mds_part = new MethodDataStructure(md);
 			lmds.add(mds_part);
 		}
+	}
+	
+	public void setCodeSmellsEvaluation(String codeSmell, boolean codeSmellEvaluation) {
+		codeSmellsEvaluation.put(codeSmell, codeSmellEvaluation);
+	}
+	
+	public Boolean getCodeSmellsEvaluation(String codeSmell) {
+		if(codeSmellsEvaluation.containsKey(codeSmell)) return codeSmellsEvaluation.get(codeSmell);
+		return null;
 	}
 
 	public String getPackageName() {

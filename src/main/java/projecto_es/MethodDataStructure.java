@@ -1,6 +1,7 @@
 package projecto_es;
 
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.github.javaparser.ast.Node;
@@ -27,6 +28,8 @@ public class MethodDataStructure {
 	private String methodName;    //MethodDeclaration
 	private int loc_method;
 	private int cyclo_method;
+
+	private HashMap<String, Boolean> codeSmellsEvaluation = new HashMap<>();
 	
 	public MethodDataStructure (MethodDeclaration md_received) {
 		String methodName = md_received.getNameAsString();
@@ -64,6 +67,15 @@ public class MethodDataStructure {
 			return "("+ paramTypesComplement.substring(0, paramTypesComplement.length()-1)+")";
 		}
 		
+	}
+	
+	public void setCodeSmellsEvaluation(String codeSmell, boolean codeSmellEvaluation) {
+		codeSmellsEvaluation.put(codeSmell, codeSmellEvaluation);
+	}
+	
+	public Boolean getCodeSmellsEvaluation(String codeSmell) {
+		if(codeSmellsEvaluation.containsKey(codeSmell)) return codeSmellsEvaluation.get(codeSmell);
+		return null;
 	}
 	
 	public String getMethodName() {
