@@ -8,9 +8,14 @@ import java.util.Scanner;
 public class CodeSmellsCalculator {
 
 	private ArrayList<ClassDataStructure> dataList;
-	private ArrayList<Rule> Rule;
+	private ArrayList<Rule> rules;
+	
+	public CodeSmellsCalculator() {
+		dataList = new ArrayList<>();
+		rules = new ArrayList<>();
+	}
 		
-	public static ArrayList<Rule> getCodeSmellsActiveRules() throws FileNotFoundException{
+	public void getCodeSmellsActiveRules() throws FileNotFoundException{
 		ArrayList<Rule> activeRules = new ArrayList<>();
 		File saveRule = new File("saveRule.txt");
 		Scanner myReader = new Scanner(saveRule);
@@ -21,7 +26,7 @@ public class CodeSmellsCalculator {
 				activeRules.add(new Rule(data));
 		}
 		myReader.close();
-		return activeRules;
+		rules = activeRules;
 	}
 		
 	//Podem alterar a assinatura do método se vos for conveniente
@@ -39,15 +44,21 @@ public class CodeSmellsCalculator {
 	}
 
 	public ArrayList<Rule> getRule() {
-		return Rule;
+		return rules;
+	}
+	
+	public void run(String filename) {
+		
 	}
 
 		
 	public static void main(String[] args) {
 		//EXEMPLO DO USO DA FUNÇÃO getCodeSmellsActiveRules
 		try {
-			ArrayList<Rule> teste = getCodeSmellsActiveRules();
-			for(Rule rule : teste) {
+			CodeSmellsCalculator teste = new CodeSmellsCalculator();
+			teste.getCodeSmellsActiveRules();
+			ArrayList<Rule> arrayTeste = teste.getRule();
+			for(Rule rule : arrayTeste) {
 				System.out.println(rule.toString());
 			}
 		} catch (FileNotFoundException e) {
