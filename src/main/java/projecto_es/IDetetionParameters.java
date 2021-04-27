@@ -56,7 +56,6 @@ public class IDetetionParameters {
 	public IDetetionParameters(String code_smell) {
 		this(new Rule(":" + code_smell + ":false::::"));
 		newRule = true;
-		saveButton.setEnabled(false);
 	}
 
 	public IDetetionParameters(Rule rule_arg) {
@@ -90,9 +89,15 @@ public class IDetetionParameters {
         
         List<String> conditionList = rule.getConditionsArray();
         
-        for(int i = 0; i < conditionList.size(); i++)
+        int numOfConditions = conditionList.size();
+        
+        if(numOfConditions == 0) addConditionPanel("::"); // Empty condition
+        else
         {
-        	addConditionPanel(conditionList.get(i));
+	        for(int i = 0; i < numOfConditions; i++)
+	        {
+	        	addConditionPanel(conditionList.get(i));
+	        }        	
         }
         
         checkForNewCond();
@@ -238,9 +243,7 @@ public class IDetetionParameters {
 	}
 	
 	private void addConditionPanel(String condition)
-	{
-		if(conditionPanels.size() == 0) saveButton.setEnabled(true);
-		
+	{		
 		String conditionNumber = "Condition " + (conditionPanels.size() + 1);
 		String conditionElements[] = condition.split(":");
 		
