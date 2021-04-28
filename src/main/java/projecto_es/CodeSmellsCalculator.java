@@ -3,12 +3,14 @@ package projecto_es;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class CodeSmellsCalculator {
 
-	private ArrayList<ClassDataStructure> dataList;
-	private ArrayList<Rule> rules;
+	private List<ClassDataStructure> dataList;
+	private List<Rule> rules;
+	private List<CodeSmellStatistics> statisics;
 	
 	public CodeSmellsCalculator() {
 		dataList = new ArrayList<>();
@@ -39,11 +41,11 @@ public class CodeSmellsCalculator {
 			
 	}
 		
-	public ArrayList<ClassDataStructure> getDataList() {
+	public List<ClassDataStructure> getDataList() {
 		return dataList;
 	}
 
-	public ArrayList<Rule> getRule() {
+	public List<Rule> getRule() {
 		return rules;
 	}
 	
@@ -57,7 +59,7 @@ public class CodeSmellsCalculator {
 		try {
 			CodeSmellsCalculator teste = new CodeSmellsCalculator();
 			teste.getCodeSmellsActiveRules();
-			ArrayList<Rule> arrayTeste = teste.getRule();
+			List<Rule> arrayTeste = teste.getRule();
 			for(Rule rule : arrayTeste) {
 				System.out.println(rule.toString());
 			}
