@@ -6,6 +6,7 @@ import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,10 +20,13 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -73,6 +77,8 @@ public class ICodeSmellsQuality {
 	private JPanel panelQualityGraphic;
 	private Canvas canvas;
 	
+	JTextField textField = new JTextField();
+	
 	
 
 	/**
@@ -116,6 +122,8 @@ public class ICodeSmellsQuality {
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 	    frame.setVisible(true);
+	    
+	    selectExcelButton();
 	}
 	
 	private void definePanelDetentionTableLook() {
@@ -382,5 +390,25 @@ public class ICodeSmellsQuality {
 	   
 	  }
 	}*/
+	
+	public void selectExcelButton() {
+		selectExcel.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setDialogTitle("Selecionar Excel");
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("XLS files", "xls", "xlsx");
+				fileChooser.setFileFilter(filter);
+				int result = fileChooser.showSaveDialog(null);
+				if (fileChooser.getSelectedFile() != null) {
+					String excelPathString = fileChooser.getSelectedFile().getAbsolutePath();
+					excelPath.setText(excelPathString);
+				}
+    
+			}
+		});
+	}
+	
+	
 }
 
