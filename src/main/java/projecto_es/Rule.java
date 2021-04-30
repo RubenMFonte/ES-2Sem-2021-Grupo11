@@ -158,6 +158,7 @@ public class Rule {
 		rule.changeID(2);
 		System.out.println(rule.getCodeSmell());
 		System.out.println(rule.toString());
+		System.out.println("condition index: " + rule.getCondition(0));
 
 	}
 }
