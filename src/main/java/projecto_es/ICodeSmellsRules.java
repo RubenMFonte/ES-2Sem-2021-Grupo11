@@ -43,10 +43,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.border.LineBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
@@ -204,8 +206,29 @@ public class ICodeSmellsRules {
 		rules.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		rules.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		rules.setPreferredScrollableViewportSize(rules.getPreferredSize());
+		rules.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		
+	    setColumnWidth(0);
+	    setColumnWidth(1);
+		
 		rulesScrollPane.setViewportView(rules);
 
+	}
+	
+	private void setColumnWidth(int colIndex) {
+		DefaultTableColumnModel colModel = (DefaultTableColumnModel) rules.getColumnModel();
+	    TableColumn col = colModel.getColumn(colIndex);
+	    
+		TableCellRenderer renderer = col.getHeaderRenderer();
+		int width = 0;
+		
+		for (int r = 0; r < rules.getRowCount(); r++) {
+			renderer = rules.getCellRenderer(r, colIndex);
+			Component comp = renderer.getTableCellRendererComponent(rules, rules.getValueAt(r, colIndex), false, false, r, colIndex);
+			width = Math.max(width, comp.getPreferredSize().width);
+		}
+		
+		col.setPreferredWidth(width + 10);
 	}
 
 	public void createActivedRule(Rule rule) {
