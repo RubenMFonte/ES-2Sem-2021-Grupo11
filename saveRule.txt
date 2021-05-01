@@ -8,3 +8,4 @@
 8:Long_method:false:LOC_CLASS:LT:7
 9:God_class:false:NOM_CLASS:!=:7:
 10:God_class:false:LOC_CLASS:==:5:
+11:God_class:false:NOM_CLASS:==:2:AND:LOC_CLASS:!=:2:AND:WMC_CLASS:==:2:AND:LOC_METHOD:>=:2:OR:WMC_CLASS:<=:2:
