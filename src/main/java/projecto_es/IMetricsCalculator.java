@@ -1,6 +1,7 @@
 package projecto_es;
 
-import java.awt.EventQueue;import java.awt.desktop.AboutEvent;
+import java.awt.EventQueue;
+import java.awt.desktop.AboutEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -77,8 +78,8 @@ public class IMetricsCalculator {
 		frame.getContentPane().add(path_Exel);
 		path_Exel.setColumns(10);
 
-		JLabel lblNewLabel = new JLabel("Ficheiro Exel");
-		lblNewLabel.setBounds(36, 83, 96, 30);
+		JLabel lblNewLabel = new JLabel("Ficheiro Excel");
+		lblNewLabel.setBounds(23, 85, 96, 30);
 		frame.getContentPane().add(lblNewLabel);
 
 		JLabel lblNewLabel_1 = new JLabel("Projeto Java");
@@ -116,7 +117,7 @@ public class IMetricsCalculator {
 	}
 
 	public void setExecutar_Button() {
-		b_executar = new JButton("Salvar Exel");
+		b_executar = new JButton("Salvar Excel");
 		b_executar.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		b_executar.setBounds(516, 83, 119, 35);
 		frame.getContentPane().add(b_executar);
@@ -134,9 +135,10 @@ public class IMetricsCalculator {
 					}
 					if (jte.getMetricsCalculator().getCompilationUnits().size() == 0) {
 						popUp("O projeto selecionado não é um projeto Java. Por favor selecione um projeto Java");
-					} else
+					} else {
 						saveFile(jte);
-
+//						popUp("Excel salvo com sucesso!");
+					}
 				} else {
 					popUp("Escolha um projeto java antes de executar");
 				}
@@ -151,16 +153,16 @@ public class IMetricsCalculator {
 		show_Statistics.setBounds(516, 128, 119, 35);
 		frame.getContentPane().add(show_Statistics);
 		show_Statistics.setEnabled(false);
-		
+
 		show_Statistics.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				/* Correr interface do SA */
 				System.out.println("Minha interface: " + path_Exel.getText());
-				InterfaceMetricsStatistics ims = new InterfaceMetricsStatistics(
-						path_Exel.getText());
-				ims.getButtonShowStatistics().doClick();;			
+				InterfaceMetricsStatistics ims = new InterfaceMetricsStatistics(path_Exel.getText());
+				ims.getButtonShowStatistics().doClick();
+				;
 				frame.dispose();
 			}
 		});
@@ -173,7 +175,7 @@ public class IMetricsCalculator {
 
 	public void saveFile(javaToExcel jte) {
 		JFileChooser save_exel = new JFileChooser();
-		save_exel.setDialogTitle("Salvar ficheiro exel");
+		save_exel.setDialogTitle("Salvar ficheiro excel");
 		save_exel.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		int result = save_exel.showSaveDialog(null);
 		if (save_exel.getSelectedFile() == null) {
@@ -198,19 +200,19 @@ public class IMetricsCalculator {
 			}
 		}
 	}
-	
+
 	public void set_GoBackButton() {
-		goBack = new JButton("Voltar");
-		goBack.setBounds(392, 128, 119, 35);
+		goBack = new JButton("<");
+		goBack.setBounds(13, 128, 119, 35);
 		frame.getContentPane().add(goBack);
-		
+
 		goBack.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				IMenu window = new IMenu();
 				frame.dispose();
-				
+
 			}
 		});
 	}

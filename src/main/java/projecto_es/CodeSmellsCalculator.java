@@ -144,6 +144,12 @@ public class CodeSmellsCalculator {
 				set_false(css, codeSmellEvaluation);
 			}
 		}
+		if (no == NumericOperator.NE) {
+			if (metric != thereshold)
+				set_true(css, codeSmellEvaluation);
+			else
+				set_false(css, codeSmellEvaluation);
+		}
 	}
 
 	public void set_true(CodeSmellStatistics css, boolean codeSmellEvaluation) {
@@ -178,8 +184,9 @@ public class CodeSmellsCalculator {
 		this.statisics = statisics;
 	}
 
-	public void run(/*String filename*/) {
-		dataList = ExcelToData.getallClass("\"C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\code_smells_app_metrics.xlsx\"");
+	public void run(/* String filename */) {
+		dataList = ExcelToData
+				.getallClass("\"C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\code_smells_app_metrics.xlsx\"");
 	}
 
 	public static void main(String[] args) {
