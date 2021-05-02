@@ -151,7 +151,9 @@ public class InterfaceMetricsStatistics extends JFrame {
 		
 		setTitle("Visualizar Estatísticas");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 668, 438);
+		setBounds(200, 200, 800, 500);
+		setResizable(false);
+		setLocationRelativeTo(null);
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
