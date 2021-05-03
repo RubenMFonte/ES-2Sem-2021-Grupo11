@@ -234,13 +234,17 @@ public class ICodeSmellsRules {
 	public void createActivedRule(Rule rule) {
 		String[] columnNames = { "Regra", "Condição" };
 		String[][] activeRule = new String[1][2];
-		activeRule[0][0] = "Regra " + rulesOnDisplay.indexOf(rule);
-		activeRule[0][1] = "";
-		for (int i = 0; i < rule.numberOfConditions(); i++) {
-			activeRule[0][1] += rule.getCondition(i).toStringFormatted();
-			if (i + 1 < rule.numberOfConditions()) {
-				activeRule[0][1] += " " + rule.getLogicalOperator(i).toString() + " ";
-
+		if(rule == null) {
+			activeRule[0][0] = "Nenhuma regra activa para o Code Smell " + allCodeSmells.get(codeSmells.getSelectedIndex());
+			activeRule[0][1] = "";
+		}else {
+			activeRule[0][0] = "Regra " + rulesOnDisplay.indexOf(rule);
+			activeRule[0][1] = "";
+			for (int i = 0; i < rule.numberOfConditions(); i++) {
+				activeRule[0][1] += rule.getCondition(i).toStringFormatted();
+				if (i + 1 < rule.numberOfConditions()) {
+					activeRule[0][1] += " " + rule.getLogicalOperator(i).toString() + " ";
+				}
 			}
 		}
 		activatedRule = new JTable(activeRule, columnNames);
@@ -389,9 +393,9 @@ public class ICodeSmellsRules {
 					popUp("Escolha a regra que pretende activar.");
 				} else {
 					Rule ruleToActivate = rulesOnDisplay.get(rules.getSelectedRow());
+					int counter = 0;
 					for (Rule ruleToDeactivate : allRules) {
-						if (ruleToDeactivate.getCodeSmell().equals(ruleToActivate.getCodeSmell())
-								&& ruleToDeactivate.isActive()) {
+						if (ruleToDeactivate.getCodeSmell().equals(ruleToActivate.getCodeSmell()) && ruleToDeactivate.isActive()) {
 							try {
 								replaceRule(ruleToDeactivate);
 								replaceRule(ruleToActivate);
@@ -402,6 +406,16 @@ public class ICodeSmellsRules {
 							createActivedRule(ruleToActivate);
 							break;
 						}
+						if(counter+1==allRules.size()) {
+							try {
+								replaceRule(ruleToActivate);
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							createActivedRule(ruleToActivate);
+						}
+						counter++;
 					}
 				}
 			}

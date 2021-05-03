@@ -1,7 +1,7 @@
 1:God_class:false:LOC_CLASS:EQ:5
 2:God_class:false:LOC_CLASS:EQ:5
-3:God_class:true:LOC_METHOD:>=:69:AND:CYCLO_METHOD:==:69:
-4:God_class:true:LOC_CLASS:EQ:5
+3:God_class:false:LOC_METHOD:>=:69:AND:CYCLO_METHOD:==:69:
+4:God_class:false:LOC_CLASS:EQ:5
 5:Long_method:true:LOC_CLASS:EQ:7
 6:Long_method:false:LOC_CLASS:EQ:9
 7:Long_method:false:LOC_CLASS:GT:7
