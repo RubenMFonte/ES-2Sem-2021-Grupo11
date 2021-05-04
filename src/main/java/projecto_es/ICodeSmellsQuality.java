@@ -157,7 +157,7 @@ public class ICodeSmellsQuality {
 	}
 	
 	private void defineJTableContent() {	
-		String[] columnNames = { "Class", "is_God_Class", "ClassificaÁ„o", "Method ID", "Method Name", "is_long_method", "ClassificaÁ„o" };
+		String[] columnNames = { "Class", "is_God_Class", "Classifica√ß√£o", "Method ID", "Method Name", "is_long_method", "Classifica√ß√£o" };
 		DefaultTableModel model = new DefaultTableModel();
 
 		tableInfo = new JTable(50,7);
@@ -168,6 +168,7 @@ public class ICodeSmellsQuality {
 		}	
 		tableInfo.setPreferredScrollableViewportSize(new Dimension (720, 300));
 		tableInfo.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
 	}
 	
 	private void definePanelSouthInfoContent() {
@@ -310,6 +311,7 @@ public class ICodeSmellsQuality {
 
 	private void definePanelQualityGraphicContent() {
 		panelQualityGraphic = new ChartPanel( new PieChart(truePositives,falsePositives,trueNegatives,falseNegatives).pie);
+
 		//System.out.println(panelQualityGraphic.get);
 		panelQualityGraphic.setBorder((BorderFactory.createTitledBorder("Chart Statistics")));
 		panelQualityGraphic.setPreferredSize(new Dimension(200,200));
@@ -425,7 +427,7 @@ public class ICodeSmellsQuality {
 				} catch (FileNotFoundException erro) {
 					// TODO Auto-generated catch block
 					erro.printStackTrace();
-					System.out.println("Erro: ficheiro excel n„o encontrado/selecionado!!!");
+					System.out.println("Erro: ficheiro excel n√£o encontrado/selecionado!!!");
 				}
 				scrollPaneForJTable.setViewportView(tableInfo);		
  System.out.println("update table pressed!!!");
