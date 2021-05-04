@@ -282,6 +282,6 @@ public class CodeSmellsCalculator {
 	}
 
 	public void run(/* String filename */) {
-		dataList = ExcelToData.getallClass("C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\MYCode_Smells.xlsx");
+//		dataList = ExcelToData.getallClass("C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\MYCode_Smells.xlsx");
 	}
 }

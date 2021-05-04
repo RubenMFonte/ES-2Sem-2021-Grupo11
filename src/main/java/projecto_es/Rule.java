@@ -10,7 +10,7 @@ public class Rule {
 	private ArrayList<String> list;
 	private ArrayList<Condition> conditions;
 	private ArrayList<LogicalOperator> logicalOperator;
-	private List<Boolean> conditionValue;
+	private List<Boolean> conditionValue;//bolleanos relativos as condicoes
 
 	// Assume-se que a string que entra nesta função +e do formato
 	// "id:codeSmell:active:Metrics:NumericOperator:threshold:LogicalOperator:Metrics:NumericOperator:threshold:LogicalOperator:..."
