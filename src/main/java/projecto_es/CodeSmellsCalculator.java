@@ -283,7 +283,7 @@ public class CodeSmellsCalculator {
 
 	public void run(/* String filename */) {
 		dataList = ExcelToData
-				.getallClass("\"C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\code_smells_app_metrics.xlsx\"");
+				.getallClass("C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\MYCode_Smells.xlsx");
 //		CodeSmellsCalculator cal = new CodeSmellsCalculator();
 //        cal.getCodeSmellsActiveRules(filename);
 //        cal.fillCodeSmellTable();
@@ -303,8 +303,10 @@ public class CodeSmellsCalculator {
 			e.printStackTrace();
 		}
 		teste.run();
+		System.out.println("1o print");
 		teste.calculateCodeSmellStatistics();
-		teste.calculateCodeSmellStatistics();
+		System.out.println("2o print");
 		teste.getStatisics().get(0).printTest();
+		System.out.println("3o print");
 	}
 }
