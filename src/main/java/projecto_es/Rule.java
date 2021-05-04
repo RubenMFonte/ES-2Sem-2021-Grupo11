@@ -10,11 +10,13 @@ public class Rule {
 	private ArrayList<String> list;
 	private ArrayList<Condition> conditions;
 	private ArrayList<LogicalOperator> logicalOperator;
+	private List<Boolean> conditionValues;
 
 	// Assume-se que a string que entra nesta função +e do formato
 	// "id:codeSmell:active:Metrics:NumericOperator:threshold:LogicalOperator:Metrics:NumericOperator:threshold:LogicalOperator:..."
 	public Rule(String rule) {
 		list = new ArrayList<>();
+		conditionValues = new ArrayList<Boolean>();
 		String[] values = rule.split(":");
 		list.add(values[0]);
 		list.add(values[1]);
@@ -73,9 +75,10 @@ public class Rule {
 	}
 
 	public void switchActive() {
-		if(list.get(2).equals("true")) {
+		if (list.get(2).equals("true")) {
 			list.set(2, "false");
-		}else list.set(2, "true");
+		} else
+			list.set(2, "true");
 	}
 
 	public ArrayList<String> getList() {
@@ -94,20 +97,19 @@ public class Rule {
 			return null;
 		}
 	}
-	
-	public List<String> getConditionsArray()
-	{		
+
+	public List<String> getConditionsArray() {
 		ArrayList<String> conditions = new ArrayList<>();
-		
-		for(int i = 3; i < list.size(); i += 2)
-		{
+
+		for (int i = 3; i < list.size(); i += 2) {
 			String condition = "" + list.get(i);
-			
-			if(i < list.size()-1) condition += ":" + list.get(i+1);
-			
+
+			if (i < list.size() - 1)
+				condition += ":" + list.get(i + 1);
+
 			conditions.add(condition);
 		}
-		
+
 		return conditions;
 	}
 
@@ -119,16 +121,35 @@ public class Rule {
 			return null;
 		}
 	}
-	
+
 	public String getCodeSmell() {
 		return list.get(1);
 	}
-	
-	public String getHeader()
-	{
+
+	public String getHeader() {
 		return list.get(0) + ":" + list.get(1) + ":" + list.get(2);
 	}
+
+	public void add_conditionValue(boolean value) {
+		conditionValues.add(value);
+	}
 	
+	public List<Boolean> getCondiotionValue(){
+		return this.conditionValues;
+	}
+
+	public ArrayList<LogicalOperator> getLogicalOperator() {
+		return logicalOperator;
+	}
+	
+	public LogicalOperator getLogicalOperatorIndex(int index) {
+		return logicalOperator.get(index);
+	}
+
+	public void setLogicalOperator(ArrayList<LogicalOperator> logicalOperator) {
+		this.logicalOperator = logicalOperator;
+	}
+
 	@Override
 	public String toString() {
 		String string;
