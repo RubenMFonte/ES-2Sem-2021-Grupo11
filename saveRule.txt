@@ -1,5 +1,6 @@
 1:God_class:false:LOC_CLASS:EQ:5
 2:God_class:false:LOC_CLASS:EQ:5
+<<<<<<< HEAD
 3:God_class:false:LOC_CLASS:EQ:5
 4:Long_method:true:LOC_CLASS:EQ:7
 5:Long_method:false:LOC_CLASS:EQ:9
@@ -10,3 +11,14 @@
 10:God_class:false:WMC_CLASS:NE:4
 11:God_class:false:NOM_CLASS:GT:4
 12:God_class:false:WMC_CLASS:==:3
+=======
+3:God_class:false:LOC_METHOD:>=:69:AND:CYCLO_METHOD:==:69:
+4:God_class:true:LOC_CLASS:EQ:5
+5:Long_method:true:LOC_CLASS:EQ:7
+6:Long_method:false:LOC_CLASS:EQ:9
+7:Long_method:false:LOC_CLASS:GT:7
+8:Long_method:false:LOC_CLASS:LT:7
+9:God_class:false:NOM_CLASS:!=:7:
+10:God_class:false:LOC_CLASS:==:5:
+11:God_class:false:NOM_CLASS:==:2:AND:LOC_CLASS:!=:2:AND:WMC_CLASS:==:2:AND:LOC_METHOD:>=:2:OR:WMC_CLASS:<=:2:
+>>>>>>> refs/remotes/origin/CodeSmellCalculator

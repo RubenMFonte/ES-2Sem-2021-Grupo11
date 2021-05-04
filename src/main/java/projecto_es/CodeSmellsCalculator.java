@@ -282,31 +282,6 @@ public class CodeSmellsCalculator {
 	}
 
 	public void run(/* String filename */) {
-		dataList = ExcelToData
-				.getallClass("C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\MYCode_Smells.xlsx");
-//		CodeSmellsCalculator cal = new CodeSmellsCalculator();
-//        cal.getCodeSmellsActiveRules(filename);
-//        cal.fillCodeSmellTable();
-//        cal.calculateCodeSmellStatistics() ;
-	}
-
-	public static void main(String[] args) {
-		// EXEMPLO DO USO DA FUNÇÃO getCodeSmellsActiveRules
-		CodeSmellsCalculator teste = new CodeSmellsCalculator();
-		try {
-			teste.getCodeSmellsActiveRules();
-			List<Rule> arrayTeste = teste.getRule();
-			for (Rule rule : arrayTeste) {
-				System.out.println(rule.toString());
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		teste.run();
-		System.out.println("1o print");
-		teste.calculateCodeSmellStatistics();
-		System.out.println("2o print");
-		teste.getStatisics().get(0).printTest();
-		System.out.println("3o print");
+		dataList = ExcelToData.getallClass("C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\MYCode_Smells.xlsx");
 	}
 }
