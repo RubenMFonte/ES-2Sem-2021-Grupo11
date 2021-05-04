@@ -10,11 +10,13 @@ public class Rule {
 	private ArrayList<String> list;
 	private ArrayList<Condition> conditions;
 	private ArrayList<LogicalOperator> logicalOperator;
+	private List<Boolean> conditionValue;
 
 	// Assume-se que a string que entra nesta função +e do formato
 	// "id:codeSmell:active:Metrics:NumericOperator:threshold:LogicalOperator:Metrics:NumericOperator:threshold:LogicalOperator:..."
 	public Rule(String rule) {
 		list = new ArrayList<>();
+		conditionValue = new ArrayList<Boolean>();
 		String[] values = rule.split(":");
 		list.add(values[0]);
 		list.add(values[1]);
@@ -42,6 +44,17 @@ public class Rule {
 			}
 		}
 	}
+
+	
+	public List<Boolean> getConditionValue() {
+		return conditionValue;
+	}
+
+
+	public void setConditionValue(List<Boolean> conditionValue) {
+		this.conditionValue = conditionValue;
+	}
+
 
 	public void addCondition(LogicalOperator operator, Condition condition) {
 		list.add(operator.toString());
@@ -142,6 +155,12 @@ public class Rule {
 		}
 		return string;
 	}
+	
+	public void add_conditionValue(boolean conditionValue) {
+		this.conditionValue.add(conditionValue);
+		
+	}
+
 
 	// teste de exemplo
 	public static void main(String[] args) {
@@ -161,4 +180,5 @@ public class Rule {
 		System.out.println("condition index: " + rule.getCondition(0));
 
 	}
+
 }
