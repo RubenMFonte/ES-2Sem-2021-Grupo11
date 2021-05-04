@@ -22,11 +22,14 @@ import javax.swing.JTextField;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -48,6 +51,12 @@ public class ICodeSmellsQuality {
 
 	private JFrame frame;
 	
+	JTextField textField = new JTextField();
+	private int truePositives=0;
+	private int falsePositives=0;
+	private int trueNegatives=0;
+	private int falseNegatives=0;
+	
 	//For Panel Left
 	private JPanel panelDetentionTable;
 	private JTable tableInfo;
@@ -67,17 +76,16 @@ public class ICodeSmellsQuality {
 	private JComboBox codeSmellSelected = new JComboBox(new String[] {"is_God_class", "is_Long_method"});
 	private JPanel panelLayoutQualityData;
 	private JLabel tp = new JLabel("True Positives [VP]:");
-	private JLabel tp_result = new JLabel("0");
+	private JLabel tp_result = new JLabel(Integer.toString(truePositives));
 	private JLabel fp = new JLabel("False Positives [TN]:");
-	private JLabel fp_result = new JLabel("0");
+	private JLabel fp_result = new JLabel(Integer.toString(falsePositives));
 	private JLabel tn = new JLabel("True Negatives [FP]:");
-	private JLabel tn_result = new JLabel("0");
+	private JLabel tn_result = new JLabel(Integer.toString(trueNegatives));
 	private JLabel fn = new JLabel("False Negatives [FN]:");
-	private JLabel fn_result = new JLabel("0");
+	private JLabel fn_result = new JLabel(Integer.toString(falseNegatives));
 	private JPanel panelQualityGraphic;
 	private Canvas canvas;
 	
-	JTextField textField = new JTextField();
 	
 	
 
@@ -124,6 +132,7 @@ public class ICodeSmellsQuality {
 	    frame.setVisible(true);
 	    
 	    selectExcelButton();
+	    updateTableButton();
 	}
 	
 	private void definePanelDetentionTableLook() {
@@ -147,17 +156,18 @@ public class ICodeSmellsQuality {
 		
 	}
 	
-	private void defineJTableContent() {
-		//Só para testar -> Mai tarde inicializar as colunas e linhas com os dados carregados do exccel
-		String[][] data = {
-	            { "Kundan Kumar Jha", "4031", "CSE" },
-	            { "Anand Jha", "6014", "IT" }
-	        };
-		 String[] columnNames = { "Name", "Roll Number"
-				, "Department" };
-		 tableInfo = new JTable(50, 10);
-		 tableInfo.setPreferredScrollableViewportSize(new Dimension (720, 300));
-		 tableInfo.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	private void defineJTableContent() {	
+		String[] columnNames = { "Class", "is_God_Class", "Classificação", "Method ID", "Method Name", "is_long_method", "Classificação" };
+		DefaultTableModel model = new DefaultTableModel();
+
+		tableInfo = new JTable(50,7);
+		for(int i=0;i<columnNames.length;i++){
+			TableColumn tc = tableInfo.getColumnModel().getColumn(i);
+			tc.setPreferredWidth(150);
+			tc.setHeaderValue(columnNames[i]);
+		}	
+		tableInfo.setPreferredScrollableViewportSize(new Dimension (720, 300));
+		tableInfo.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	}
 	
 	private void definePanelSouthInfoContent() {
@@ -213,9 +223,6 @@ public class ICodeSmellsQuality {
 		
 		panelDetentionQuality.add(panelQualityLabels);
 		panelDetentionQuality.add(panelQualityGraphic);
-		
-		
-		
 	}
 	
 	private void definePanelQualityLabelsContent() {
@@ -302,7 +309,7 @@ public class ICodeSmellsQuality {
 	}
 
 	private void definePanelQualityGraphicContent() {
-		panelQualityGraphic = new ChartPanel( new PieChart(10,11,20,20).pie);
+		panelQualityGraphic = new ChartPanel( new PieChart(truePositives,falsePositives,trueNegatives,falseNegatives).pie);
 		//System.out.println(panelQualityGraphic.get);
 		panelQualityGraphic.setBorder((BorderFactory.createTitledBorder("Chart Statistics")));
 		panelQualityGraphic.setPreferredSize(new Dimension(200,200));
@@ -405,6 +412,24 @@ public class ICodeSmellsQuality {
 					excelPath.setText(excelPathString);
 				}
     
+			}
+		});
+	}
+	
+	public void updateTableButton() {
+		update.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					CodeSmellsCalculator codeSmellsCalculator = new CodeSmellsCalculator(textField.getText());
+					tableInfo = codeSmellsCalculator.fillCodeSmellTable();
+				} catch (FileNotFoundException erro) {
+					// TODO Auto-generated catch block
+					erro.printStackTrace();
+					System.out.println("Erro: ficheiro excel não encontrado/selecionado!!!");
+				}
+				scrollPaneForJTable.setViewportView(tableInfo);		
+ System.out.println("update table pressed!!!");
+ System.out.println(tableInfo.getModel().getValueAt(0, 0));
 			}
 		});
 	}
