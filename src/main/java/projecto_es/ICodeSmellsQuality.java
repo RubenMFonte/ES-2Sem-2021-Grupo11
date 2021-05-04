@@ -51,6 +51,12 @@ public class ICodeSmellsQuality {
 
 	private JFrame frame;
 	
+	JTextField textField = new JTextField();
+	private int truePositives=0;
+	private int falsePositives=0;
+	private int trueNegatives=0;
+	private int falseNegatives=0;
+	
 	//For Panel Left
 	private JPanel panelDetentionTable;
 	private JTable tableInfo;
@@ -70,17 +76,16 @@ public class ICodeSmellsQuality {
 	private JComboBox codeSmellSelected = new JComboBox(new String[] {"is_God_class", "is_Long_method"});
 	private JPanel panelLayoutQualityData;
 	private JLabel tp = new JLabel("True Positives [VP]:");
-	private JLabel tp_result = new JLabel("0");
+	private JLabel tp_result = new JLabel(Integer.toString(truePositives));
 	private JLabel fp = new JLabel("False Positives [TN]:");
-	private JLabel fp_result = new JLabel("0");
+	private JLabel fp_result = new JLabel(Integer.toString(falsePositives));
 	private JLabel tn = new JLabel("True Negatives [FP]:");
-	private JLabel tn_result = new JLabel("0");
+	private JLabel tn_result = new JLabel(Integer.toString(trueNegatives));
 	private JLabel fn = new JLabel("False Negatives [FN]:");
-	private JLabel fn_result = new JLabel("0");
+	private JLabel fn_result = new JLabel(Integer.toString(falseNegatives));
 	private JPanel panelQualityGraphic;
 	private Canvas canvas;
 	
-	JTextField textField = new JTextField();
 	
 	
 
@@ -152,7 +157,7 @@ public class ICodeSmellsQuality {
 	}
 	
 	private void defineJTableContent() {	
-		String[] columnNames = { "Class", "is_God_Class", "ClassificaÁ„o", "Method ID", "Method Name", "is_long_method", "ClassificaÁ„o" };
+		String[] columnNames = { "Class", "is_God_Class", "Classifica√ß√£o", "Method ID", "Method Name", "is_long_method", "Classifica√ß√£o" };
 		DefaultTableModel model = new DefaultTableModel();
 
 		tableInfo = new JTable(50,7);
@@ -161,21 +166,9 @@ public class ICodeSmellsQuality {
 			tc.setPreferredWidth(150);
 			tc.setHeaderValue(columnNames[i]);
 		}	
-		
-	/*	
-			try {
-				CodeSmellsCalculator codeSmellsCalculator = new CodeSmellsCalculator(textField.getText());
-				tableInfo = codeSmellsCalculator.fillCodeSmellTable();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				System.out.println("Erro: ficheiro excel n„o encontrado/selecionado!!!");
-			}		
-System.out.println("ola");		
-*/	 tableInfo.setPreferredScrollableViewportSize(new Dimension (720, 300));
-		 tableInfo.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		 
-		 
+		tableInfo.setPreferredScrollableViewportSize(new Dimension (720, 300));
+		tableInfo.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
 	}
 	
 	private void definePanelSouthInfoContent() {
@@ -231,9 +224,6 @@ System.out.println("ola");
 		
 		panelDetentionQuality.add(panelQualityLabels);
 		panelDetentionQuality.add(panelQualityGraphic);
-		
-		
-		
 	}
 	
 	private void definePanelQualityLabelsContent() {
@@ -320,7 +310,8 @@ System.out.println("ola");
 	}
 
 	private void definePanelQualityGraphicContent() {
-		panelQualityGraphic = new ChartPanel( new PieChart(20,20,20,20).pie);
+		panelQualityGraphic = new ChartPanel( new PieChart(truePositives,falsePositives,trueNegatives,falseNegatives).pie);
+
 		//System.out.println(panelQualityGraphic.get);
 		panelQualityGraphic.setBorder((BorderFactory.createTitledBorder("Chart Statistics")));
 		panelQualityGraphic.setPreferredSize(new Dimension(200,200));
@@ -436,7 +427,7 @@ System.out.println("ola");
 				} catch (FileNotFoundException erro) {
 					// TODO Auto-generated catch block
 					erro.printStackTrace();
-					System.out.println("Erro: ficheiro excel n„o encontrado/selecionado!!!");
+					System.out.println("Erro: ficheiro excel n√£o encontrado/selecionado!!!");
 				}
 				scrollPaneForJTable.setViewportView(tableInfo);		
  System.out.println("update table pressed!!!");
