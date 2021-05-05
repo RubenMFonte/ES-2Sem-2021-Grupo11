@@ -93,6 +93,8 @@ public class IMetricsCalculator {
 		setShowStatisitcs_Button();
 		set_GoBackButton();
 
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
 	}
 
 	public void setSelecionarProjeto_Button() {

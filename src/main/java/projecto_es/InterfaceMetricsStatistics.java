@@ -160,16 +160,13 @@ public class InterfaceMetricsStatistics extends JFrame {
 		textField.setText(excelPath);
 	}
 
-	private void initialize() {
-//		this.packageJList = ListsToInterface.getListsToInterfaceInstance().getPackageJList();
-//		this.classJList = ListsToInterface.getListsToInterfaceInstance().getClassJList();
-//		this.methodsJList = ListsToInterface.getListsToInterfaceInstance().getMethodsJList();
-//		this.statisticsJlist = ListsToInterface.getListsToInterfaceInstance().showGeneralMetrics(statisticsGeneral);
-		
+	private void initialize() {		
 		
 		setTitle("Visualizar Estatísticas");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(200, 200, 800, 500);
+		setResizable(false);
+		setLocationRelativeTo(null);
 		setResizable(false);
 		setLocationRelativeTo(null);
 
@@ -305,23 +302,23 @@ public class InterfaceMetricsStatistics extends JFrame {
 
 		scrollPane_4.setViewportView(statisticsJlist);
 				
-				JPanel panel_5 = new JPanel();
-				FlowLayout flowLayout = (FlowLayout) panel_5.getLayout();
-				flowLayout.setAlignment(FlowLayout.LEFT);
-				contentPane.add(panel_5);
+		JPanel panel_5 = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel_5.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		contentPane.add(panel_5);
+
+		JButton goBackButton = new JButton("<");
+		panel_5.add(goBackButton);
+		goBackButton.setHorizontalAlignment(SwingConstants.LEFT);
 		
-				JButton goBackButton = new JButton("<");
-				panel_5.add(goBackButton);
-				goBackButton.setHorizontalAlignment(SwingConstants.LEFT);
-				
-				//goBackButton
-						goBackButton.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-							IMenu window = new IMenu();
-								window.frame.setVisible(true);
-								dispose();
-							}
-						});
+//goBackButton
+		goBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			IMenu window = new IMenu();
+				window.frame.setVisible(true);
+				dispose();
+			}
+		});
 
 //buttonShowMetrics actionListener
 		buttonShowMetrics.addActionListener(new ActionListener() {

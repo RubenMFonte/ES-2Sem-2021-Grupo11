@@ -83,6 +83,8 @@ public class IMenu {
 			setCodeRules();
 			setQualityCodeSmells();
 
+			frame.setResizable(false);
+			frame.setLocationRelativeTo(null);
 		}
 	
 		

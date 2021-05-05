@@ -128,6 +128,9 @@ public class IDetetionParameters {
         
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        
 	}
 	
 	private void exitWindow()
