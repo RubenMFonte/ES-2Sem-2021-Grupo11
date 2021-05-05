@@ -40,5 +40,12 @@ public class ClassBooleanObject {
 	public Boolean getGodC() {
 		return godC;
 	}
+
+
+	public List<MethodBoolean> getLmds() {
+		return lmds;
+	}
+}
+
 }
 
