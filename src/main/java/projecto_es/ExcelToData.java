@@ -1,6 +1,7 @@
 package projecto_es;
 
 import java.io.File;
+
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,20 +43,10 @@ public class ExcelToData {
 					cds = new ClassDataStructure(ReadCellData(cont, 1, wb), ReadCellData(cont, 2, wb),
 							ReadCellData(cont, 4, wb), ReadCellData(cont, 5, wb), ReadCellData(cont, 6, wb));
 					
-					String codeSmellEvaluation = ReadCellData(cont, 7, wb);
-					
-					if(codeSmellEvaluation.equals("true")) cds.setCodeSmellsEvaluation("God_class", true);
-					else if(codeSmellEvaluation.equals("false")) cds.setCodeSmellsEvaluation("God_class", false);
-					
 					allClass.add(cds);
 				}
 				MethodDataStructure newMethod = new MethodDataStructure(ReadCellData(cont, 3, wb), (int) Double.parseDouble(ReadCellData(cont, 8, wb)),
 						(int) Double.parseDouble(ReadCellData(cont, 9, wb)));
-				
-				String codeSmellEvaluation = ReadCellData(cont, 10, wb);
-				
-				if(codeSmellEvaluation.equals("true")) newMethod.setCodeSmellsEvaluation("Long_method", true);
-				else if(codeSmellEvaluation.equals("false")) newMethod.setCodeSmellsEvaluation("Long_method", false);
 				
 				cds.addMethod(newMethod);
 			}
@@ -64,7 +55,47 @@ public class ExcelToData {
 		}
 		return allClass;
 	}
+	
+	public static List<ClassBooleanObject> getBooleanObjects(String args) {
+		List<ClassBooleanObject> allObject = new ArrayList<>();
 
+		try {
+			File file = new File(args);
+			FileInputStream fis;
+
+			fis = new FileInputStream(file);
+			XSSFWorkbook wb = new XSSFWorkbook(fis);
+			XSSFSheet sheet = wb.getSheetAt(0);
+			int cont = 0;
+			ExcelToData rc = new ExcelToData();
+			Iterator<Row> itr = sheet.iterator();
+			ClassBooleanObject cds = null;
+			while (itr.hasNext()) {
+
+				cont++;
+
+				if (!ReadCellData(cont-1,2,wb).equals(ReadCellData(cont,2,wb))) {
+
+					cds = new ClassBooleanObject(ReadCellData(cont, 1, wb), ReadCellData(cont, 2, wb),
+							 Boolean.parseBoolean(ReadCellData(cont, 7, wb)));
+					System.out.println( cds.getClassName()) ;
+					System.out.println(cds.getGodC());
+					allObject.add(cds);
+				}
+				MethodBoolean newMethod = new MethodBoolean(ReadCellData(cont, 3, wb), Boolean.parseBoolean(ReadCellData(cont, 10, wb)));
+				
+				cds.addMethod(newMethod);
+				System.out.println(newMethod.getMethodName());
+				System.out.println(newMethod.getLmethod());
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return allObject;
+	}
+	
+	
 	public static String ReadCellData(int vRow, int vColumn, Workbook wb) {
 		String value = null;
 		Sheet sheet = wb.getSheetAt(0);
@@ -87,13 +118,8 @@ public class ExcelToData {
 	}
 
 	public static void main(String[] args) {
-		String path = "C:\\Users\\ruben\\Downloads\\Code_Smells.xlsx";
-		List<ClassDataStructure> teste = getallClass(path);
-		GeneralStatistics gs = new GeneralStatistics(teste);
-		System.out.println("n_packages = " + gs.getN_package());
-		System.out.println("n_lines = " + gs.getN_lines());
-		System.out.println("n_classes = " + gs.getN_classes());
-		System.out.println("n_methods = " + gs.getN_methods());
+		String path =( "C:\\Users\\catar\\Desktop\\Code_Smells.xlsx");
+		List<ClassBooleanObject> end= getBooleanObjects(path);
 	
 	}
 
