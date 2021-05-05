@@ -27,6 +27,8 @@ import java.text.DecimalFormat;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -64,7 +66,7 @@ public class ICodeSmellsQuality {
 	private JPanel panelQualityLabels;
 	private JPanel panelLayoutCodeSmellSelected;
 	private JLabel codeS = new JLabel("Code Smell Selected:");
-	private JComboBox codeSmellSelected = new JComboBox(new String[] {"is_God_class", "is_Long_method"});
+	private JComboBox codeSmellSelected = new JComboBox(new String[] {"", "is_God_class", "is_Long_method"});
 	private JPanel panelLayoutQualityData;
 	private JLabel tp = new JLabel("True Positives [VP]:");
 	private JLabel tp_result = new JLabel("0");
@@ -149,13 +151,16 @@ public class ICodeSmellsQuality {
 	
 	private void defineJTableContent() {
 		//Só para testar -> Mai tarde inicializar as colunas e linhas com os dados carregados do exccel
-		String[][] data = {
-	            { "Kundan Kumar Jha", "4031", "CSE" },
-	            { "Anand Jha", "6014", "IT" }
-	        };
-		 String[] columnNames = { "Name", "Roll Number"
-				, "Department" };
-		 tableInfo = new JTable(50, 10);
+		 String[] columnNames = { "Class", "is_God_Class", "Classificação", "Method ID", "Method Name", "is_long_method", "Classificação" };
+		 DefaultTableModel model = new DefaultTableModel(); 
+	
+		 tableInfo = new JTable(50,7);
+		 for(int i=0;i<columnNames.length;i++){
+
+			 TableColumn tc = tableInfo.getColumnModel().getColumn(i);
+			 tc.setPreferredWidth(150);
+			 tc.setHeaderValue(columnNames[i]);
+		 }
 		 tableInfo.setPreferredScrollableViewportSize(new Dimension (720, 300));
 		 tableInfo.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	}

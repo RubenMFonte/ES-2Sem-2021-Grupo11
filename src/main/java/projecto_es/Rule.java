@@ -129,6 +129,16 @@ public class Rule {
 		return list.get(0) + ":" + list.get(1) + ":" + list.get(2);
 	}
 	
+	// Necessárias
+	public List<Condition> getConditions(){
+		return conditions;
+	}
+	
+	public List<LogicalOperator> getLogicalOperators(){
+		return logicalOperator;
+	}
+	//
+	
 	@Override
 	public String toString() {
 		String string;
