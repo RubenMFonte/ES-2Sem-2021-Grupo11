@@ -139,7 +139,7 @@ public class IMetricsCalculator {
 						popUp("O projeto selecionado não é um projeto Java. Por favor selecione um projeto Java");
 					} else {
 						saveFile(jte);
-//						popUp("Excel salvo com sucesso!");
+						popUp("Excel salvo com sucesso!");
 					}
 				} else {
 					popUp("Escolha um projeto java antes de executar");
@@ -191,7 +191,7 @@ public class IMetricsCalculator {
 		} else {
 			String exel_file = save_exel.getSelectedFile().getAbsolutePath();
 			exel_file += generate_nameFile(path_Java.getText());
-//			path_Exel.setText(exel_file);
+			path_Exel.setText(exel_file);
 			show_Statistics.setEnabled(true);
 			jte.setPath_exel(exel_file);
 			path_Exel.setText(jte.getPath_exel());

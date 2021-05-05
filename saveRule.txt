@@ -1,6 +1,5 @@
 1:God_class:false:LOC_CLASS:EQ:5
 2:God_class:false:LOC_CLASS:EQ:5
-
 3:God_class:false:LOC_CLASS:EQ:5
 4:Long_method:true:LOC_CLASS:EQ:7
 5:Long_method:false:LOC_CLASS:EQ:9
@@ -11,3 +10,4 @@
 10:God_class:false:WMC_CLASS:NE:4
 11:God_class:false:NOM_CLASS:GT:4
 12:God_class:false:WMC_CLASS:EQ:3
+13:God_class:false:NOM_CLASS:GE:5

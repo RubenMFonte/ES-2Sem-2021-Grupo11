@@ -22,6 +22,15 @@ public class CodeSmellsCalculator {
 		statisics = new ArrayList<CodeSmellStatistics>();
 //		this.run(path);
 	}
+	
+//	public Rule find_Rule(String rule) {
+//		Rule rule_return = null;
+//		for(Rule r : rules) {
+//			if(r.getCodeSmell().equals(rule))
+//				rule_return = r;
+//		}
+//		return rule_return;
+//	}
 
 	public void getCodeSmellsActiveRules() throws FileNotFoundException {
 		ArrayList<Rule> activeRules = new ArrayList<>();
@@ -220,6 +229,7 @@ public class CodeSmellsCalculator {
 			if (i < rule.getConditionValue().size() - 1) {
 				LogicalOperator lo = rule.getLogicalOperator(i);
 				if (lo == LogicalOperator.AND) {
+			
 					if (finalEvaluationValue == true && rule.getConditionValue().get(i) == false) {
 						finalEvaluationValue = false;
 					}
@@ -282,6 +292,24 @@ public class CodeSmellsCalculator {
 	}
 
 	public void run(/* String filename */) {
-//		dataList = ExcelToData.getallClass("C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\MYCode_Smells.xlsx");
+		dataList = ExcelToData.getallClass("C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\MYCode_Smells.xlsx");
+	}
+
+	public static void main(String[] args) {
+		// EXEMPLO DO USO DA FUNÇÃO getCodeSmellsActiveRules
+		CodeSmellsCalculator teste = new CodeSmellsCalculator();
+		try {
+			teste.getCodeSmellsActiveRules();
+			List<Rule> arrayTeste = teste.getRule();
+			for (Rule rule : arrayTeste) {
+				System.out.println(rule.toString());
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		teste.run();
+		teste.calculateCodeSmellStatistics();
+		teste.calculateCodeSmellStatistics();
+		teste.getStatisics().get(0).printTest();
 	}
 }
