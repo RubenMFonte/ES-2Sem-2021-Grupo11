@@ -7,7 +7,10 @@ import java.util.List;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.PackageDeclaration;
+import com.github.javaparser.ast.body.CallableDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.ConstructorDeclaration;
+//import com.github.javaparser.ast.body.
 import com.github.javaparser.ast.body.MethodDeclaration;
 
 public class ClassDataStructure {
@@ -49,8 +52,10 @@ public class ClassDataStructure {
 	private int loc_class;
 	private int wmc_class;
 	private List<MethodDataStructure> lmds = new ArrayList<>();
-	
+	private List<ClassDataStructure> innerClasses = new ArrayList<>();
 	private HashMap<String, Boolean> codeSmellsEvaluation = new HashMap<>();
+	private String codeSmellDetected;
+	
 
 	public ClassDataStructure(CompilationUnit javaFile) {
 		List<Node> children = javaFile.getChildNodes();
@@ -62,12 +67,19 @@ public class ClassDataStructure {
 
 			} else if (child.getClass() == ClassOrInterfaceDeclaration.class) {
 				ClassOrInterfaceDeclaration cid = (ClassOrInterfaceDeclaration) child;
-				calculateMetricsStoreMethods(cid);
 				String className = cid.getNameAsString();
 				this.className = className;
+				calculateMetricsStoreMethods(cid);
 			} else {
 			}
 		}
+	}
+	
+	public ClassDataStructure(String packag, String classNameToConcat, ClassOrInterfaceDeclaration innerClass) {
+		String innerClassName = classNameToConcat.concat("."+innerClass.getNameAsString());
+		this.packageName = packag;
+		this.className = innerClassName;
+		calculateMetricsStoreMethods(innerClass);
 	}
 
 	public ClassDataStructure(String packageName, String className, String nom_class, String loc_class,
@@ -83,7 +95,7 @@ public class ClassDataStructure {
 		MethodDataStructure mds = new MethodDataStructure(methodName, loc_method, cyclo_method);
 		this.addMethod(mds);
 	}
-	
+
 	public void addMethod(MethodDataStructure mds) {
 		this.lmds.add(mds);
 	}
@@ -91,20 +103,32 @@ public class ClassDataStructure {
 	private void calculateMetricsStoreMethods(ClassOrInterfaceDeclaration cid) {
 		this.wmc_class = MetricsCalculator.WMC_class(cid);
 		this.loc_class = MetricsCalculator.getLOC_Class(cid);
-		this.nom_class = MetricsCalculator.NOM_class(cid);
-		List<MethodDeclaration> methods = cid.getMethods();
+		this.nom_class = MetricsCalculator.NOM_class(cid);	
+		for (Node n : cid.getChildNodes()) {
+			if (n.getClass() == MethodDeclaration.class || n.getClass() == ConstructorDeclaration.class) {
+				System.out.println("Class name: " + n.getClass().getName());
+				MethodDataStructure mds_part = new MethodDataStructure((CallableDeclaration) n);
+				lmds.add(mds_part);
+			} else if(n.getClass() == ClassOrInterfaceDeclaration.class) {
+				ClassOrInterfaceDeclaration decl = (ClassOrInterfaceDeclaration) n ;
+				ClassDataStructure inner = new ClassDataStructure(packageName, className, decl);
+				innerClasses.add(inner);
+			}
+		}
+		/*List<MethodDeclaration> methods = cid.getMethods();
 		for (MethodDeclaration md : methods) {
 			MethodDataStructure mds_part = new MethodDataStructure(md);
 			lmds.add(mds_part);
-		}
+		}*/
 	}
-	
+
 	public void setCodeSmellsEvaluation(String codeSmell, boolean codeSmellEvaluation) {
 		codeSmellsEvaluation.put(codeSmell, codeSmellEvaluation);
 	}
-	
+
 	public Boolean getCodeSmellsEvaluation(String codeSmell) {
-		if(codeSmellsEvaluation.containsKey(codeSmell)) return codeSmellsEvaluation.get(codeSmell);
+		if (codeSmellsEvaluation.containsKey(codeSmell))
+			return codeSmellsEvaluation.get(codeSmell);
 		return null;
 	}
 
@@ -130,6 +154,22 @@ public class ClassDataStructure {
 
 	public List<MethodDataStructure> getMethodDataStructureList() {
 		return lmds;
+	}
+	
+	public List<ClassDataStructure> getInnerClassesList() {
+		return innerClasses;
+	}
+	
+	public HashMap<String, Boolean>  getCodeSmellsEvaluation(){
+		return codeSmellsEvaluation;
+	}
+	
+	public void setCodeSmellDetected(String codeSmellDetected) {
+		this.codeSmellDetected = codeSmellDetected;
+	}
+	
+	public String getCodeSmellDetected() {
+		return codeSmellDetected;
 	}
 
 }

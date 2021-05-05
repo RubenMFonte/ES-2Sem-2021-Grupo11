@@ -1,40 +1,32 @@
 package projecto_es;
 
-import java.awt.Font;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 
 public class CodeSmellsCalculator {
 
 	private List<ClassDataStructure> dataList;
-	private List<Rule> rules;
+	private List<Rule> activeRules;
 	private List<CodeSmellStatistics> statisics;
 
-	public CodeSmellsCalculator(/* String path */) /* throws FileNotFoundException */ {
+	public CodeSmellsCalculator() {
 		dataList = new ArrayList<>();
-		rules = new ArrayList<>();
+		activeRules = new ArrayList<>();
 		statisics = new ArrayList<CodeSmellStatistics>();
-//		this.run(path);
-	}
-	
-//	public Rule find_Rule(String rule) {
-//		Rule rule_return = null;
-//		for(Rule r : rules) {
-//			if(r.getCodeSmell().equals(rule))
-//				rule_return = r;
-//		}
-//		return rule_return;
-//	}
 
-	public void getCodeSmellsActiveRules() throws FileNotFoundException {
-		ArrayList<Rule> activeRules = new ArrayList<>();
-		File saveRule = new File("saveRule.txt");
+	}
+
+	public void getCodeSmellsActiveRules(String filename) throws FileNotFoundException {
+		File saveRule = new File(filename);
 		Scanner myReader = new Scanner(saveRule);
 		while (myReader.hasNextLine()) {
 			String data = myReader.nextLine();
@@ -43,236 +35,37 @@ public class CodeSmellsCalculator {
 				activeRules.add(new Rule(data));
 		}
 		myReader.close();
-		rules = activeRules;
 	}
 
-	// Podem alterar a assinatura do mÈtodo se vos for conveniente
-	public JTable fillCodeSmellTable() {
-		String[] columnNames = { "Class", "is_God_Class", "ClassificaÁ„o", "Method ID", "Method Name", "is_long_method",
-				"ClassificaÁ„o" };
-		int statisticsJTNumberLines = 0;
-		for (int c = 0; c < dataList.size(); c++) {
-			statisticsJTNumberLines += dataList.get(c).getMethodDataStructureList().size();
-		}
-		String[][] statisticsJT = new String[statisticsJTNumberLines][columnNames.length];
-		int line = 0;
-		for (int i = 0; i < dataList.size(); i++) {
-			ClassDataStructure data = dataList.get(i);
-			for (int j = 0; j < data.getMethodDataStructureList().size(); j++) {
-				statisticsJT[line][0] = data.getClassName();
-				statisticsJT[line][1] = data.getCodeSmellsEvaluation("God_class").toString();
-				statisticsJT[line][2] = ""; // classificaÁ„o
-				statisticsJT[line][3] = ""; // data.getMethodDataStructureList().get(j).getID(); Falta criar o metodo
-											// para ir buscar o ID do excel
-				statisticsJT[line][4] = data.getMethodDataStructureList().get(j).getMethodName();
-				statisticsJT[line][5] = data.getMethodDataStructureList().get(j).getCodeSmellsEvaluation("Long_method")
-						.toString();
-				statisticsJT[line][6] = ""; // ClassificaÁ„o
-				line++;
-			}
-		}
-		return new JTable(statisticsJT, columnNames);
+	// Podem alterar a assinatura do m√©todo se vos for conveniente
+	public void fillCodeSmellTable() {
+
 	}
 
-	// Podem alterar a assinatura do mÈtodo se vos for conveniente
+	// Podem alterar a assinatura do m√©todo se vos for conveniente
 	public void calculateCodeSmellStatistics() {
-		for (Rule rule : rules) {
+		for (Rule rule : activeRules) {
 			CodeSmellStatistics css = new CodeSmellStatistics(rule.getCodeSmell(), 0, 0, 0, 0);
 			if (rule.getCodeSmell().equals("Long_method")) {
 				for (int i = 0; i < dataList.size(); i++) {
-					iterateMethodsCS(dataList.get(i).getMethodDataStructureList(), rule, dataList.get(i), css);
+					for(MethodDataStructure method : dataList.get(i).getMethodDataStructureList()) {
+						detention(null, method, rule, css);
+					}
 				}
 			}
 			if (rule.getCodeSmell().equals("God_class")) {
 				for (int i = 0; i < dataList.size(); i++) {
-					boolean codeSmellEvaluation = dataList.get(i).getCodeSmellsEvaluation(rule.getCodeSmell());
-					compareConditionClass(rule, dataList.get(i), codeSmellEvaluation, css);
+					detention(dataList.get(i), null, rule, css);
 				}
 			}
 			statisics.add(css);
 		}
-	}
-
-	public void iterateMethodsCS(List<MethodDataStructure> methods, Rule rule, ClassDataStructure cds,
-			CodeSmellStatistics css) {
-		for (int i = 0; i < methods.size(); i++) {
-			MethodDataStructure ms = methods.get(i);
-			compareConditionsMTD(css, rule, ms);
+		System.out.println("--------------SEE STATUS----------------");
+		for(CodeSmellStatistics status : statisics) {
+			System.out.println(status.getCodeSmell() + " Statistics " + " VP " + status.getTrue_positive() + " FP " + status.getFalse_positive()
+			+ " FN " + status.getFalse_negative() + " VN " + status.getTrue_negative());				
 		}
-	}
-
-	public void compareConditionsMTD(CodeSmellStatistics css, Rule rule, MethodDataStructure mtd) {
-		if (rule.numberOfConditions() == 1) {
-			Condition condition = rule.getCondition(0);
-			if (condition.getMetric() == Metrics.LOC_METHOD) {
-				verifyOperator(rule, mtd.getLOCMetric(), condition.getNumericOperator(), condition.getThreshold(),
-						mtd.getCodeSmellsEvaluation(rule.getCodeSmell()), css);
-			}
-
-			if (condition.getMetric() == Metrics.CYCLO_METHOD) {
-				verifyOperator(rule, mtd.getCYCLOMetric(), condition.getNumericOperator(), condition.getThreshold(),
-						mtd.getCodeSmellsEvaluation(rule.getCodeSmell()), css);
-			}
-			codeSmellSatistic_increase(css, mtd.getCodeSmellsEvaluation(rule.getCodeSmell()),
-					rule.getConditionValue().get(0));
-		} else {
-			for (int j = 0; j < rule.numberOfConditions(); j++) {
-				Condition condition = rule.getCondition(j);
-				if (condition.getMetric() == Metrics.LOC_METHOD) {
-					verifyOperator(rule, mtd.getLOCMetric(), condition.getNumericOperator(), condition.getThreshold(),
-							mtd.getCodeSmellsEvaluation(rule.getCodeSmell()), css);
-				}
-
-				if (condition.getMetric() == Metrics.CYCLO_METHOD) {
-					verifyOperator(rule, mtd.getCYCLOMetric(), condition.getNumericOperator(), condition.getThreshold(),
-							mtd.getCodeSmellsEvaluation(rule.getCodeSmell()), css);
-				}
-			}
-			boolean ruleEvaluation = verifyLogicalOperator(rule);
-			codeSmellSatistic_increase(css, mtd.getCodeSmellsEvaluation(rule.getCodeSmell()), ruleEvaluation);
-		}
-	}
-
-	public void compareConditionClass(Rule rule, ClassDataStructure cds, boolean codeSmellEvaluiation,
-			CodeSmellStatistics css) {
-		if (rule.numberOfConditions() == 1) {
-			Condition condition = rule.getCondition(0);
-			if (condition.getMetric() == Metrics.WMC_CLASS) {
-				verifyOperator(rule, cds.getWMCmetric(), condition.getNumericOperator(), condition.getThreshold(),
-						codeSmellEvaluiation, css);
-			}
-			if (condition.getMetric() == Metrics.LOC_CLASS) {
-				verifyOperator(rule, cds.getLOCmetric(), condition.getNumericOperator(), condition.getThreshold(),
-						codeSmellEvaluiation, css);
-			}
-			if (condition.getMetric() == Metrics.NOM_CLASS) {
-				verifyOperator(rule, cds.getNOMmetric(), condition.getNumericOperator(), condition.getThreshold(),
-						codeSmellEvaluiation, css);
-			}
-			codeSmellSatistic_increase(css, cds.getCodeSmellsEvaluation(rule.getCodeSmell()),
-					rule.getConditionValue().get(0));
-		} else {
-			for (int j = 0; j < rule.getConditionsArray().size(); j++) {
-				Condition condition = rule.getCondition(j);
-				if (condition.getMetric() == Metrics.WMC_CLASS) {
-					verifyOperator(rule, cds.getWMCmetric(), condition.getNumericOperator(), condition.getThreshold(),
-							codeSmellEvaluiation, css);
-				}
-				if (condition.getMetric() == Metrics.LOC_CLASS) {
-					verifyOperator(rule, cds.getLOCmetric(), condition.getNumericOperator(), condition.getThreshold(),
-							codeSmellEvaluiation, css);
-				}
-				if (condition.getMetric() == Metrics.NOM_CLASS) {
-					verifyOperator(rule, cds.getNOMmetric(), condition.getNumericOperator(), condition.getThreshold(),
-							codeSmellEvaluiation, css);
-				}
-			}
-			boolean ruleEvaluation = verifyLogicalOperator(rule);
-			codeSmellSatistic_increase(css, cds.getCodeSmellsEvaluation(rule.getCodeSmell()), ruleEvaluation);
-		}
-	}
-
-	public void verifyOperator(Rule rule, int metric, NumericOperator no, int thereshold, boolean codeSmellEvaluation,
-			CodeSmellStatistics css) {
-		if (no == NumericOperator.EQ) {
-			if (metric == thereshold) {
-				rule.add_conditionValue(true);
-			} else {
-				rule.add_conditionValue(false);
-			}
-		}
-		if (no == NumericOperator.GE) {
-			rule.add_conditionValue(true);
-		} else {
-			rule.add_conditionValue(false);
-		}
-		if (no == NumericOperator.GE) {
-			if (metric >= thereshold) {
-				rule.add_conditionValue(true);
-			} else {
-				rule.add_conditionValue(false);
-			}
-		}
-		if (no == NumericOperator.LE) {
-			if (thereshold <= thereshold) {
-				rule.add_conditionValue(true);
-			} else {
-				rule.add_conditionValue(false);
-			}
-		}
-		if (no == NumericOperator.GT) {
-			if (thereshold > thereshold) {
-				rule.add_conditionValue(true);
-			} else {
-				rule.add_conditionValue(false);
-			}
-		}
-		if (no == NumericOperator.LT) {
-			if (metric < thereshold) {
-				rule.add_conditionValue(true);
-			} else {
-				rule.add_conditionValue(false);
-			}
-		}
-		if (no == NumericOperator.NE) {
-			if (metric != thereshold) {
-				rule.add_conditionValue(true);
-			} else {
-				rule.add_conditionValue(false);
-			}
-		}
-	}
-
-	public boolean verifyLogicalOperator(Rule rule) {
-		boolean finalEvaluationValue = rule.getConditionValue().get(0);
-		for (int i = 1; i < rule.getConditionValue().size(); i++) {
-			if (i < rule.getConditionValue().size() - 1) {
-				LogicalOperator lo = rule.getLogicalOperator(i);
-				if (lo == LogicalOperator.AND) {
-			
-					if (finalEvaluationValue == true && rule.getConditionValue().get(i) == false) {
-						finalEvaluationValue = false;
-					}
-					if (finalEvaluationValue == false && rule.getConditionValue().get(i) == true) {
-						finalEvaluationValue = false;
-					}
-					if (finalEvaluationValue == false && rule.getConditionValue().get(i) == false) {
-						finalEvaluationValue = false;
-					}
-					if (finalEvaluationValue == true && rule.getConditionValue().get(i) == true) {
-						finalEvaluationValue = true;
-					}
-
-					if (lo == LogicalOperator.OR) {
-						if (finalEvaluationValue == true && rule.getConditionValue().get(i) == false) {
-							finalEvaluationValue = true;
-						}
-						if (finalEvaluationValue == false && rule.getConditionValue().get(i) == true) {
-							finalEvaluationValue = true;
-						}
-						if (finalEvaluationValue == false && rule.getConditionValue().get(i) == false) {
-							finalEvaluationValue = false;
-						}
-						if (finalEvaluationValue == true && rule.getConditionValue().get(i) == true) {
-							finalEvaluationValue = true;
-						}
-					}
-				}
-			}
-		}
-		return finalEvaluationValue;
-	}
-
-	public void codeSmellSatistic_increase(CodeSmellStatistics css, boolean codeSmellEvaluation,
-			boolean ruleEvaluation) {
-		if (codeSmellEvaluation == true && ruleEvaluation == true)
-			css.increase_truePositive();
-		if (codeSmellEvaluation = true && ruleEvaluation == false)
-			css.increase_falsePositive();
-		if (codeSmellEvaluation = false && ruleEvaluation == true)
-			css.increase_falseNegative();
-		if (codeSmellEvaluation = false && ruleEvaluation == false)
-			css.increase_trueNegative();
+		System.out.println("--------------END STATUS----------------");
 	}
 
 	public List<ClassDataStructure> getDataList() {
@@ -280,7 +73,7 @@ public class CodeSmellsCalculator {
 	}
 
 	public List<Rule> getRule() {
-		return rules;
+		return activeRules;
 	}
 
 	public List<CodeSmellStatistics> getStatisics() {
@@ -291,25 +84,199 @@ public class CodeSmellsCalculator {
 		this.statisics = statisics;
 	}
 
-	public void run(/* String filename */) {
-		dataList = ExcelToData.getallClass("C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\MYCode_Smells.xlsx");
+	/*
+	 * public void run(String filename) { //dataList = ExcelToData.getallClass(
+	 * "\"C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\code_smells_app_metrics.xlsx\""
+	 * );
+	 * 
+	 * 
+	 * 
+	 * }
+	 */
+
+	public void run(List<ClassDataStructure> classes) throws FileNotFoundException {
+		this.dataList = classes;
+		for (ClassDataStructure ole : dataList) {
+			System.out.println("Tenho esta classe " + ole.getClassName());
+		}
+		getCodeSmellsActiveRules("saveRule.txt");
+		for (Rule r : activeRules) {
+			System.out.println("Regra ativa encontrada: ");
+			for (Condition r2 : r.getConditions()) {
+				System.out.println("Condi√ß√£o m√©trica " + r2.getMetric());
+				System.out.println("Condi√ß√£o operador num√©rico " + r2.getNumericOperator());
+				System.out.println("Condi√ß√£o limite " + r2.getThreshold());
+			}
+		}
+		System.out.println("Inicialize process...");
+		calculateCodeSmellStatistics();
+		// cal.fillCodeSmellTable();
+		// calculateCodeSmellStatistics() ;
+		// detention();
 	}
 
-	public static void main(String[] args) {
-		// EXEMPLO DO USO DA FUN«√O getCodeSmellsActiveRules
-		CodeSmellsCalculator teste = new CodeSmellsCalculator();
-		try {
-			teste.getCodeSmellsActiveRules();
-			List<Rule> arrayTeste = teste.getRule();
-			for (Rule rule : arrayTeste) {
-				System.out.println(rule.toString());
+	public void detention(ClassDataStructure classToDetect, MethodDataStructure methodToDetect, Rule regra, CodeSmellStatistics css) {
+		List<Condition> conditionsActive = regra.getConditions();
+		List<Boolean> bol = new ArrayList<>();
+		for (int i = 0; i < conditionsActive.size(); i++) {
+			System.out.println(i + "¬∫" + " condi√ß√£o encontrada " + conditionsActive.get(i));
+			// boolean detectV = checkMetric(conditionsActive.get(i), classToDetect);
+			int metric_value;
+			if(classToDetect==null) {
+				metric_value = checkMetricMethod(conditionsActive.get(i), methodToDetect);
+			}else {
+				metric_value = checkMetricClass(conditionsActive.get(i), classToDetect);
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			System.out.println("M√âTRICA " + metric_value);
+			boolean b = checkNO(conditionsActive.get(i), metric_value);
+			System.out.println("VALOR BOOLEANO FINAL " + b);
+			bol.add(b);
 		}
-		teste.run();
-		teste.calculateCodeSmellStatistics();
-		teste.calculateCodeSmellStatistics();
-		teste.getStatisics().get(0).printTest();
+		System.out.println("Hora de ver os valores booleanos das condi√ß√µes");
+		for (int j = 0; j < bol.size(); j++) {
+			System.out.println("Na " + j + "¬∫" + " -> " + bol.get(j));
+		}
+		System.out.println("Vamos ver os Logical Operators ");
+		for (LogicalOperator op : regra.getLogicalOperators()) {
+			System.out.println("Operador encontrado " + op);
+		}
+		System.out.println("Opera√ß√£o Final ");
+		boolean finalValue = bol.get(0);
+		if (!(bol.size() == 1)) {
+			for (int w = 0; w < regra.getLogicalOperators().size(); w++) {
+				finalValue = finalOP(finalValue, (boolean) bol.get(w + 1), regra.getLogicalOperators().get(w));
+			}
+		}
+		System.out.println("VALOR OBTIDO FINAL BOOLEANO " + finalValue);
+		if(classToDetect==null) {
+			System.out.println("O que est√° no metodo de code smell eval " + methodToDetect.getCodeSmellsEvaluation("Long_method"));
+			String sentence = evaluate(css, finalValue, methodToDetect.getCodeSmellsEvaluation("Long_method"));
+			System.out.println("Este deu: " + sentence);
+			methodToDetect.setCodeSmellDetected(sentence);
+		}else {
+			System.out.println("O que est√° na classe de code smell eval " + classToDetect.getCodeSmellsEvaluation("God_class"));
+			String sentence = evaluate(css, finalValue, classToDetect.getCodeSmellsEvaluation("God_class"));
+			System.out.println("Este deu: " + sentence);
+			classToDetect.setCodeSmellDetected(sentence);
+		}
+
+		System.out.println(css.getCodeSmell() + " Statistics " + " VP " + css.getTrue_positive() + " FP " + css.getFalse_positive()
+				+ " FN " + css.getFalse_negative() + " VN " + css.getTrue_negative());
 	}
+
+	private String evaluate(CodeSmellStatistics sts, boolean our, boolean specialist) {
+		String ll = "";
+		if (our == true && specialist == true) {
+			sts.increase_truePositive();
+			ll = "Verdadeiro Positivo";
+		}
+		if (our == true && specialist == false) {
+			sts.increase_falsePositive();
+			ll = "Falso Positivo";
+		}
+		if (our == false && specialist == true) {
+			sts.increase_falseNegative();
+			;
+			ll = "Falso Negativo";
+		}
+		if (our == false && specialist == false) {
+			sts.increase_trueNegative();
+			;
+			ll = "Verdadeiro Negativo";
+		}
+		return ll;
+	}
+
+	private boolean finalOP(boolean value, boolean valueToCompareWith, LogicalOperator logicalOperator) {
+		switch (logicalOperator) {
+		case AND:
+			return value && valueToCompareWith;
+		case OR:
+			return value || valueToCompareWith;
+		}
+		return true;
+	}
+
+	private int checkMetricClass(Condition a, ClassDataStructure classToDetect) {
+		switch (a.getMetric()) {
+		case NOM_CLASS:
+			System.out.println("NOM_CLASS");
+			return classToDetect.getNOMmetric();
+		case LOC_CLASS:
+			System.out.println("LOC_CLASS");
+			return classToDetect.getLOCmetric();
+		case WMC_CLASS:
+			System.out.println("WMC_CLASS");
+			return classToDetect.getWMCmetric();
+		}
+		return 0;
+	}
+
+	private int checkMetricMethod(Condition a, MethodDataStructure methodToDetect) {
+		switch (a.getMetric()) {
+		case LOC_METHOD:
+			System.out.println("LOC_METHOD");
+			return methodToDetect.getLOCMetric();
+		case CYCLO_METHOD:
+			System.out.println("CYCLO_METHOD");
+			return methodToDetect.getCYCLOMetric();
+		}
+		return 0;
+	}
+
+	private boolean checkNO(Condition a, int metric_value) {
+		switch (a.getNumericOperator()) {
+		case EQ:
+			System.out.println("EQ");
+			if (metric_value == a.getThreshold())
+				return true;
+			return false;
+		case NE:
+			System.out.println("NE");
+			if (metric_value != a.getThreshold())
+				return true;
+			return false;
+		case GT:
+			System.out.println("GT");
+			if (metric_value > a.getThreshold())
+				return true;
+			return false;
+		case LT:
+			System.out.println("LT");
+			if (metric_value < a.getThreshold())
+				return true;
+			return false;
+		case GE:
+			System.out.println("GE");
+			if (metric_value >= a.getThreshold())
+				return true;
+			return false;
+		case LE:
+			System.out.println("LE");
+			if (metric_value <= a.getThreshold())
+				return true;
+			return false;
+		}
+		return true;
+	}
+
+	public static void main(String[] args) throws FileNotFoundException {
+		// EXEMPLO DO USO DA FUN√á√ÉO getCodeSmellsActiveRules
+		/*
+		 * CodeSmellsCalculator teste = new CodeSmellsCalculator(); try {
+		 * teste.getCodeSmellsActiveRules(); List<Rule> arrayTeste = teste.getRule();
+		 * for (Rule rule : arrayTeste) { System.out.println(rule.toString()); } } catch
+		 * (FileNotFoundException e) { e.printStackTrace(); } teste.run();
+		 * teste.calculateCodeSmellStatistics();
+		 * teste.getStatisics().get(0).printTest();
+		 */
+		CodeSmellsCalculator cal = new CodeSmellsCalculator();
+		cal.getCodeSmellsActiveRules("saveRule.txt");
+		for (Rule r : cal.activeRules) {
+			System.out.println("Regra ativa encontrada: " + r);
+		}
+//	        cal.fillCodeSmellTable();
+		cal.calculateCodeSmellStatistics();
+	}
+
 }

@@ -20,6 +20,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 public class ExcelToData {
 	
 //	ClassDataStructure(String packageName, String className, String loc_class,String nom_class, String wmc_class)
+	
 	public static List<ClassDataStructure> getallClass(String args) {
 		List<ClassDataStructure> allClass = new ArrayList<>();
 
@@ -38,18 +39,23 @@ public class ExcelToData {
 
 				cont++;
 
+
 				if (!ReadCellData(cont-1,2,wb).equals(ReadCellData(cont,2,wb))) {
 
+					
 					cds = new ClassDataStructure(ReadCellData(cont, 1, wb), ReadCellData(cont, 2, wb),
 							ReadCellData(cont, 4, wb), ReadCellData(cont, 5, wb), ReadCellData(cont, 6, wb));
 					
+
 					allClass.add(cds);
 				}
+				
 				MethodDataStructure newMethod = new MethodDataStructure(ReadCellData(cont, 3, wb), (int) Double.parseDouble(ReadCellData(cont, 8, wb)),
 						(int) Double.parseDouble(ReadCellData(cont, 9, wb)));
 				
 				cds.addMethod(newMethod);
 			}
+				
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

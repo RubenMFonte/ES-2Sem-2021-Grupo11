@@ -66,7 +66,7 @@ public class CodeSmellStatistics {
 	}
 	
 	public void increase_falseNegative() {
-		this.false_positive++;
+		this.false_negative++;
 	}
 	
 	public void increase_trueNegative() {

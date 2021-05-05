@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.body.CallableDeclaration;
+import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 
@@ -30,12 +32,13 @@ public class MethodDataStructure {
 	private int cyclo_method;
 
 	private HashMap<String, Boolean> codeSmellsEvaluation = new HashMap<>();
+	private String codeSmellDetected;
 	
-	public MethodDataStructure (MethodDeclaration md_received) {
-		String methodName = md_received.getNameAsString();
-		String complementToMethodName = getParameterTypes(md_received);
+	public MethodDataStructure (CallableDeclaration method) {
+		String methodName = method.getNameAsString();
+		String complementToMethodName = getParameterTypes(method);
 		this.methodName = methodName.concat(complementToMethodName);
-		calculateMetricsMethods(md_received);
+		calculateMetricsMethods(method);
 	}
 	
 	public MethodDataStructure (String methodName, int loc_method, int cyclo_method) {
@@ -44,12 +47,12 @@ public class MethodDataStructure {
 		this.cyclo_method = cyclo_method;
 	}
 	
-	private void calculateMetricsMethods(MethodDeclaration md_received) {
+	private void calculateMetricsMethods(CallableDeclaration md_received) {
 		this.cyclo_method = MetricsCalculator.Cyclo_method(md_received);
 		this.loc_method = MetricsCalculator.LOC_method(md_received);
 	}
 	
-	private String getParameterTypes (MethodDeclaration md_received){
+	private String getParameterTypes (CallableDeclaration md_received){
 		String paramTypesComplement = "";
 		List <Parameter> param = md_received.getChildNodesByType(Parameter.class);
 		for(Parameter param_find : param) {
@@ -88,6 +91,15 @@ public class MethodDataStructure {
 	
 	public int getCYCLOMetric () {
 		return cyclo_method;	
+	}
+	
+	public void setCodeSmellDetected(String codeSmellDetected) {
+		this.codeSmellDetected =  codeSmellDetected;
+	}
+	
+
+	public String getCodeSmellDetected() {
+		return codeSmellDetected;
 	}
 	
 }

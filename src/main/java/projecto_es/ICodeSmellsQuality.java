@@ -74,7 +74,7 @@ public class ICodeSmellsQuality {
 	private JPanel panelQualityLabels;
 	private JPanel panelLayoutCodeSmellSelected;
 	private JLabel codeS = new JLabel("Code Smell Selected:");
-	private JComboBox codeSmellSelected = new JComboBox(new String[] {"is_God_class", "is_Long_method"});
+	private JComboBox codeSmellSelected = new JComboBox(new String[] {"", "is_God_class", "is_Long_method"});
 	private JPanel panelLayoutQualityData;
 	private JLabel tp = new JLabel("True Positives [VP]:");
 	private JLabel tp_result = new JLabel(Integer.toString(truePositives));
@@ -160,18 +160,20 @@ public class ICodeSmellsQuality {
 		
 	}
 	
-	private void defineJTableContent() {	
-		String[] columnNames = { "Class", "is_God_Class", "ClassificaÃ§Ã£o", "Method ID", "Method Name", "is_long_method", "ClassificaÃ§Ã£o" };
-		DefaultTableModel model = new DefaultTableModel();
+	private void defineJTableContent() {
+		//Só para testar -> Mai tarde inicializar as colunas e linhas com os dados carregados do exccel
+		 String[] columnNames = { "Class", "is_God_Class", "Classificação", "Method ID", "Method Name", "is_long_method", "Classificação" };
+		 DefaultTableModel model = new DefaultTableModel(); 
+	
+		 tableInfo = new JTable(50,7);
+		 for(int i=0;i<columnNames.length;i++){
 
-		tableInfo = new JTable(50,7);
-		for(int i=0;i<columnNames.length;i++){
-			TableColumn tc = tableInfo.getColumnModel().getColumn(i);
-			tc.setPreferredWidth(150);
-			tc.setHeaderValue(columnNames[i]);
-		}	
-		tableInfo.setPreferredScrollableViewportSize(new Dimension (720, 300));
-		tableInfo.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			 TableColumn tc = tableInfo.getColumnModel().getColumn(i);
+			 tc.setPreferredWidth(150);
+			 tc.setHeaderValue(columnNames[i]);
+		 }
+		 tableInfo.setPreferredScrollableViewportSize(new Dimension (720, 300));
+		 tableInfo.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 	}
 	

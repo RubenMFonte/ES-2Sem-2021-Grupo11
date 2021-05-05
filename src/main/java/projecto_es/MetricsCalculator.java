@@ -156,7 +156,7 @@ public class MetricsCalculator {
 		return lines.length;
 	}
 
-	public static int LOC_method(MethodDeclaration method) {
+	public static int LOC_method(CallableDeclaration method) {
 		int lines = 1;
 		int size = method.getChildNodes().size();
 		String last_node = method.getChildNodes().get(size - 1).toString();
