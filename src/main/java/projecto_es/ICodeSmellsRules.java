@@ -167,6 +167,9 @@ public class ICodeSmellsRules {
 		editRule();
 		activatedRule();
 		goBack();
+		
+		frmCodeSmells.setResizable(false);
+		frmCodeSmells.setLocationRelativeTo(null);
 	}
 
 	public void updateRules() throws FileNotFoundException {

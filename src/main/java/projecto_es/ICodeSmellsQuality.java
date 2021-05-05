@@ -67,6 +67,7 @@ public class ICodeSmellsQuality {
 	private JTextField excelPath = new JTextField();
 	private JButton selectExcel = new JButton(" Select Excel");
 	private JButton update = new JButton("Update Table");
+	private JButton goBack = new JButton("<");
 	
 	//For Panel Right
 	private JPanel panelDetentionQuality;
@@ -117,7 +118,7 @@ public class ICodeSmellsQuality {
 	 */
 	private void initialize() {
 		frame = new JFrame("Code Smells Detetion and Quality");
-		frame.setBounds(100, 100, 1200, 520);
+		frame.setBounds(100, 100, 1300, 520);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//frame.getContentPane().setLayout(new FlowLayout()); //FlowLayout.CENTER, 5, 5
 		
@@ -133,6 +134,9 @@ public class ICodeSmellsQuality {
 	    
 	    selectExcelButton();
 	    updateTableButton();
+	    goBackButton();
+	    frame.setResizable(false);
+	    frame.setLocationRelativeTo(null);
 	}
 	
 	private void definePanelDetentionTableLook() {
@@ -173,45 +177,36 @@ public class ICodeSmellsQuality {
 	
 	private void definePanelSouthInfoContent() {
 		panelSouthInfo = new JPanel();
+		
 		GroupLayout l = new GroupLayout(panelSouthInfo);          
+		l.setHorizontalGroup(
+			l.createParallelGroup(Alignment.LEADING)
+				.addGroup(l.createSequentialGroup()
+					.addGroup(l.createParallelGroup(Alignment.LEADING)
+						.addGroup(l.createSequentialGroup()
+							.addComponent(label)
+							.addComponent(excelPath, 790, 790, 790))
+						.addComponent(goBack))
+					.addGap(2)
+					.addGroup(l.createParallelGroup(Alignment.TRAILING)
+						.addComponent(selectExcel)
+						.addComponent(update)))
+		);
+		l.setVerticalGroup(
+			l.createParallelGroup(Alignment.LEADING)
+				.addGroup(l.createSequentialGroup()
+					.addGroup(l.createParallelGroup(Alignment.BASELINE)
+						.addComponent(label)
+						.addComponent(excelPath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(selectExcel))
+					.addGap(6)
+					.addGroup(l.createParallelGroup(Alignment.TRAILING)
+						.addComponent(update)
+						.addComponent(goBack)))
+		);
         panelSouthInfo.setLayout(l);
         l.setAutoCreateGaps(true);
         l.setAutoCreateContainerGaps(true);
-        
-        //Configuration like the one in trello
-        /*l.setHorizontalGroup(l.createSequentialGroup()
-        	.addComponent(label)
-        	.addGroup(l.createParallelGroup(GroupLayout.Alignment.TRAILING)
-        			.addComponent(excelPath)
-        			.addGroup(l.createParallelGroup(GroupLayout.Alignment.TRAILING)
-        					.addComponent(selectExcel)
-        					.addComponent(update)))
-        );
-        
-        l.setVerticalGroup(l.createSequentialGroup()
-        		.addGroup(l.createParallelGroup(GroupLayout.Alignment.BASELINE)
-        				.addComponent(label)
-        				.addComponent(excelPath))
-        		.addComponent(selectExcel)
-        		.addComponent(update)
-        );*/
-        
-        l.setHorizontalGroup(l.createSequentialGroup()
-            	.addComponent(label)
-            	.addGroup(l.createParallelGroup(GroupLayout.Alignment.LEADING)
-            			.addComponent(excelPath))
-            	.addGroup(l.createParallelGroup(GroupLayout.Alignment.TRAILING)
-            			.addComponent(selectExcel)
-            			.addComponent(update))
-            );
-            
-            l.setVerticalGroup(l.createSequentialGroup()
-            		.addGroup(l.createParallelGroup(GroupLayout.Alignment.BASELINE)
-            				.addComponent(label)
-            				.addComponent(excelPath)
-            				.addComponent(selectExcel))
-            		.addComponent(update)
-            );
 	}
 	
 	private void definePanelDetentionQualityLook() {
@@ -400,6 +395,17 @@ public class ICodeSmellsQuality {
 	  }
 	}*/
 	
+//goBackButton
+	public void goBackButton() {
+		goBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			IMenu window = new IMenu();
+				window.frame.setVisible(true);
+				frame.dispose();
+			}
+		});	
+	}
+	
 	public void selectExcelButton() {
 		selectExcel.addActionListener(new ActionListener() {
 			
@@ -435,7 +441,5 @@ public class ICodeSmellsQuality {
 			}
 		});
 	}
-	
-	
 }
 
