@@ -14,5 +14,4 @@ public class MethodBoolean{
 	public Boolean getLmethod() {
 		return lmethod;
 	}
-	
 }
