@@ -159,7 +159,7 @@ public class IDetetionParameters {
 				
 				if(rule.getID().equals(ruleInFile.getID()))
 				{
-					line = getRuleString();
+					line = changeString(getRuleString());
 				}
 				
 				stringBuffer.append(line + "\n");
@@ -206,9 +206,8 @@ public class IDetetionParameters {
 			
 			Rule ruleInFile = new Rule(line);
 			
-			newId = Integer.parseInt(ruleInFile.getID()) + 1;
-			
-			stringBuffer.append(newId + getRuleString());
+			newId = Integer.parseInt(ruleInFile.getID()) + 1;			
+			stringBuffer.append(newId + changeString(getRuleString()));
 				
 			FileWriter writer;
 			
@@ -228,6 +227,18 @@ public class IDetetionParameters {
 
 	}
 	
+	
+	private String changeString(String beforeChange) {
+		int lengthOfBeforeChange = beforeChange.length();
+		String afterChange;
+		if(beforeChange.substring(lengthOfBeforeChange-1, lengthOfBeforeChange).equals(":")) {
+			afterChange = beforeChange.substring(0, lengthOfBeforeChange-1);
+		}else {
+			afterChange = beforeChange;
+		}
+		return afterChange;
+	}
+	
 	private String getRuleString()
 	{
 		StringBuffer stringBuffer = new StringBuffer();
@@ -237,6 +248,7 @@ public class IDetetionParameters {
 		for(int i = 0; i < conditionPanels.size(); i++)
 		{
 			stringBuffer.append(":" + conditionPanels.get(i).getConditionAsString());
+System.out.println(conditionPanels.get(i).getConditionAsString().length());
 		}
 		
 		return stringBuffer.toString();
