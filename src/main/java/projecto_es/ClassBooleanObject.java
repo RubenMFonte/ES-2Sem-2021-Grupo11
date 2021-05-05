@@ -46,3 +46,6 @@ public class ClassBooleanObject {
 		return lmds;
 	}
 }
+
+}
+

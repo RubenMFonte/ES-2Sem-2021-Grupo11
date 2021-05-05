@@ -22,7 +22,7 @@ public class ConditionJPanel extends JPanel {
 			new JComboBox(new String[] {"", "NOM_CLASS", "LOC_CLASS", "WMC_CLASS", "LOC_METHOD", "CYCLO_METHOD"});
 	
 	private JLabel noperator = new JLabel("Numeric Operator");
-	private JComboBox noperatorsAvailable = new JComboBox(new String[] {"", "==","!=",">",">=","<","<="});
+	private JComboBox noperatorsAvailable = new JComboBox(new String[] {"", "EQ","NE","GT","GE","LT","LE"});
 	private JLabel threshold = new JLabel("Threshold");
 	private JTextField limit = new JTextField(3);
 	private JLabel lo = new JLabel("Logical Operator");;

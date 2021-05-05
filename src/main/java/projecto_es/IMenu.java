@@ -60,6 +60,7 @@ public class IMenu {
 			frame.setBounds(100, 100, 557, 287);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.getContentPane().setLayout(null);
+			frame.setResizable(false);
 			
 			JLabel lblNewLabel = new JLabel("M\u00E9tricas");
 			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -112,13 +113,13 @@ public class IMenu {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					/*Correr interface ICodeRules*/
-					frame.dispose();
 					try {
 						ICodeSmellsRules windowCodeRules= new ICodeSmellsRules();
+						frame.dispose();
 					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					
 					
 				}
 			});
@@ -148,7 +149,8 @@ public class IMenu {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					/*Correr interface IQualityCodeSmells*/
+					frame.dispose();
+					ICodeSmellsQuality windowQuality = new ICodeSmellsQuality();
 				}
 			});
 		}

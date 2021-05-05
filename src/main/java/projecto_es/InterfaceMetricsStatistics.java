@@ -36,6 +36,45 @@ import java.util.List;
 
 public class InterfaceMetricsStatistics extends JFrame {
 
+	public GeneralStatistics getStatisticsGeneral() {
+		return statisticsGeneral;
+	}
+
+	public void setStatisticsGeneral(GeneralStatistics statisticsGeneral) {
+		this.statisticsGeneral = statisticsGeneral;
+	}
+
+	public JList<String> getMetricsMethodsJlist() {
+		return metricsMethodsJlist;
+	}
+
+	public void setMetricsMethodsJlist(JList<String> metricsMethodsJlist) {
+		this.metricsMethodsJlist = metricsMethodsJlist;
+	}
+
+	private JPanel contentPane;
+	private JTable table;
+	private JTable table_1;
+
+	private JList<String> packageJList = new JList<String>();
+	private JList<String> classJList = new JList<String>();
+	private JList<String> methodsJList = new JList<String>();
+	private JList<String> metricsClassJlist = new JList<String>();
+	private JList<String> metricsMethodsJlist = new JList<String>();
+	private JList<String> statisticsJlist = new JList<String>();
+
+	private String packageString;
+	private String classString;
+	private String methodsString;
+	private JTextField textField;
+
+	private String excelPath;
+
+	private List<ClassDataStructure> allClass;
+	private GeneralStatistics statisticsGeneral;
+
+	JButton buttonShowStatistics;
+	
 	public void setTextField(JTextField textField) {
 		this.textField = textField;
 	}
@@ -84,28 +123,7 @@ public class InterfaceMetricsStatistics extends JFrame {
 		this.allClass = allClass;
 	}
 
-	private JPanel contentPane;
-	private JTable table;
-	private JTable table_1;
-
-	private JList<String> packageJList = new JList<String>();
-	private JList<String> classJList = new JList<String>();
-	private JList<String> methodsJList = new JList<String>();
-	private JList<String> metricsClassJlist = new JList<String>();
-	private JList<String> metricsMethodsJlist = new JList<String>();
-	private JList<String> statisticsJlist = new JList<String>();
-
-	private String packageString;
-	private String classString;
-	private String methodsString;
-	private JTextField textField;
-
-	private String excelPath;
-
-	private List<ClassDataStructure> allClass;
-	private GeneralStatistics statisticsGeneral;
-
-	JButton buttonShowStatistics;
+	
 
 	public JButton getButtonShowStatistics() {
 		return buttonShowStatistics;
@@ -151,7 +169,9 @@ public class InterfaceMetricsStatistics extends JFrame {
 		
 		setTitle("Visualizar Estatísticas");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 668, 438);
+		setBounds(200, 200, 800, 500);
+		setResizable(false);
+		setLocationRelativeTo(null);
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -402,6 +422,21 @@ public class InterfaceMetricsStatistics extends JFrame {
 //buttonShowCarateristics
 		buttonShowStatistics.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setPackageJList(new JList<String>());
+				setClassJList(new JList<String>());
+				setMethodsJList(new JList<String>());
+				setMetricsClassJlist(new JList<String>());
+				setMetricsMethodsJlist(new JList<String>());
+				setStatisticsJlist(new JList<String>());
+				scrollPane_1.setViewportView(packageJList);
+				scrollPane_2.setViewportView(classJList);
+				scrollPane_3.setViewportView(methodsJList);
+				
+				scrollPane.setViewportView(metricsClassJlist);
+				scrollPane_methodsMetrics.setViewportView(metricsMethodsJlist);
+				scrollPane_4.setViewportView(statisticsJlist);
+				
+				
 				setAllClass(ExcelToData.getallClass(textField.getText()));
 				ListsToInterface.getListsToInterfaceInstance().setDataList(allClass);
 				setPackageJList(ListsToInterface.getListsToInterfaceInstance().getPackageJList());

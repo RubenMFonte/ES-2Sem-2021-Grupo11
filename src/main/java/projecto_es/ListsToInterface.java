@@ -12,7 +12,7 @@ import com.github.javaparser.ast.CompilationUnit;
 public class ListsToInterface {
 	
 	// Singleton instance
-	private static ListsToInterface listsToInterface = null;
+	public static ListsToInterface listsToInterface = null;
 
 	private List<ClassDataStructure> dataList = new ArrayList<ClassDataStructure>();
 	
@@ -31,7 +31,7 @@ public class ListsToInterface {
 		return listsToInterface;
 	}
 	
-	private ListsToInterface()
+	public ListsToInterface()
 	{
 		dataList = new ArrayList<ClassDataStructure>();
 	}
