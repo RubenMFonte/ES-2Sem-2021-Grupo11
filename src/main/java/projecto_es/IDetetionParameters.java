@@ -34,7 +34,7 @@ public class IDetetionParameters {
 	private JButton removeCond = new JButton("Remove Last Condition");
 	private JButton cancelButton = new JButton("Cancel");
 	private JButton saveButton = new JButton("Save");
-	
+	private String code_smell;
 	private boolean newRule = false;
 	private Rule rule;
 
@@ -54,12 +54,14 @@ public class IDetetionParameters {
 	}
 	
 	public IDetetionParameters(String code_smell) {
-		this(new Rule(":" + code_smell + ":false::::"));
+		this(new Rule(":" + code_smell + ":false::::"), code_smell);
 		newRule = true;
+		this.code_smell = code_smell;
 	}
 
-	public IDetetionParameters(Rule rule_arg) {
+	public IDetetionParameters(Rule rule_arg, String code_smell) {
 		this.rule = rule_arg;
+		this.code_smell = code_smell;
 		initialize();
 	}
 
@@ -267,11 +269,11 @@ System.out.println(conditionPanels.get(i).getConditionAsString().length());
 		if(conditionElements.length > 1)
 		{
 		    iic = new ConditionJPanel(conditionNumber, conditionElements[0], conditionElements[1], conditionElements[2],
-		    				conditionElements.length > 3 ? conditionElements[3] : "");
+		    				conditionElements.length > 3 ? conditionElements[3] : "", code_smell);
 		}
 		else
 		{
-		    iic = new ConditionJPanel(conditionNumber);
+		    iic = new ConditionJPanel(conditionNumber, code_smell);
 		}
 	    
 	    panel.add(iic);

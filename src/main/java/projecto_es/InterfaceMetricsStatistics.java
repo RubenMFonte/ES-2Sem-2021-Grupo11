@@ -72,63 +72,10 @@ public class InterfaceMetricsStatistics extends JFrame {
 
 	private List<ClassDataStructure> allClass;
 	private GeneralStatistics statisticsGeneral;
-
-	JButton buttonShowStatistics;
+	private JScrollPane scrollPane_2;
+	private JButton buttonShowStatistics;
 	
-	public void setTextField(JTextField textField) {
-		this.textField = textField;
-	}
-
-	public JList<String> getPackageJList() {
-		return packageJList;
-	}
-
-	public void setPackageJList(JList packageJList) {
-		this.packageJList = packageJList;
-	}
-
-	public JList<String> getClassJList() {
-		return classJList;
-	}
-
-	public void setClassJList(JList<String> classJList) {
-		this.classJList = classJList;
-	}
-
-	public JList<String> getMetricsClassJlist() {
-		return metricsClassJlist;
-	}
-
-	public void setMetricsClassJlist(JList<String> metricsClassJlist) {
-		this.metricsClassJlist = metricsClassJlist;
-	}
-
-	public JList<String> getStatisticsJlist() {
-		return statisticsJlist;
-	}
-
-	public void setStatisticsJlist(JList<String> statisticsJlist) {
-		this.statisticsJlist = statisticsJlist;
-	}
-
-	public JList<String> getMethodsJList() {
-		return methodsJList;
-	}
-
-	public List<ClassDataStructure> getAllClass() {
-		return allClass;
-	}
-
-	public void setAllClass(List<ClassDataStructure> allClass) {
-		this.allClass = allClass;
-	}
-
 	
-
-	public JButton getButtonShowStatistics() {
-		return buttonShowStatistics;
-	}
-
 	/**
 	 * Launch the application.
 	 */
@@ -229,7 +176,7 @@ public class InterfaceMetricsStatistics extends JFrame {
 		lblNewLabel_2.setBackground(Color.WHITE);
 		contentPane_Classes.add(lblNewLabel_2);
 
-		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2 = new JScrollPane();
 		contentPane_Classes.add(scrollPane_2);
 
 		scrollPane_2.setViewportView(classJList);
@@ -453,9 +400,88 @@ public class InterfaceMetricsStatistics extends JFrame {
 			}
 		});
 		
+//		selectActionJListPackages();
 	}
 
+/*	public void selectActionJListPackages() {
+System.out.println("entrou no selectAction antes do valueChanged...");
+		packageJList.addListSelectionListener(new ListSelectionListener() {
+				
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+System.out.println("entrou no selectAction...");
+		int index = packageJList.getSelectedIndex();
+				if (packageJList.getSelectedIndex() != -1) {
+					packageString = (String)packageJList.getSelectedValue();
+					JList<String> classesJList_Temp = ListsToInterface.getListsToInterfaceInstance().showClasses(packageString);
+					setClassJList(classesJList_Temp);
+					scrollPane_2.setViewportView(classesJList_Temp);
+					System.out.println("1entrou no selectAction...");
+      		}else {
+					System.out.println("error: Package not selected!");
+				}
+			
+			} 
+		});
+		;
+	}
+*/	
 	public void setMethodsJList(JList methodsJList) {
 		this.methodsJList = methodsJList;
 	}
+	
+	public void setTextField(JTextField textField) {
+		this.textField = textField;
+	}
+
+	public JList<String> getPackageJList() {
+		return packageJList;
+	}
+
+	public void setPackageJList(JList packageJList) {
+		this.packageJList = packageJList;
+	}
+
+	public JList<String> getClassJList() {
+		return classJList;
+	}
+
+	public void setClassJList(JList<String> classJList) {
+		this.classJList = classJList;
+	}
+
+	public JList<String> getMetricsClassJlist() {
+		return metricsClassJlist;
+	}
+
+	public void setMetricsClassJlist(JList<String> metricsClassJlist) {
+		this.metricsClassJlist = metricsClassJlist;
+	}
+
+	public JList<String> getStatisticsJlist() {
+		return statisticsJlist;
+	}
+
+	public void setStatisticsJlist(JList<String> statisticsJlist) {
+		this.statisticsJlist = statisticsJlist;
+	}
+
+	public JList<String> getMethodsJList() {
+		return methodsJList;
+	}
+
+	public List<ClassDataStructure> getAllClass() {
+		return allClass;
+	}
+
+	public void setAllClass(List<ClassDataStructure> allClass) {
+		this.allClass = allClass;
+	}
+
+	
+
+	public JButton getButtonShowStatistics() {
+		return buttonShowStatistics;
+	}
+
 }

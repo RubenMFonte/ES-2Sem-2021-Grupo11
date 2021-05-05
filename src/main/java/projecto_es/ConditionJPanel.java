@@ -18,8 +18,8 @@ public class ConditionJPanel extends JPanel {
 
 	private JLabel metric = new JLabel("Metric");
 	
-	private JComboBox metricsAvailable =
-			new JComboBox(new String[] {"", "NOM_CLASS", "LOC_CLASS", "WMC_CLASS", "LOC_METHOD", "CYCLO_METHOD"});
+	private JComboBox metricsAvailable;
+	//new JComboBox(new String[] {"", "NOM_CLASS", "LOC_CLASS", "WMC_CLASS", "LOC_METHOD", "CYCLO_METHOD"});
 	
 	private JLabel noperator = new JLabel("Numeric Operator");
 	private JComboBox noperatorsAvailable = new JComboBox(new String[] {"", "EQ","NE","GT","GE","LT","LE"});
@@ -27,19 +27,26 @@ public class ConditionJPanel extends JPanel {
 	private JTextField limit = new JTextField(3);
 	private JLabel lo = new JLabel("Logical Operator");;
 	private JComboBox loperatorsAvailable = new JComboBox(new String[] {"","AND","OR"});
-	
+	private String code_smell;
 	private static final Color DEFAULT_COLOR = new Color(0,0,0,0);
 	
 	/**
 	 * Create the panel.
 	 */
 	
-	public ConditionJPanel(String conditionNumber)
+	public ConditionJPanel(String conditionNumber, String code_smell)
 	{
-		this(conditionNumber, "", "", "", "");
+		this(conditionNumber, "", "", "", "", code_smell);
 	}
 	
-	public ConditionJPanel(String conditionNumber, String s_metric, String s_numericOperator, String s_threshold, String s_logicalOperator) {
+	public ConditionJPanel(String conditionNumber, String s_metric, String s_numericOperator, String s_threshold, String s_logicalOperator, String code_smell) {
+		this.code_smell = code_smell;
+		if("God_class".equals(code_smell)) {
+			metricsAvailable = new JComboBox(new String[] {"", "NOM_CLASS", "LOC_CLASS", "WMC_CLASS"});
+		}else {
+			metricsAvailable = new JComboBox(new String[] {"", "LOC_METHOD", "CYCLO_METHOD"});
+		}
+		
 		setBorder(BorderFactory.createTitledBorder(conditionNumber));
 		GroupLayout l = new GroupLayout(this);          
         this.setLayout(l);
@@ -92,7 +99,6 @@ public class ConditionJPanel extends JPanel {
                 .addComponent(limit)
                 .addComponent(loperatorsAvailable))
         );
-
        l.setVerticalGroup(l.createSequentialGroup()
             .addGroup(l.createParallelGroup(GroupLayout.Alignment.BASELINE)
                 .addComponent(metric)
