@@ -74,7 +74,7 @@ public class ICodeSmellsRules {
 	private List<Rule> allRules;
 	private List<String> allCodeSmells;
 	private List<Rule> rulesOnDisplay;
-
+	private String codeSmell;
 	/**
 	 * Launch the application.
 	 */
@@ -350,7 +350,7 @@ public class ICodeSmellsRules {
 		newRule.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String codeSmell = allCodeSmells.get(codeSmells.getSelectedIndex());
+				codeSmell = allCodeSmells.get(codeSmells.getSelectedIndex());
 				frmCodeSmells.dispose();
 				IDetetionParameters frame = new IDetetionParameters(codeSmell);
 			}
@@ -366,7 +366,7 @@ public class ICodeSmellsRules {
 				if (rules.getSelectedRow() > -1) {
 					Rule rule = rulesOnDisplay.get(rules.getSelectedRow());
 					frmCodeSmells.dispose();
-					IDetetionParameters frame = new IDetetionParameters(rule);
+					IDetetionParameters frame = new IDetetionParameters(rule, codeSmell);
 				} else
 					popUp("Escolha a regra que pretende editar.");
 
