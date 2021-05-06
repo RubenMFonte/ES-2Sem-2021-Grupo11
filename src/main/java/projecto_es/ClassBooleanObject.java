@@ -21,8 +21,8 @@ public class ClassBooleanObject {
 	}
 	
 	
-	public void addMethod(String methodName, Boolean lmethod) {
-		MethodBoolean mds = new MethodBoolean(methodName,lmethod);
+	public void addMethod(int methodID, String methodName, Boolean lmethod) {
+		MethodBoolean mds = new MethodBoolean(methodID, methodName,lmethod);
 		this.addMethod(mds);
 	}
 	public void addMethod(MethodBoolean mds) {

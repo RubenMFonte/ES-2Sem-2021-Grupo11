@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
 
 public class MainTeste {
 
@@ -19,7 +22,7 @@ public class MainTeste {
 		System.out.println("Este é o nome da classe: " + data.getClassName());*/
 		
 				//TESTE PERCORRER COMPILATION UNITS
-		List<CompilationUnit> compilationUnits = new ArrayList<CompilationUnit>();
+		/*List<CompilationUnit> compilationUnits = new ArrayList<CompilationUnit>();
 		CompilationUnit teste = parser.parse("package com.github.javaparser; public class Teste { public int teste(boolean t, String d) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; }  public int teste2(boolean t) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; } }").getResult().get();
 		CompilationUnit teste2 = parser.parse("package com.github.java; public class TestTest { public int teste() { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; } }").getResult().get();
 		compilationUnits.add(teste);
@@ -37,10 +40,10 @@ public class MainTeste {
     			System.out.println(unit_id + "º unit:" + " O método: " + mds_ind.getMethodName() + " com a métrica [Cyclo_method]: " + mds_ind.getCYCLOMetric());
     		}
     		unit_id++;
-        }
+        }*/
 		
 			//TESTAR LEITURA CLASSE METHOD...
-		/*CompilationUnit teste = parser.parse("package com.github.javaparser; public class Teste { public int teste(boolean t, String d) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; }  public int teste2(boolean t) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; } }").getResult().get();
+		CompilationUnit teste = parser.parse("package com.github.javaparser; public class Teste { public int teste(boolean t, String d) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; }  public int teste2(boolean t) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; } }").getResult().get();
 		List<Node> a = teste.getChildNodes();
 		for(Node b : a) {
 			if(b.getClass() == ClassOrInterfaceDeclaration.class) {
@@ -52,7 +55,7 @@ public class MainTeste {
 			}else {
 				
 			}
-		}*/
+		}
 		
 		
 	}
