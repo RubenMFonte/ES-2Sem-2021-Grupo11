@@ -36,16 +36,16 @@ class MetricsCalculatorTests {
 
 	@Test
 	void testNomClass() {
-		Assertions.assertEquals(4, MetricsCalculator.NOM_class(grammerExceptionClass));
-		Assertions.assertEquals(6, MetricsCalculator.NOM_class(parsingExceptionClass));
-		Assertions.assertEquals(29, MetricsCalculator.NOM_class(sourceCodeParserClass));
+		Assertions.assertEquals(4, MetricsCalculator.getNOM_class(grammerExceptionClass));
+		Assertions.assertEquals(6, MetricsCalculator.getNOM_class(parsingExceptionClass));
+		Assertions.assertEquals(29, MetricsCalculator.getNOM_class(sourceCodeParserClass));
 	}
 	
 	@Test
 	void testWMCClass() {
-		Assertions.assertEquals(4, MetricsCalculator.WMC_class(grammerExceptionClass));
-		Assertions.assertEquals(13, MetricsCalculator.WMC_class(parsingExceptionClass));
-		Assertions.assertEquals(328, MetricsCalculator.WMC_class(sourceCodeParserClass));
+		Assertions.assertEquals(4, MetricsCalculator.getWMC_class(grammerExceptionClass));
+		Assertions.assertEquals(13, MetricsCalculator.getWMC_class(parsingExceptionClass));
+		Assertions.assertEquals(328, MetricsCalculator.getWMC_class(sourceCodeParserClass));
 	}
 	
 	@Test

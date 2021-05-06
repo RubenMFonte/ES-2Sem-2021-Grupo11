@@ -429,14 +429,14 @@ public class ICodeSmellsQuality {
 	public void updateTableButton() {
 		update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
+				/*try {
 					CodeSmellsCalculator codeSmellsCalculator = new CodeSmellsCalculator(textField.getText());
 					tableInfo = codeSmellsCalculator.fillCodeSmellTable();
 				} catch (FileNotFoundException erro) {
 					// TODO Auto-generated catch block
 					erro.printStackTrace();
 					System.out.println("Erro: ficheiro excel não encontrado/selecionado!!!");
-				}
+				}*/
 				scrollPaneForJTable.setViewportView(tableInfo);		
  System.out.println("update table pressed!!!");
  System.out.println(tableInfo.getModel().getValueAt(0, 0));

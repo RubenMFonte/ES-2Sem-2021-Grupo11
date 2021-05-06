@@ -48,8 +48,8 @@ public class MethodDataStructure {
 	}
 	
 	private void calculateMetricsMethods(CallableDeclaration md_received) {
-		this.cyclo_method = MetricsCalculator.Cyclo_method(md_received);
-		this.loc_method = MetricsCalculator.LOC_method(md_received);
+		this.cyclo_method = MetricsCalculator.getCYCLO_method(md_received);
+		this.loc_method = MetricsCalculator.getLOC_method(md_received);
 	}
 	
 	private String getParameterTypes (CallableDeclaration md_received){

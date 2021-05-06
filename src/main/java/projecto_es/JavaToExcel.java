@@ -20,12 +20,21 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.github.javaparser.ast.CompilationUnit;
 
-public class javaToExcel {
+public class JavaToExcel {
 
 	private String path_java;
 	private ArrayList<String[]> lines;
 	private String path_exel;
 	private MetricsCalculator mc;
+
+	public JavaToExcel(String path_java) {
+		this.path_java = path_java;
+		lines = new ArrayList<String[]>();
+	}
+	
+	public JavaToExcel() {
+		lines = new ArrayList<String[]>();
+	}
 
 	public String getPath_java() {
 		return path_java;
@@ -47,26 +56,10 @@ public class javaToExcel {
 		this.path_exel = path_exel;
 	}
 
-	public void add_xslx(String path_exel) {
-		String extension = "";
-		for (int i = path_exel.length() - 5; i < path_exel.length(); i++) {
-			extension += path_exel.charAt(i);
-		}
-		System.out.println(extension);
-		if (extension.equals(".xlsx"))
-			this.path_exel = path_exel;
-		else {
-			path_exel += ".xlsx";
-			this.path_exel = path_exel;
-		}
-	}
-
-	public javaToExcel(String path_java) {
-		this.path_java = path_java;
-		lines = new ArrayList<String[]>();
+	public List<String[]> getLineS() {
+		return lines;
 	}
 	
-
 	public void makeLines(MetricsCalculator mc) {
 		List<CompilationUnit> compUnits = mc.getCompilationUnits();
 		int i = 1;
@@ -109,59 +102,6 @@ public class javaToExcel {
 			}
 			//
 		}
-	}
-	/*  PARA VERIFICAR COM O MAINNN [APAGAR DEPOIS] */
-	
-	public javaToExcel() {
-		lines = new ArrayList<String[]>();
-	}
-	public void makeLinesTESTE(CompilationUnit comp) {
-		//List<CompilationUnit> compUnits = mc.getCompilationUnits();
-		int i = 1;
-			ClassDataStructure struct = new ClassDataStructure(comp);
-			List<MethodDataStructure> lmds = struct.getMethodDataStructureList();
-			for (MethodDataStructure mds : lmds) {
-				String[] lineData = new String[9];
-				lineData[0] = String.valueOf(i);
-				lineData[1] = struct.getPackageName();
-				lineData[2] = struct.getClassName();
-				lineData[3] = mds.getMethodName();
-				lineData[4] = String.valueOf(struct.getNOMmetric());
-				lineData[5] = String.valueOf(struct.getLOCmetric());
-				lineData[6] = String.valueOf(struct.getWMCmetric());
-				lineData[7] = String.valueOf(mds.getLOCMetric());
-				lineData[8] = String.valueOf(mds.getCYCLOMetric());
-				lines.add(lineData);
-				i++;
-			}
-			//Anotar as innerclasses
-			if(!struct.getInnerClassesList().isEmpty()) {
-				for(ClassDataStructure innerStruct : struct.getInnerClassesList()) {
-					List<MethodDataStructure> lmds2 = innerStruct.getMethodDataStructureList();
-					for (MethodDataStructure mds : lmds2) {
-						String[] lineData = new String[9];
-						lineData[0] = String.valueOf(i);
-						lineData[1] = innerStruct.getPackageName();
-						lineData[2] = innerStruct.getClassName();
-						lineData[3] = mds.getMethodName();
-						lineData[4] = String.valueOf(innerStruct.getNOMmetric());
-						lineData[5] = String.valueOf(innerStruct.getLOCmetric());
-						lineData[6] = String.valueOf(innerStruct.getWMCmetric());
-						lineData[7] = String.valueOf(mds.getLOCMetric());
-						lineData[8] = String.valueOf(mds.getCYCLOMetric());
-						lines.add(lineData);
-						i++;
-					}
-				}
-			}
-			//
-			
-	}
-	
-	/*PARA VERIFICAR COM O MAINNNN */
-
-	public List<String[]> getLineS() {
-		return lines;
 	}
 
 	public void writeToExcel() throws IOException {

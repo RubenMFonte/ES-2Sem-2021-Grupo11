@@ -128,7 +128,7 @@ public class IMetricsCalculator {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				javaToExcel jte = new javaToExcel(path_Java.getText());
+				JavaToExcel jte = new JavaToExcel(path_Java.getText());
 				if (!path_Java.getText().equals("")) {
 					try {
 						jte.run();
@@ -175,7 +175,7 @@ public class IMetricsCalculator {
 		JOptionPane.showMessageDialog(parent, popUp);
 	}
 
-	public void saveFile(javaToExcel jte) {
+	public void saveFile(JavaToExcel jte) {
 		JFileChooser save_exel = new JFileChooser();
 		save_exel.setDialogTitle("Salvar ficheiro excel");
 		save_exel.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

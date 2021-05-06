@@ -101,9 +101,9 @@ public class ClassDataStructure {
 	}
 
 	private void calculateMetricsStoreMethods(ClassOrInterfaceDeclaration cid) {
-		this.wmc_class = MetricsCalculator.WMC_class(cid);
+		this.wmc_class = MetricsCalculator.getWMC_class(cid);
 		this.loc_class = MetricsCalculator.getLOC_Class(cid);
-		this.nom_class = MetricsCalculator.NOM_class(cid);	
+		this.nom_class = MetricsCalculator.getNOM_class(cid);	
 		for (Node n : cid.getChildNodes()) {
 			if (n.getClass() == MethodDeclaration.class || n.getClass() == ConstructorDeclaration.class) {
 				System.out.println("Class name: " + n.getClass().getName());
