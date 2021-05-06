@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+import javax.swing.JTable;
+
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
@@ -52,8 +54,26 @@ public class CodeSmellsCalculator {
 	}
 
 	// Podem alterar a assinatura do método se vos for conveniente
-	public void fillCodeSmellTable() {
-
+	public JTable fillCodeSmellTable() {
+		String[] columnNames = { "Class", "is_God_Class", "Method ID", "Method Name", "is_long_method" };
+		int statisticsJTNumberLines = 0;
+		for(int c = 0; c < classDataStructureList.size(); c++) {
+			statisticsJTNumberLines +=classDataStructureList.get(c).getMethodDataStructureList().size();
+		}
+		String[][] statisticsJT = new String[statisticsJTNumberLines][columnNames.length];
+		int line = 0;
+		for(int i=0; i<classDataStructureList.size(); i++) {
+			ClassDataStructure data = classDataStructureList.get(i);
+			for(int j = 0; j<data.getMethodDataStructureList().size(); j++) {
+				statisticsJT[line][0] = data.getClassName();
+				statisticsJT[line][1] = data.getCodeSmellDetected();
+				statisticsJT[line][2] = String.valueOf(data.getMethodDataStructureList().get(j).getmethodID());
+				statisticsJT[line][3] = data.getMethodDataStructureList().get(j).getMethodName();
+				statisticsJT[line][4] = data.getMethodDataStructureList().get(j).getCodeSmellDetected();
+				line++;
+			}
+		}
+		return new JTable(statisticsJT, columnNames);
 	}
 
 	// Podem alterar a assinatura do método se vos for conveniente
