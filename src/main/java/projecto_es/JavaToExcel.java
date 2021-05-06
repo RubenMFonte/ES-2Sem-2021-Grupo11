@@ -1,14 +1,13 @@
 package projecto_es;
 
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
+import java.util.stream.Collectors;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -26,12 +25,14 @@ public class JavaToExcel {
 	private ArrayList<String[]> lines;
 	private String path_exel;
 	private MetricsCalculator mc;
+	private List<ClassDataStructure> list_classes;
 
 	public JavaToExcel(String path_java) {
 		this.path_java = path_java;
 		lines = new ArrayList<String[]>();
+		list_classes = new ArrayList<ClassDataStructure>();
 	}
-	
+
 	public JavaToExcel() {
 		lines = new ArrayList<String[]>();
 	}
@@ -59,12 +60,49 @@ public class JavaToExcel {
 	public List<String[]> getLineS() {
 		return lines;
 	}
-	
-	public void makeLines(MetricsCalculator mc) {
+
+	public List<ClassDataStructure> alphbeticOrder(List<ClassDataStructure> list) {
+		List<String> class_names = new ArrayList<String>();
+		for (int i = 0; i < list.size(); i++) {
+			for (int j = 0; j < list.get(i).getInnerClassesList().size(); j++) {
+				if (list.get(i).getInnerClassesList().get(j).getClassName() != null)
+					class_names.add(list.get(i).getInnerClassesList().get(j).getClassName());
+			}
+			if (list.get(i).getClassName() != null)
+				class_names.add(list.get(i).getClassName());
+		}
+		Sorter s = new Sorter(class_names);
+		class_names = s.getListSorted();
+//		System.out.println("-----Lista ordenada------");
+//		for (int i = 0; i < class_names.size(); i++)
+//			System.out.println(i + ": " + class_names.get(i));
+//		System.out.println("--------Fim da lista ordenada---------");
+		List<ClassDataStructure> return_list = new ArrayList<>();
+		for (int i = 0; i < class_names.size(); i++) {
+			for (int j = 0; j < list.size(); j++) {
+				if (list.get(j).getClassName() != null) {
+					if (list.get(j).getClassName().equals(class_names.get(i))) {
+						return_list.add(list.get(j));
+						break;
+					}
+				}
+			}
+		}
+		return return_list;
+	}
+
+	public void makeClassDataStructureList(MetricsCalculator mc) {
 		List<CompilationUnit> compUnits = mc.getCompilationUnits();
-		int i = 1;
 		for (CompilationUnit comp : compUnits) {
 			ClassDataStructure struct = new ClassDataStructure(comp);
+			list_classes.add(struct);
+		}
+		list_classes = alphbeticOrder(list_classes);
+	}
+
+	public void makeLines() {
+		int i = 1;
+		for (ClassDataStructure struct : list_classes) {
 			List<MethodDataStructure> lmds = struct.getMethodDataStructureList();
 			for (MethodDataStructure mds : lmds) {
 				String[] lineData = new String[9];
@@ -80,9 +118,9 @@ public class JavaToExcel {
 				lines.add(lineData);
 				i++;
 			}
-			//Anotar as innerclasses
-			if(!struct.getInnerClassesList().isEmpty()) {
-				for(ClassDataStructure innerStruct : struct.getInnerClassesList()) {
+			// Anotar as innerclasses
+			if (!struct.getInnerClassesList().isEmpty()) {
+				for (ClassDataStructure innerStruct : struct.getInnerClassesList()) {
 					List<MethodDataStructure> lmds2 = innerStruct.getMethodDataStructureList();
 					for (MethodDataStructure mds : lmds2) {
 						String[] lineData = new String[9];
@@ -148,7 +186,8 @@ public class JavaToExcel {
 		Path p = Paths.get(path_java);
 		mc = MetricsCalculator.getMetricsCalculatorInstance();
 		mc.run(p);
-		makeLines(mc);
+		makeClassDataStructureList(mc);
+		makeLines();
 //		writeToExcel();
 	}
 

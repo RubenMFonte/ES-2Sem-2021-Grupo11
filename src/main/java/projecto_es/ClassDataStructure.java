@@ -1,6 +1,7 @@
 package projecto_es;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,7 +57,6 @@ public class ClassDataStructure {
 	private List<ClassDataStructure> innerClasses = new ArrayList<>();
 	private HashMap<String, Boolean> codeSmellsEvaluation = new HashMap<>();
 	private String codeSmellDetected;
-	
 
 	public ClassDataStructure(CompilationUnit javaFile) {
 		List<Node> children = javaFile.getChildNodes();
@@ -74,10 +74,11 @@ public class ClassDataStructure {
 			} else {
 			}
 		}
+		alphbeticOrder();
 	}
-	
+
 	public ClassDataStructure(String packag, String classNameToConcat, ClassOrInterfaceDeclaration innerClass) {
-		String innerClassName = classNameToConcat.concat("."+innerClass.getNameAsString());
+		String innerClassName = classNameToConcat.concat("." + innerClass.getNameAsString());
 		this.packageName = packag;
 		this.className = innerClassName;
 		calculateMetricsStoreMethods(innerClass);
@@ -104,42 +105,48 @@ public class ClassDataStructure {
 	private void calculateMetricsStoreMethods(ClassOrInterfaceDeclaration cid) {
 		this.wmc_class = MetricsCalculator.getWMC_class(cid);
 		this.loc_class = MetricsCalculator.getLOC_Class(cid);
-		this.nom_class = MetricsCalculator.getNOM_class(cid);	
+		this.nom_class = MetricsCalculator.getNOM_class(cid);
 		for (Node n : cid.getChildNodes()) {
 			if (n.getClass() == MethodDeclaration.class || n.getClass() == ConstructorDeclaration.class) {
-				System.out.println("Class name: " + n.getClass().getName());
+//				System.out.println("Class name: " + n.getClass().getName());
 				MethodDataStructure mds_part = new MethodDataStructure((CallableDeclaration) n);
 				lmds.add(mds_part);
-			} else if(n.getClass() == ClassOrInterfaceDeclaration.class) {
-				ClassOrInterfaceDeclaration decl = (ClassOrInterfaceDeclaration) n ;
+			} else if (n.getClass() == ClassOrInterfaceDeclaration.class) {
+				ClassOrInterfaceDeclaration decl = (ClassOrInterfaceDeclaration) n;
 				ClassDataStructure inner = new ClassDataStructure(packageName, className, decl);
 				innerClasses.add(inner);
 			}
 		}
-		/*List<MethodDeclaration> methods = cid.getMethods();
-		for (MethodDeclaration md : methods) {
-			MethodDataStructure mds_part = new MethodDataStructure(md);
-			lmds.add(mds_part);
-		}*/
+
+		/*
+		 * List<MethodDeclaration> methods = cid.getMethods(); for (MethodDeclaration md
+		 * : methods) { MethodDataStructure mds_part = new MethodDataStructure(md);
+		 * lmds.add(mds_part); }
+		 */
 	}
-	
-	public List<MethodDataStructure> alphbeticOrder(List<MethodDataStructure> list) {
+
+	public void alphbeticOrder() {
 		List<String> method_names = new ArrayList<String>();
-		for (int i = 0; i < list.size(); i++) {
-			method_names.add(list.get(i).getMethodName());
+		for (int i = 0; i < lmds.size(); i++) {
+			method_names.add(lmds.get(i).getMethodName());
 		}
-		method_names = method_names.stream().sorted().collect(Collectors.toList());
+		Sorter sorter = new Sorter(method_names);
+		method_names = sorter.getListSorted();
 		List<MethodDataStructure> return_list = new ArrayList<>();
 		for (int i = 0; i < method_names.size(); i++) {
 			boolean found = false;
-			for (int j = 0; found; j++) {
-				if (list.get(j).getMethodName().equals(method_names.get(i))) {
-					return_list.add(list.get(j));
-					found = true;
+			for (int j = 0; j < lmds.size(); j++) {
+				if (lmds.get(j).getMethodName() != null) {
+					if (lmds.get(j).getMethodName().equals(method_names.get(i))) {
+						return_list.add(lmds.get(j));
+//					found = true;
+						break;
+					}
 				}
+
 			}
 		}
-		return return_list;
+		lmds = return_list;
 	}
 
 	public void setCodeSmellsEvaluation(String codeSmell, boolean codeSmellEvaluation) {
@@ -175,19 +182,19 @@ public class ClassDataStructure {
 	public List<MethodDataStructure> getMethodDataStructureList() {
 		return lmds;
 	}
-	
+
 	public List<ClassDataStructure> getInnerClassesList() {
 		return innerClasses;
 	}
-	
-	public HashMap<String, Boolean>  getCodeSmellsEvaluation(){
+
+	public HashMap<String, Boolean> getCodeSmellsEvaluation() {
 		return codeSmellsEvaluation;
 	}
-	
+
 	public void setCodeSmellDetected(String codeSmellDetected) {
 		this.codeSmellDetected = codeSmellDetected;
 	}
-	
+
 	public String getCodeSmellDetected() {
 		return codeSmellDetected;
 	}
