@@ -55,11 +55,6 @@ public class ICodeSmellsQuality {
 	
 	JTextField textField = new JTextField();
 	
-	//For Panel with Just GoBackButton
-	private JPanel panelSOUTHFRAME;
-	private JPanel panelSOUTHWESTFRAME;
-	private JButton goBack = new JButton("<");
-	
 	//For Panel Left
 	private JPanel panelDetentionTable;
 	private JTable tableInfo;
@@ -67,15 +62,16 @@ public class ICodeSmellsQuality {
 	private JScrollPane scrollPaneForJTable;
 	private JPanel panelSouthInfo;
 	
-	private JLabel excelToCompare = new JLabel("MÈtricas Excel:");
+	private JLabel excelToCompare = new JLabel("M√©tricas Excel:");
 	private JTextField excelMetricsPath = new JTextField();
-	private JButton selectExcelMetrics = new JButton("Select Excel MÈtricas");
+	private JButton selectExcelMetrics = new JButton("Select Excel M√©tricas");
 	
 	private JLabel excelWithEvaluation = new JLabel("Excel especialistas:");	
 	private JTextField excelEvaluationPath = new JTextField();	
 	private JButton selectExcelEvaluation = new JButton("Select Excel Especialistas");
-	
+
 	private JButton update = new JButton("Update Table");
+	private JButton goBack = new JButton("<");
 	
 	//For Panel Right
 	private JPanel panelDetentionQuality;
@@ -125,16 +121,14 @@ public class ICodeSmellsQuality {
 	 */
 	private void initialize() {
 		frame = new JFrame("Code Smells Detetion and Quality");
-		frame.setBounds(100, 100, 1300, 720);
+		frame.setBounds(100, 100, 1300, 520);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		definePanelDetentionTableLook();	
 		definePanelDetentionQualityLook();
-		definePanelSouthWithGoBackButton();
 			
 		frame.getContentPane().add(panelDetentionTable,BorderLayout.CENTER);
 		frame.getContentPane().add(panelDetentionQuality, BorderLayout.EAST);
-		frame.getContentPane().add(panelSOUTHFRAME, BorderLayout.SOUTH);
 	
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
@@ -147,14 +141,6 @@ public class ICodeSmellsQuality {
 	    selectComboBox();
 	    frame.setResizable(false);
 	    frame.setLocationRelativeTo(null);
-	}
-	
-	private void definePanelSouthWithGoBackButton() {
-		panelSOUTHFRAME = new JPanel();
-		panelSOUTHFRAME.setLayout(new BorderLayout(0, 0));
-		panelSOUTHWESTFRAME = new JPanel();	
-		panelSOUTHWESTFRAME.add(goBack);
-		panelSOUTHFRAME.add(panelSOUTHWESTFRAME, BorderLayout.WEST);
 	}
 	
 	private void definePanelDetentionTableLook() {
@@ -179,8 +165,8 @@ public class ICodeSmellsQuality {
 	}
 	
 	private void defineJTableContent() {
-		//SÛ para testar -> Mai tarde inicializar as colunas e linhas com os dados carregados do exccel
-		 String[] columnNames = { "Class", "is_God_Class", "ClassificaÁ„o", "Method ID", "Method Name", "is_long_method", "ClassificaÁ„o" };
+		//S√≥ para testar -> Mai tarde inicializar as colunas e linhas com os dados carregados do exccel
+		 String[] columnNames = { "Class", "is_God_Class", "Classifica√ß√£o", "Method ID", "Method Name", "is_long_method", "Classifica√ß√£o" };
 		 DefaultTableModel model = new DefaultTableModel(); 
 	
 		 tableInfo = new JTable(50,7);
@@ -190,19 +176,21 @@ public class ICodeSmellsQuality {
 			 tc.setPreferredWidth(150);
 			 tc.setHeaderValue(columnNames[i]);
 		 }
-		 tableInfo.setPreferredScrollableViewportSize(new Dimension (720, 450));
+		 tableInfo.setPreferredScrollableViewportSize(new Dimension (720, 300));
 		 tableInfo.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 	}
 	
 	private void definePanelSouthInfoContent() {
 		panelSouthInfo = new JPanel();
-		
-		GroupLayout l = new GroupLayout(panelSouthInfo);
+	
+		GroupLayout l = new GroupLayout(panelSouthInfo);          
+
 		l.setHorizontalGroup(
 			l.createParallelGroup(Alignment.LEADING)
 				.addGroup(l.createSequentialGroup()
 					.addGroup(l.createParallelGroup(Alignment.LEADING)
+
 						.addComponent(excelToCompare)
 						.addComponent(excelWithEvaluation)
 						.addComponent(update))
@@ -213,6 +201,7 @@ public class ICodeSmellsQuality {
 						.addComponent(selectExcelEvaluation, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(selectExcelMetrics, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						))
+
 		);
 		l.setVerticalGroup(
 			l.createParallelGroup(Alignment.LEADING)
@@ -226,6 +215,7 @@ public class ICodeSmellsQuality {
 						.addComponent(excelEvaluationPath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(selectExcelEvaluation))
 					.addComponent(update))
+
 		);
         panelSouthInfo.setLayout(l);
         l.setAutoCreateGaps(true);
@@ -380,7 +370,7 @@ public class ICodeSmellsQuality {
 	}
 	
 	public void selectExcelButton() {
-		selectExcelMetrics.addActionListener(new ActionListener() {
+		selectExcel.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
@@ -390,7 +380,7 @@ public class ICodeSmellsQuality {
 				int result = fileChooser.showSaveDialog(null);
 				if (fileChooser.getSelectedFile() != null) {
 					String excelPathString = fileChooser.getSelectedFile().getAbsolutePath();
-					excelMetricsPath.setText(excelPathString);
+					excelPath.setText(excelPathString);
 				}
     
 			}
@@ -420,10 +410,10 @@ public class ICodeSmellsQuality {
 		update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				List<ClassDataStructure> classesJasmlNos = ExcelToData.getallClass(excelMetricsPath.getText());
-System.out.println("Neste Excel gerado, est„o presentes: " + classesJasmlNos.size() + " classes");
+System.out.println("Neste Excel gerado, est√£o presentes: " + classesJasmlNos.size() + " classes");
 				
 				List<ClassBooleanObject> classesJasmlProfs = ExcelToData.getBooleanObjects(excelEvaluationPath.getText());
-System.out.println("Neste Excel dos profs, est„o presentes: " + classesJasmlProfs.size() + " classes");
+System.out.println("Neste Excel dos profs, est√£o presentes: " + classesJasmlProfs.size() + " classes");
 				
 				CodeSmellsCalculator csc = CodeSmellsCalculator.getCodeSmellsCalculatorInstance();
 				try {
