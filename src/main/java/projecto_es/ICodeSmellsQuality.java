@@ -24,6 +24,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -52,10 +54,6 @@ public class ICodeSmellsQuality {
 	private JFrame frame;
 	
 	JTextField textField = new JTextField();
-	private int truePositives=0;
-	private int falsePositives=0;
-	private int trueNegatives=0;
-	private int falseNegatives=0;
 	
 	//For Panel with Just GoBackButton
 	private JPanel panelSOUTHFRAME;
@@ -73,7 +71,7 @@ public class ICodeSmellsQuality {
 	private JTextField excelMetricsPath = new JTextField();
 	private JButton selectExcelMetrics = new JButton("Select Excel MÈtricas");
 	
-	private JLabel excelWithEvaluation = new JLabel("Excel especialistas:");
+	private JLabel excelWithEvaluation = new JLabel("Excel especialistas:");	
 	private JTextField excelEvaluationPath = new JTextField();	
 	private JButton selectExcelEvaluation = new JButton("Select Excel Especialistas");
 	
@@ -84,21 +82,20 @@ public class ICodeSmellsQuality {
 	private JPanel panelQualityLabels;
 	private JPanel panelLayoutCodeSmellSelected;
 	private JLabel codeS = new JLabel("Code Smell Selected:");
-	private JComboBox codeSmellSelected = new JComboBox(new String[] {"", "is_God_class", "is_Long_method"});
+	private JComboBox codeSmellSelected = new JComboBox(new String[] {"", "God_class", "Long_method"});
 	private JPanel panelLayoutQualityData;
 	private JLabel tp = new JLabel("True Positives [VP]:");
-	private JLabel tp_result = new JLabel(Integer.toString(truePositives));
+	private JLabel tp_result = new JLabel("0");
 	private JLabel fp = new JLabel("False Positives [TN]:");
-	private JLabel fp_result = new JLabel(Integer.toString(falsePositives));
+	private JLabel fp_result = new JLabel("0");
 	private JLabel tn = new JLabel("True Negatives [FP]:");
-	private JLabel tn_result = new JLabel(Integer.toString(trueNegatives));
+	private JLabel tn_result = new JLabel("0");
 	private JLabel fn = new JLabel("False Negatives [FN]:");
-	private JLabel fn_result = new JLabel(Integer.toString(falseNegatives));
+	private JLabel fn_result = new JLabel("0");
 	private JPanel panelQualityGraphic;
 	private Canvas canvas;
 	
-	
-	
+	private List<CodeSmellStatistics> statistics = new ArrayList<CodeSmellStatistics>(); 
 
 	/**
 	 * Launch the application.
@@ -130,7 +127,6 @@ public class ICodeSmellsQuality {
 		frame = new JFrame("Code Smells Detetion and Quality");
 		frame.setBounds(100, 100, 1300, 720);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//frame.getContentPane().setLayout(new FlowLayout()); //FlowLayout.CENTER, 5, 5
 		
 		definePanelDetentionTableLook();	
 		definePanelDetentionQualityLook();
@@ -145,8 +141,10 @@ public class ICodeSmellsQuality {
 	    frame.setVisible(true);
 	    
 	    selectExcelButton();
+	    selectExcelButtonSpecialists();
 	    updateTableButton();
 	    goBackButton();
+	    selectComboBox();
 	    frame.setResizable(false);
 	    frame.setLocationRelativeTo(null);
 	}
@@ -229,32 +227,6 @@ public class ICodeSmellsQuality {
 						.addComponent(selectExcelEvaluation))
 					.addComponent(update))
 		);
-		/*
-		l.setHorizontalGroup(
-			l.createParallelGroup(Alignment.LEADING)
-				.addGroup(l.createSequentialGroup()
-					.addGroup(l.createParallelGroup(Alignment.LEADING)
-						.addGroup(l.createSequentialGroup()
-							.addComponent(excelToCompare)
-							.addComponent(excelMetricsPath)) 
-						)
-					.addGap(2)
-					.addGroup(l.createParallelGroup(Alignment.TRAILING)
-						.addComponent(selectExcelMetrics)
-						.addComponent(update)))
-		);
-		l.setVerticalGroup(
-			l.createParallelGroup(Alignment.LEADING)
-				.addGroup(l.createSequentialGroup()
-					.addGroup(l.createParallelGroup(Alignment.BASELINE)
-						.addComponent(excelToCompare)
-						.addComponent(excelMetricsPath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(selectExcelMetrics))
-					.addGap(6)
-					.addGroup(l.createParallelGroup(Alignment.TRAILING)
-						.addComponent(update)
-						))
-		);*/
         panelSouthInfo.setLayout(l);
         l.setAutoCreateGaps(true);
         l.setAutoCreateContainerGaps(true);
@@ -356,42 +328,20 @@ public class ICodeSmellsQuality {
 	}
 
 	private void definePanelQualityGraphicContent() {
-		panelQualityGraphic = new ChartPanel( new PieChart(truePositives,falsePositives,trueNegatives,falseNegatives).pie);
+		panelQualityGraphic = new ChartPanel( new PieChart(Integer.parseInt(tp_result.getText()),Integer.parseInt(fp_result.getText()),Integer.parseInt(tn_result.getText()),Integer.parseInt(fn_result.getText())).pie);
 
-		//System.out.println(panelQualityGraphic.get);
 		panelQualityGraphic.setBorder((BorderFactory.createTitledBorder("Chart Statistics")));
 		panelQualityGraphic.setPreferredSize(new Dimension(200,200));
-		//canvas = new PieChart();
-		//panelQualityGraphic.add(canvas);
-		//panelQualityGraphic.repaint();
-		
+		panelQualityGraphic.revalidate();
+		panelQualityGraphic.repaint();
 		
 	}
 	
-	/*private JPanel chartCons() {
-		
-		      DefaultPieDataset dataset = new DefaultPieDataset( );
-		      dataset.setValue( "IPhone 5s" , new Double( 10 ) );  
-		      dataset.setValue( "SamSung Grand" , new Double( 10 ) );   
-		      dataset.setValue( "MotoG" , new Double( 10 ) );    
-		      dataset.setValue( "Nokia " , new Double( 10 ) );  
-		            		   
-		      JFreeChart chart = ChartFactory.createPieChart(      
-		         "",   // chart title 
-		         dataset,          // data    
-		         true,             // include legend   
-		         true, 
-		         false);
-		    
-		     
-		      return new ChartPanel(chart); 
-		   
-	}*/
 	
 	class PieChart {
 		private JFreeChart pie;
 		
-		public PieChart(int tp, int tn, int fp, int fn) {			
+		public PieChart(int tp, int tn, int fp, int fn) {
 			 DefaultPieDataset dataset = dataOnPie(tp, tn, fp, fn);
 			 pie = ChartFactory.createPieChart(      
 			         "",   				// chart title 
@@ -417,34 +367,6 @@ public class ICodeSmellsQuality {
 		}
 		
 	}
-	
-	
-	/*class PieChart extends Canvas  
-	{  
-		
-	  public PieChart() {  
-	        	setBounds(0, 0, 200, 200);
-	  }
-	  @Override
-	  public void paint(Graphics g)  
-	  {  
-		  g.setColor(Color.BLUE);
-		  /*g.drawRect(0, 0, 50, 50);
-		  g.fillRect(0, 50, 50, 50);
-		  g.drawRect(0, 100, 50, 50);
-		  g.fillRect(0, 150, 50, 50);
-		  
-		 
-		  g.fillRect(50, 0, 50, 50);
-		  g.drawRect(100, 0, 50, 50);
-		  g.fillRect(150, 0, 50, 50);
-		  
-	    //g.fillOval(37,37,125,125);  
-	  g.fillArc(37, 37, 125, 125, 180, -90);
-	  
-	   
-	  }
-	}*/
 	
 //goBackButton
 	public void goBackButton() {
@@ -475,22 +397,88 @@ public class ICodeSmellsQuality {
 		});
 	}
 	
-	public void updateTableButton() {
-		/*update.addActionListener(new ActionListener() {
+	public void selectExcelButtonSpecialists() {
+		selectExcelEvaluation.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
-				/*try {
-					CodeSmellsCalculator codeSmellsCalculator = new CodeSmellsCalculator(textField.getText());
-					tableInfo = codeSmellsCalculator.fillCodeSmellTable();
-				} catch (FileNotFoundException erro) {
-					// TODO Auto-generated catch block
-					erro.printStackTrace();
-					System.out.println("Erro: ficheiro excel n√£o encontrado/selecionado!!!");
-				}*/
-				scrollPaneForJTable.setViewportView(tableInfo);		
- System.out.println("update table pressed!!!");
- System.out.println(tableInfo.getModel().getValueAt(0, 0));
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setDialogTitle("Selecionar Excel");
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("XLS files", "xls", "xlsx");
+				fileChooser.setFileFilter(filter);
+				int result = fileChooser.showSaveDialog(null);
+				if (fileChooser.getSelectedFile() != null) {
+					String excelPathString = fileChooser.getSelectedFile().getAbsolutePath();
+					excelEvaluationPath.setText(excelPathString);
+					
+				}
+    
 			}
-		});*/
+		});
 	}
+	
+	public void updateTableButton() {
+		update.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				List<ClassDataStructure> classesJasmlNos = ExcelToData.getallClass(excelMetricsPath.getText());
+System.out.println("Neste Excel gerado, est„o presentes: " + classesJasmlNos.size() + " classes");
+				
+				List<ClassBooleanObject> classesJasmlProfs = ExcelToData.getBooleanObjects(excelEvaluationPath.getText());
+System.out.println("Neste Excel dos profs, est„o presentes: " + classesJasmlProfs.size() + " classes");
+				
+				CodeSmellsCalculator csc = CodeSmellsCalculator.getCodeSmellsCalculatorInstance();
+				try {
+					csc.run(classesJasmlNos, classesJasmlProfs);
+					tableInfo = csc.fillCodeSmellTable();
+					scrollPaneForJTable.setViewportView(tableInfo);
+				} catch (FileNotFoundException error) {
+				// TODO Auto-generated catch block
+					error.printStackTrace();
+				}
+				statistics = csc.getCodeSmellsStatistics();
+				for(CodeSmellStatistics status : statistics) {
+System.out.println(status.getCodeSmell() + " Statistics " + " VP " + status.getTrue_positive() + " FP " + status.getFalse_positive()
+					+ " FN " + status.getFalse_negative() + " VN " + status.getTrue_negative());
+					}
+				
+//	scrollPaneForJTable.setViewportView(tableInfo);		
+// System.out.println("update table pressed!!!");
+ //System.out.println(tableInfo.getModel().getValueAt(0, 0));
+			}
+		});
+	}
+	
+	
+//	quando estiver a null limpar grafico
+	public void selectComboBox() {
+		codeSmellSelected.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String comboValueSelected = String.valueOf(codeSmellSelected.getSelectedItem());
+System.out.println("CodeSmell combo selected: "+codeSmellSelected.getSelectedItem());
+					for(int i=0; i<statistics.size(); i++) {
+						if(comboValueSelected.equals("")) {
+							tp_result.setText("0");
+							tn_result.setText("0");
+							fp_result.setText("0");
+							fn_result.setText("0");
+							break;
+						}
+						if(statistics.get(i).getCodeSmell().toString().equals(comboValueSelected)) {
+							tp_result.setText(String.valueOf(statistics.get(i).getTrue_positive()));
+							tn_result.setText(String.valueOf(statistics.get(i).getTrue_negative()));
+							fp_result.setText(String.valueOf(statistics.get(i).getFalse_positive()));
+							fn_result.setText(String.valueOf(statistics.get(i).getFalse_negative()));
+System.out.println("TruePositive: " + String.valueOf(statistics.get(i).getTrue_positive()) + 
+					"\n TrueNegative: " + String.valueOf(statistics.get(i).getTrue_negative()) +
+					"\n FalsePositive: " + String.valueOf(statistics.get(i).getFalse_positive()) +
+					"\n FalseNegative: " + String.valueOf(statistics.get(i).getFalse_negative()) +
+					"\n TrueNegativefromLabel: " + tn_result.getText());
+							break;
+						}
+					}
+					definePanelQualityGraphicContent();
+			}
+		});
+	}
+	
 }
 
