@@ -57,6 +57,7 @@ public class ConditionJPanel extends JPanel {
         noperatorsAvailable.setSelectedIndex(getNumericOperatorComboBoxIndex(s_numericOperator));
         limit.setText(s_threshold);
         loperatorsAvailable.setSelectedIndex(getLogicalOperatorComboBoxIndex(s_logicalOperator));
+        loperatorsAvailable.setEnabled(false);//ta aqui
         
         l.setHorizontalGroup(l.createSequentialGroup()
         		.addGroup(l.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -198,9 +199,9 @@ public class ConditionJPanel extends JPanel {
 		switch(metric){
 		case "NOM_CLASS": return 1;
 		case "LOC_CLASS": return 2;
-		case "WMC_CLASS": return 3;
-		case "LOC_METHOD": return 4;
-		case "CYCLO_METHOD": return 5;
+		case "WMC_CLASS": return 1;
+		case "LOC_METHOD": return 2;
+		case "CYCLO_METHOD": return 3;
 		default: return 0;
 		}
 	}

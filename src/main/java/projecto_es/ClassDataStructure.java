@@ -3,6 +3,7 @@ package projecto_es;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
@@ -120,6 +121,25 @@ public class ClassDataStructure {
 			MethodDataStructure mds_part = new MethodDataStructure(md);
 			lmds.add(mds_part);
 		}*/
+	}
+	
+	public List<MethodDataStructure> alphbeticOrder(List<MethodDataStructure> list) {
+		List<String> method_names = new ArrayList<String>();
+		for (int i = 0; i < list.size(); i++) {
+			method_names.add(list.get(i).getMethodName());
+		}
+		method_names = method_names.stream().sorted().collect(Collectors.toList());
+		List<MethodDataStructure> return_list = new ArrayList<>();
+		for (int i = 0; i < method_names.size(); i++) {
+			boolean found = false;
+			for (int j = 0; found; j++) {
+				if (list.get(j).getMethodName().equals(method_names.get(i))) {
+					return_list.add(list.get(j));
+					found = true;
+				}
+			}
+		}
+		return return_list;
 	}
 
 	public void setCodeSmellsEvaluation(String codeSmell, boolean codeSmellEvaluation) {
