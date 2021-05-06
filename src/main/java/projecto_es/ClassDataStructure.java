@@ -92,8 +92,8 @@ public class ClassDataStructure {
 		this.wmc_class = (int) Double.parseDouble(wmc_class);
 	}
 
-	public void addMethod(String methodName, int loc_method, int cyclo_method) {
-		MethodDataStructure mds = new MethodDataStructure(methodName, loc_method, cyclo_method);
+	public void addMethod(int methodID, String methodName, int loc_method, int cyclo_method) {
+		MethodDataStructure mds = new MethodDataStructure(methodID, methodName, loc_method, cyclo_method);
 		this.addMethod(mds);
 	}
 

@@ -57,17 +57,27 @@ public class ICodeSmellsQuality {
 	private int trueNegatives=0;
 	private int falseNegatives=0;
 	
+	//For Panel with Just GoBackButton
+	private JPanel panelSOUTHFRAME;
+	private JPanel panelSOUTHWESTFRAME;
+	private JButton goBack = new JButton("<");
+	
 	//For Panel Left
 	private JPanel panelDetentionTable;
 	private JTable tableInfo;
 	private JPanel panelCenterTable;
 	private JScrollPane scrollPaneForJTable;
 	private JPanel panelSouthInfo;
-	private JLabel label = new JLabel("Excel:");
-	private JTextField excelPath = new JTextField();
-	private JButton selectExcel = new JButton(" Select Excel");
+	
+	private JLabel excelToCompare = new JLabel("Métricas Excel:");
+	private JTextField excelMetricsPath = new JTextField();
+	private JButton selectExcelMetrics = new JButton("Select Excel Métricas");
+	
+	private JLabel excelWithEvaluation = new JLabel("Excel especialistas:");
+	private JTextField excelEvaluationPath = new JTextField();	
+	private JButton selectExcelEvaluation = new JButton("Select Excel Especialistas");
+	
 	private JButton update = new JButton("Update Table");
-	private JButton goBack = new JButton("<");
 	
 	//For Panel Right
 	private JPanel panelDetentionQuality;
@@ -118,15 +128,17 @@ public class ICodeSmellsQuality {
 	 */
 	private void initialize() {
 		frame = new JFrame("Code Smells Detetion and Quality");
-		frame.setBounds(100, 100, 1300, 520);
+		frame.setBounds(100, 100, 1300, 720);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//frame.getContentPane().setLayout(new FlowLayout()); //FlowLayout.CENTER, 5, 5
 		
 		definePanelDetentionTableLook();	
 		definePanelDetentionQualityLook();
+		definePanelSouthWithGoBackButton();
 			
 		frame.getContentPane().add(panelDetentionTable,BorderLayout.CENTER);
 		frame.getContentPane().add(panelDetentionQuality, BorderLayout.EAST);
+		frame.getContentPane().add(panelSOUTHFRAME, BorderLayout.SOUTH);
 	
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
@@ -137,6 +149,14 @@ public class ICodeSmellsQuality {
 	    goBackButton();
 	    frame.setResizable(false);
 	    frame.setLocationRelativeTo(null);
+	}
+	
+	private void definePanelSouthWithGoBackButton() {
+		panelSOUTHFRAME = new JPanel();
+		panelSOUTHFRAME.setLayout(new BorderLayout(0, 0));
+		panelSOUTHWESTFRAME = new JPanel();	
+		panelSOUTHWESTFRAME.add(goBack);
+		panelSOUTHFRAME.add(panelSOUTHWESTFRAME, BorderLayout.WEST);
 	}
 	
 	private void definePanelDetentionTableLook() {
@@ -172,7 +192,7 @@ public class ICodeSmellsQuality {
 			 tc.setPreferredWidth(150);
 			 tc.setHeaderValue(columnNames[i]);
 		 }
-		 tableInfo.setPreferredScrollableViewportSize(new Dimension (720, 300));
+		 tableInfo.setPreferredScrollableViewportSize(new Dimension (720, 450));
 		 tableInfo.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 	}
@@ -180,32 +200,61 @@ public class ICodeSmellsQuality {
 	private void definePanelSouthInfoContent() {
 		panelSouthInfo = new JPanel();
 		
-		GroupLayout l = new GroupLayout(panelSouthInfo);          
+		GroupLayout l = new GroupLayout(panelSouthInfo);
+		l.setHorizontalGroup(
+			l.createParallelGroup(Alignment.LEADING)
+				.addGroup(l.createSequentialGroup()
+					.addGroup(l.createParallelGroup(Alignment.LEADING)
+						.addComponent(excelToCompare)
+						.addComponent(excelWithEvaluation)
+						.addComponent(update))
+					.addGroup(l.createParallelGroup(Alignment.LEADING)
+						.addComponent(excelMetricsPath)
+						.addComponent(excelEvaluationPath))
+					.addGroup(l.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(selectExcelEvaluation, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(selectExcelMetrics, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						))
+		);
+		l.setVerticalGroup(
+			l.createParallelGroup(Alignment.LEADING)
+				.addGroup(l.createSequentialGroup()
+					.addGroup(l.createParallelGroup(Alignment.BASELINE)
+						.addComponent(excelToCompare)
+						.addComponent(excelMetricsPath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(selectExcelMetrics))
+					.addGroup(l.createParallelGroup(Alignment.LEADING)
+						.addComponent(excelWithEvaluation)
+						.addComponent(excelEvaluationPath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(selectExcelEvaluation))
+					.addComponent(update))
+		);
+		/*
 		l.setHorizontalGroup(
 			l.createParallelGroup(Alignment.LEADING)
 				.addGroup(l.createSequentialGroup()
 					.addGroup(l.createParallelGroup(Alignment.LEADING)
 						.addGroup(l.createSequentialGroup()
-							.addComponent(label)
-							.addComponent(excelPath, 790, 790, 790))
-						.addComponent(goBack))
+							.addComponent(excelToCompare)
+							.addComponent(excelMetricsPath)) 
+						)
 					.addGap(2)
 					.addGroup(l.createParallelGroup(Alignment.TRAILING)
-						.addComponent(selectExcel)
+						.addComponent(selectExcelMetrics)
 						.addComponent(update)))
 		);
 		l.setVerticalGroup(
 			l.createParallelGroup(Alignment.LEADING)
 				.addGroup(l.createSequentialGroup()
 					.addGroup(l.createParallelGroup(Alignment.BASELINE)
-						.addComponent(label)
-						.addComponent(excelPath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(selectExcel))
+						.addComponent(excelToCompare)
+						.addComponent(excelMetricsPath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(selectExcelMetrics))
 					.addGap(6)
 					.addGroup(l.createParallelGroup(Alignment.TRAILING)
 						.addComponent(update)
-						.addComponent(goBack)))
-		);
+						))
+		);*/
         panelSouthInfo.setLayout(l);
         l.setAutoCreateGaps(true);
         l.setAutoCreateContainerGaps(true);
@@ -409,7 +458,7 @@ public class ICodeSmellsQuality {
 	}
 	
 	public void selectExcelButton() {
-		selectExcel.addActionListener(new ActionListener() {
+		selectExcelMetrics.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
@@ -419,7 +468,7 @@ public class ICodeSmellsQuality {
 				int result = fileChooser.showSaveDialog(null);
 				if (fileChooser.getSelectedFile() != null) {
 					String excelPathString = fileChooser.getSelectedFile().getAbsolutePath();
-					excelPath.setText(excelPathString);
+					excelMetricsPath.setText(excelPathString);
 				}
     
 			}
@@ -427,7 +476,7 @@ public class ICodeSmellsQuality {
 	}
 	
 	public void updateTableButton() {
-		update.addActionListener(new ActionListener() {
+		/*update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				/*try {
 					CodeSmellsCalculator codeSmellsCalculator = new CodeSmellsCalculator(textField.getText());
@@ -441,7 +490,7 @@ public class ICodeSmellsQuality {
  System.out.println("update table pressed!!!");
  System.out.println(tableInfo.getModel().getValueAt(0, 0));
 			}
-		});
+		});*/
 	}
 }
 

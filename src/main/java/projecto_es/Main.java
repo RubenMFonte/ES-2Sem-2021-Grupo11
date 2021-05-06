@@ -41,7 +41,7 @@ public class Main {
 		}*/
 		
 		//Extrair a data do Excel
-		List<ClassDataStructure> classesPresentes = ExcelToData.getallClass("C:\\Users\\perei\\OneDrive\\Documentos\\ES\\testemain.xlsx");
+		/*List<ClassDataStructure> classesPresentes = ExcelToData.getallClass("C:\\Users\\perei\\OneDrive\\Documentos\\ES\\testemain.xlsx");
 		
 		for(ClassDataStructure a : classesPresentes) {
 			System.out.println("Encontrei as classes " + a.getClassName());
@@ -55,8 +55,23 @@ public class Main {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
+		//Extrair a data do Excel [UPDATE]
+		List<ClassDataStructure> classesJasmlNos = ExcelToData.getallClass("C:\\Users\\perei\\OneDrive\\Documentos\\ES\\jasml_metrics.xlsx");
+		System.out.println("Neste Excel gerado, estão presentes: " + classesJasmlNos.size() + " classes");
+		
+		List<ClassBooleanObject> classesJasmlProfs = ExcelToData.getBooleanObjects("C:\\Users\\perei\\OneDrive\\Documentos\\ES\\Code_Smell.xlsx");
+		System.out.println("Neste Excel dos profs, estão presentes: " + classesJasmlProfs.size() + " classes");
+		
+		//Após a extração das duas listas, aceder ao singleton da classe CodeSmellsCalculator e inicializar método run
+		CodeSmellsCalculator csc = CodeSmellsCalculator.getCodeSmellsCalculatorInstance();
+		try {
+			csc.run(classesJasmlNos, classesJasmlProfs);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		//Teste para ver se captura as inner classes [Funciona]
 		/*ClassDataStructure siga = new ClassDataStructure(testClass);
