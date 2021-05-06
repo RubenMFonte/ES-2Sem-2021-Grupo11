@@ -20,7 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.github.javaparser.ast.CompilationUnit;
 
-public class javaToExcel {
+public class JavaToExcel {
 
 	private String path_java;
 	private ArrayList<String[]> lines;
@@ -61,7 +61,7 @@ public class javaToExcel {
 		}
 	}
 
-	public javaToExcel(String path_java) {
+	public JavaToExcel(String path_java) {
 		this.path_java = path_java;
 		lines = new ArrayList<String[]>();
 	}
@@ -112,7 +112,7 @@ public class javaToExcel {
 	}
 	/*  PARA VERIFICAR COM O MAINNN [APAGAR DEPOIS] */
 	
-	public javaToExcel() {
+	public JavaToExcel() {
 		lines = new ArrayList<String[]>();
 	}
 	public void makeLinesTESTE(CompilationUnit comp) {

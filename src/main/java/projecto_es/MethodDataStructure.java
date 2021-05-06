@@ -11,6 +11,7 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 
 
+
 public class MethodDataStructure {
 	
 	/*Semelhança de funcionamento à classe [ClassDataStruture].
@@ -27,6 +28,8 @@ public class MethodDataStructure {
 	 * 
 	 */
 	
+	private int methodID; //Ver classe MethodBoolean - comparação de method id
+	
 	private String methodName;    //MethodDeclaration
 	private int loc_method;
 	private int cyclo_method;
@@ -41,7 +44,8 @@ public class MethodDataStructure {
 		calculateMetricsMethods(method);
 	}
 	
-	public MethodDataStructure (String methodName, int loc_method, int cyclo_method) {
+	public MethodDataStructure (int methodID, String methodName, int loc_method, int cyclo_method) {
+		this.methodID=methodID;
 		this.methodName = methodName;
 		this.loc_method = loc_method;
 		this.cyclo_method = cyclo_method;
@@ -79,6 +83,10 @@ public class MethodDataStructure {
 	public Boolean getCodeSmellsEvaluation(String codeSmell) {
 		if(codeSmellsEvaluation.containsKey(codeSmell)) return codeSmellsEvaluation.get(codeSmell);
 		return null;
+	}
+	
+	public int getmethodID() {
+		return methodID;
 	}
 	
 	public String getMethodName() {
