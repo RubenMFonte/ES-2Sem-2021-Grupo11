@@ -150,7 +150,6 @@ public class IMetricsCalculator {
 	}
 
 	public void setShowStatisitcs_Button() {
-		show_Statistics = new JButton("Ver Estatisiticas");
 		show_Statistics.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		show_Statistics.setBounds(516, 128, 119, 35);
 		frame.getContentPane().add(show_Statistics);

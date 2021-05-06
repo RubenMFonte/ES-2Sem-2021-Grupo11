@@ -14,6 +14,7 @@ public class Rule {
 	// Assume-se que a string que entra nesta função +e do formato
 	// "id:codeSmell:active:Metrics:NumericOperator:threshold:LogicalOperator:Metrics:NumericOperator:threshold:LogicalOperator:..."
 	public Rule(String rule) {
+		System.out.println("aqui:" + rule);
 		list = new ArrayList<>();
 		String[] values = rule.split(":");
 		list.add(values[0]);
