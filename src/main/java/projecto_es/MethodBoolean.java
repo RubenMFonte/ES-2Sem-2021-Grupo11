@@ -1,27 +1,16 @@
 package projecto_es;
-public class MethodBoolean{
-	
-		//Adicionado para ser possível a comparação de métodos - devido a certos métodos nao serem encontrados por terem argumentos exception
-	private int methodID;
-	//
-	private String methodName;
+public class MethodBoolean extends ClassMethods{
+
 	private Boolean lmethod;
 	
 	
-	public MethodBoolean (int methodID, String methodName, Boolean lmethod) {
-		this.methodID = methodID;
-		this.methodName = methodName;
+	public MethodBoolean (String methodName, Boolean lmethod) {
+		super(methodName);
 		this.lmethod= lmethod;
 	}
-	public String getMethodName() {
-		return methodName;
-	}
+	
 	public Boolean getLmethod() {
 		return lmethod;
 	}
-	// Ver comentário linha 4
-	public int getmethodID() {
-		return methodID;
-	}
-	//
+	
 }

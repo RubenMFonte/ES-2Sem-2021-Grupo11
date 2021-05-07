@@ -41,7 +41,7 @@ public class GeneralStatistics {
 	public int count_methods(List<ClassDataStructure> data_exel) {
 		int count_methods = 0;
 		for (int i = 0; i < data_exel.size(); i++) {
-			count_methods += data_exel.get(i).getMethodDataStructureList().size();
+			count_methods += data_exel.get(i).getMethods().size();
 		}
 		return count_methods;
 	}

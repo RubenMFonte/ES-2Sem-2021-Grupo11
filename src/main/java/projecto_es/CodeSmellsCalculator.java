@@ -58,13 +58,13 @@ public class CodeSmellsCalculator {
 		String[] columnNames = { "Class", "is_God_Class", "Method ID", "Method Name", "is_long_method" };
 		int statisticsJTNumberLines = 0;
 		for(int c = 0; c < classDataStructureList.size(); c++) {
-			statisticsJTNumberLines +=classDataStructureList.get(c).getMethodDataStructureList().size();
+			statisticsJTNumberLines +=classDataStructureList.get(c).getMethods().size();
 		}
 		String[][] statisticsJT = new String[statisticsJTNumberLines][columnNames.length];
 		int line = 0;
 		for(int i=0; i<classDataStructureList.size(); i++) {
 			ClassDataStructure data = classDataStructureList.get(i);
-			for(int j = 0; j<data.getMethodDataStructureList().size(); j++) {
+			for(int j = 0; j<data.getMethods().size(); j++) {
 				statisticsJT[line][0] = data.getClassName();
 				statisticsJT[line][1] = data.getClassClassificationDetected();
 				statisticsJT[line][2] = String.valueOf(data.getMethodDataStructureList().get(j).getmethodID());
