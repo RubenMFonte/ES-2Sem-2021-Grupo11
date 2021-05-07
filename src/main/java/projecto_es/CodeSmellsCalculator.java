@@ -66,10 +66,10 @@ public class CodeSmellsCalculator {
 			ClassDataStructure data = classDataStructureList.get(i);
 			for(int j = 0; j<data.getMethodDataStructureList().size(); j++) {
 				statisticsJT[line][0] = data.getClassName();
-				statisticsJT[line][1] = data.getCodeSmellDetected();
+				statisticsJT[line][1] = data.getClassClassificationDetected();
 				statisticsJT[line][2] = String.valueOf(data.getMethodDataStructureList().get(j).getmethodID());
 				statisticsJT[line][3] = data.getMethodDataStructureList().get(j).getMethodName();
-				statisticsJT[line][4] = data.getMethodDataStructureList().get(j).getCodeSmellDetected();
+				statisticsJT[line][4] = data.getMethodDataStructureList().get(j).getMethodClassificationDetected();
 				line++;
 			}
 		}
@@ -82,14 +82,18 @@ public class CodeSmellsCalculator {
 			CodeSmellStatistics css = new CodeSmellStatistics(rule.getCodeSmell(), 0, 0, 0, 0);
 			if (rule.getCodeSmell().equals("Long_method")) {
 				for (int i = 0; i < classDataStructureList.size(); i++) {
-					for(MethodDataStructure method : classDataStructureList.get(i).getMethodDataStructureList()) {
-						calculateCodeSmellStatistics(null, method, rule, css);
+					if(!classDataStructureList.get(i).getClassClassificationDetected().contains("Não Detetado")) {
+						for(MethodDataStructure method : classDataStructureList.get(i).getMethodDataStructureList()) {
+							if(method.getMethodClassificationDetected() == null) 
+								calculateCodeSmellStatistics(null, method, rule, css);										
+						}
 					}
 				}
 			}
 			if (rule.getCodeSmell().equals("God_class")) {
 				for (int i = 0; i < classDataStructureList.size(); i++) {
-					calculateCodeSmellStatistics(classDataStructureList.get(i), null, rule, css);
+					if(classDataStructureList.get(i).getClassClassificationDetected() == null) 
+						calculateCodeSmellStatistics(classDataStructureList.get(i), null, rule, css);					
 				}
 			}
 			statistics.add(css);
@@ -136,15 +140,15 @@ public class CodeSmellsCalculator {
 		}
 		System.out.println("VALOR OBTIDO FINAL BOOLEANO " + finalValue);
 		if(classToDetect==null) {
-			System.out.println("O que está no metodo de code smell eval " + methodToDetect.getCodeSmellsEvaluation("Long_method"));
-			String sentence = classificationBetweenEvaluationAndSpecialist(css, finalValue, methodToDetect.getCodeSmellsEvaluation("Long_method"));
+			System.out.println("O que está no metodo de code smell eval " + methodToDetect.getMethodCodeSmellSpecialistValue(regra.getCodeSmell()));
+			String sentence = classificationBetweenEvaluationAndSpecialist(css, finalValue, methodToDetect.getMethodCodeSmellSpecialistValue(regra.getCodeSmell()));
 			System.out.println("Este deu: " + sentence);
-			methodToDetect.setCodeSmellDetected(sentence);
+			methodToDetect.setMethodClassificationDetected(sentence);
 		}else {
-			System.out.println("O que está na classe de code smell eval " + classToDetect.getCodeSmellsEvaluation("God_class"));
-			String sentence = classificationBetweenEvaluationAndSpecialist(css, finalValue, classToDetect.getCodeSmellsEvaluation("God_class"));
+			System.out.println("O que está na classe de code smell eval " + classToDetect.getClassCodeSmellSpecialistValue(regra.getCodeSmell()));
+			String sentence = classificationBetweenEvaluationAndSpecialist(css, finalValue, classToDetect.getClassCodeSmellSpecialistValue(regra.getCodeSmell()));
 			System.out.println("Este deu: " + sentence);
-			classToDetect.setCodeSmellDetected(sentence);
+			classToDetect.setClassClassificationDetected(sentence);
 		}
 
 		System.out.println(css.getCodeSmell() + " Statistics " + " VP " + css.getTrue_positive() + " FP " + css.getFalse_positive()
@@ -251,13 +255,22 @@ public class CodeSmellsCalculator {
 		for(ClassDataStructure ourClass : classDataStructureList) {
 			System.out.println("Nesta Classe: " + ourClass.getClassName());
 			System.out.println("A encontrar a classe na lista de [ClassBooleanObject]...");
-			ClassBooleanObject v = classWithSpecialistValues.stream().filter(cbo -> cbo.getClassName().equals(ourClass.getClassName())).findFirst().get();
-			System.out.println("Resultado da procura " + v.getClassName());
-			System.out.println("[ANTES] Este é o valor do Code_Smell: " + ourClass.getCodeSmellsEvaluation("God_class") );
-			ourClass.setCodeSmellsEvaluation("God_class", v.getGodC());
-			System.out.println("[DEPOIS] Este é o valor do Code_Smell: " + ourClass.getCodeSmellsEvaluation("God_class"));	
-			defineLongMethodValueFromSpecialistToMethod(ourClass.getMethodDataStructureList(), v.getLmds());
-			//break;
+			try {
+				ClassBooleanObject v = classWithSpecialistValues.stream().filter(cbo -> cbo.getClassName().equals(ourClass.getClassName())).findFirst().get();
+				System.out.println("Resultado da procura " + v.getClassName());
+				System.out.println("[ANTES] Este é o valor do Code_Smell: " + ourClass.getClassCodeSmellSpecialistValue("God_class") );
+				ourClass.setClassCodeSmellSpecialistValue("God_class", v.getGodC());	
+				System.out.println("[DEPOIS] Este é o valor do Code_Smell: " + ourClass.getClassCodeSmellSpecialistValue("God_class"));
+				defineLongMethodValueFromSpecialistToMethod(ourClass.getMethodDataStructureList(), v.getLmds());
+			}catch(Exception e) {	
+				//e.printStackTrace();
+				System.out.println("NULO");
+				ourClass.setClassClassificationDetected("Não Detetado - Classe Inexistente");
+				for(MethodDataStructure method : ourClass.getMethodDataStructureList()) {
+					method.setMethodClassificationDetected("Não Detetado - Devido a classe Inexistente");
+				}
+			}
+			
 		}
 	}
 	
@@ -265,12 +278,22 @@ public class CodeSmellsCalculator {
 		for(MethodDataStructure ourMethod : lmds) {
 			System.out.println("Neste Método: " + ourMethod.getMethodName());
 			System.out.println("A encontrar o método na lista de [MethodBoolean]...");
-			//Vou encontrar pelo MethodID
-			MethodBoolean v2 = mb.stream().filter(object -> object.getmethodID()==ourMethod.getmethodID()).findFirst().get();
-			System.out.println("Resultado da procura " + v2.getMethodName());
-			System.out.println("[ANTES] Este é o valor do Code_Smell: " + ourMethod.getCodeSmellsEvaluation("Long_method") );
-			ourMethod.setCodeSmellsEvaluation("Long_method", v2.getLmethod());
-			System.out.println("[DEPOIS] Este é o valor do Code_Smell: " + ourMethod.getCodeSmellsEvaluation("Long_method"));	
+			try {
+				//A encontrar pelo MethodID
+				//MethodBoolean v2 = mb.stream().filter(object -> object.getmethodID()==ourMethod.getmethodID()).findFirst().get();
+				//A encontrar pelo nome
+				MethodBoolean v2 = mb.stream().filter(object -> object.getMethodName().equals(ourMethod.getMethodName())).findFirst().get();
+				System.out.println("Resultado da procura " + v2.getMethodName());
+				System.out.println("[ANTES] Este é o valor do Code_Smell: " + ourMethod.getMethodCodeSmellSpecialistValue("Long_method") );
+				ourMethod.setMethodCodeSmellSpecialistValue("Long_method", v2.getLmethod());
+				System.out.println("[DEPOIS] Este é o valor do Code_Smell: " + ourMethod.getMethodCodeSmellSpecialistValue("Long_method"));
+				
+			}catch(Exception e) {
+				//e.printStackTrace();
+				System.out.println("NULO");
+				ourMethod.setMethodClassificationDetected("Não Detetado - Método Inexistente");
+			}
+			
 		}
 	}
 	
@@ -281,6 +304,12 @@ public class CodeSmellsCalculator {
 		getCodeSmellsActiveRules("saveRule.txt");
 		defineGodClassValueFromSpecialistToClass();
 		initProcessToCalculateCodeSmellsStatistics();
+		for(ClassDataStructure c : classDataStructureList) {
+			System.out.println("VERIFY " + c.getClassClassificationDetected());
+			for(MethodDataStructure m : c.getMethodDataStructureList()) {
+				System.out.println("                      Method " + m.getMethodClassificationDetected());
+			}
+		}
 	}
 	
 	public List<ClassDataStructure> getClassDataStructureList() {
