@@ -12,7 +12,6 @@ import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.CallableDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.ConstructorDeclaration;
-//import com.github.javaparser.ast.body.
 import com.github.javaparser.ast.body.MethodDeclaration;
 
 public class ClassDataStructure {
@@ -48,40 +47,39 @@ public class ClassDataStructure {
 	 * 
 	 */
 
-	private String packageName; // PackageDeclaration
-	private String className; // ClassOrInterfaceDeclaration
+	private String packageName;
+	private String className;
 	private int nom_class;
 	private int loc_class;
 	private int wmc_class;
-	private List<MethodDataStructure> lmds = new ArrayList<>();
-	private List<ClassDataStructure> innerClasses = new ArrayList<>();
-	private HashMap<String, Boolean> codeSmellsEvaluation = new HashMap<>();
-	private String codeSmellDetected;
+	private List<MethodDataStructure> methodDataStructureList = new ArrayList<>();
+	private List<ClassDataStructure> innerClassList = new ArrayList<>();
+	private HashMap<String, Boolean> classCodeSmellSpecialistValue = new HashMap<>();
+	private String classClassificationDetected;
 
 	public ClassDataStructure(CompilationUnit javaFile) {
 		List<Node> children = javaFile.getChildNodes();
 		for (Node child : children) {
 			if (child.getClass() == PackageDeclaration.class) {
-				PackageDeclaration pd = (PackageDeclaration) child;
-				String packageName = pd.getNameAsString();
+				PackageDeclaration packageDeclaration = (PackageDeclaration) child;
+				String packageName = packageDeclaration.getNameAsString();
 				this.packageName = packageName;
-
 			} else if (child.getClass() == ClassOrInterfaceDeclaration.class) {
-				ClassOrInterfaceDeclaration cid = (ClassOrInterfaceDeclaration) child;
-				String className = cid.getNameAsString();
+				ClassOrInterfaceDeclaration classInterfaceDeclaration = (ClassOrInterfaceDeclaration) child;
+				String className = classInterfaceDeclaration.getNameAsString();
 				this.className = className;
-				calculateMetricsStoreMethods(cid);
+				calculateClassDataStructureInformation(classInterfaceDeclaration);
 			} else {
 			}
 		}
-		alphbeticOrder();
+		orderClassesAlphabetically();
 	}
 
-	public ClassDataStructure(String packag, String classNameToConcat, ClassOrInterfaceDeclaration innerClass) {
+	public ClassDataStructure(String packageName, String classNameToConcat, ClassOrInterfaceDeclaration innerClass) {
 		String innerClassName = classNameToConcat.concat("." + innerClass.getNameAsString());
-		this.packageName = packag;
+		this.packageName = packageName;
 		this.className = innerClassName;
-		calculateMetricsStoreMethods(innerClass);
+		calculateClassDataStructureInformation(innerClass);
 	}
 
 	public ClassDataStructure(String packageName, String className, String nom_class, String loc_class,
@@ -93,52 +91,53 @@ public class ClassDataStructure {
 		this.wmc_class = (int) Double.parseDouble(wmc_class);
 	}
 
-	public void addMethod(int methodID, String methodName, int loc_method, int cyclo_method) {
-		MethodDataStructure mds = new MethodDataStructure(methodID, methodName, loc_method, cyclo_method);
-		this.addMethod(mds);
+	/*
+	 * public void addMethodDataStructure(int methodID, String methodName, int
+	 * loc_method, int cyclo_method) { MethodDataStructure methodDataStructure = new
+	 * MethodDataStructure(methodID, methodName, loc_method, cyclo_method);
+	 * //this.addMethod(methodDataStructure); }
+	 */
+
+	public void addMethodDataStructure(MethodDataStructure methodDataStructure) {
+		this.methodDataStructureList.add(methodDataStructure);
 	}
 
-	public void addMethod(MethodDataStructure mds) {
-		this.lmds.add(mds);
-	}
-
-	private void calculateMetricsStoreMethods(ClassOrInterfaceDeclaration cid) {
-		this.wmc_class = MetricsCalculator.getWMC_class(cid);
-		this.loc_class = MetricsCalculator.getLOC_Class(cid);
-		this.nom_class = MetricsCalculator.getNOM_class(cid);
-		for (Node n : cid.getChildNodes()) {
-			if (n.getClass() == MethodDeclaration.class || n.getClass() == ConstructorDeclaration.class) {
-//				System.out.println("Class name: " + n.getClass().getName());
-				MethodDataStructure mds_part = new MethodDataStructure((CallableDeclaration) n);
-				lmds.add(mds_part);
-			} else if (n.getClass() == ClassOrInterfaceDeclaration.class) {
-				ClassOrInterfaceDeclaration decl = (ClassOrInterfaceDeclaration) n;
-				ClassDataStructure inner = new ClassDataStructure(packageName, className, decl);
-				innerClasses.add(inner);
+	private void calculateClassDataStructureInformation(ClassOrInterfaceDeclaration classInterfaceDeclaration) {
+		calculateClassMetrics(classInterfaceDeclaration);
+		List<Node> children = classInterfaceDeclaration.getChildNodes();
+		for (Node child : children) {
+			if (child.getClass() == MethodDeclaration.class || child.getClass() == ConstructorDeclaration.class) {
+				MethodDataStructure methodOnClass = new MethodDataStructure((CallableDeclaration) child);
+				methodDataStructureList.add(methodOnClass);
+			} else if (child.getClass() == ClassOrInterfaceDeclaration.class) {
+				ClassOrInterfaceDeclaration innerClassInterfaceDeclaration = (ClassOrInterfaceDeclaration) child;
+				ClassDataStructure innerClass = new ClassDataStructure(packageName, className,
+						innerClassInterfaceDeclaration);
+				innerClassList.add(innerClass);
 			}
 		}
-
-		/*
-		 * List<MethodDeclaration> methods = cid.getMethods(); for (MethodDeclaration md
-		 * : methods) { MethodDataStructure mds_part = new MethodDataStructure(md);
-		 * lmds.add(mds_part); }
-		 */
 	}
 
-	public void alphbeticOrder() {
+	private void calculateClassMetrics(ClassOrInterfaceDeclaration classInterfaceDeclaration) {
+		this.wmc_class = MetricsCalculator.getWMC_class(classInterfaceDeclaration);
+		this.loc_class = MetricsCalculator.getLOC_Class(classInterfaceDeclaration);
+		this.nom_class = MetricsCalculator.getNOM_class(classInterfaceDeclaration);
+	}
+
+	private void orderClassesAlphabetically() {
 		List<String> method_names = new ArrayList<String>();
-		for (int i = 0; i < lmds.size(); i++) {
-			method_names.add(lmds.get(i).getMethodName());
+		for (int i = 0; i < methodDataStructureList.size(); i++) {
+			method_names.add(methodDataStructureList.get(i).getMethodName());
 		}
 		Sorter sorter = new Sorter(method_names);
 		method_names = sorter.getListSorted();
 		List<MethodDataStructure> return_list = new ArrayList<>();
 		for (int i = 0; i < method_names.size(); i++) {
 			boolean found = false;
-			for (int j = 0; j < lmds.size(); j++) {
-				if (lmds.get(j).getMethodName() != null) {
-					if (lmds.get(j).getMethodName().equals(method_names.get(i))) {
-						return_list.add(lmds.get(j));
+			for (int j = 0; j < methodDataStructureList.size(); j++) {
+				if (methodDataStructureList.get(j).getMethodName() != null) {
+					if (methodDataStructureList.get(j).getMethodName().equals(method_names.get(i))) {
+						return_list.add(methodDataStructureList.get(j));
 //					found = true;
 						break;
 					}
@@ -146,16 +145,16 @@ public class ClassDataStructure {
 
 			}
 		}
-		lmds = return_list;
+		methodDataStructureList = return_list;
 	}
 
-	public void setCodeSmellsEvaluation(String codeSmell, boolean codeSmellEvaluation) {
-		codeSmellsEvaluation.put(codeSmell, codeSmellEvaluation);
+	public void setClassCodeSmellSpecialistValue(String codeSmellName, boolean codeSmellValue) {
+		classCodeSmellSpecialistValue.put(codeSmellName, codeSmellValue);
 	}
 
-	public Boolean getCodeSmellsEvaluation(String codeSmell) {
-		if (codeSmellsEvaluation.containsKey(codeSmell))
-			return codeSmellsEvaluation.get(codeSmell);
+	public Boolean getClassCodeSmellSpecialistValue(String codeSmellName) {
+		if (classCodeSmellSpecialistValue.containsKey(codeSmellName))
+			return classCodeSmellSpecialistValue.get(codeSmellName);
 		return null;
 	}
 
@@ -180,23 +179,23 @@ public class ClassDataStructure {
 	}
 
 	public List<MethodDataStructure> getMethodDataStructureList() {
-		return lmds;
+		return methodDataStructureList;
 	}
 
 	public List<ClassDataStructure> getInnerClassesList() {
-		return innerClasses;
+		return innerClassList;
 	}
 
 	public HashMap<String, Boolean> getCodeSmellsEvaluation() {
-		return codeSmellsEvaluation;
+		return classCodeSmellSpecialistValue;
 	}
 
-	public void setCodeSmellDetected(String codeSmellDetected) {
-		this.codeSmellDetected = codeSmellDetected;
+	public void setClassClassificationDetected(String classificationDetected) {
+		this.classClassificationDetected = classificationDetected;
 	}
 
-	public String getCodeSmellDetected() {
-		return codeSmellDetected;
+	public String getClassClassificationDetected() {
+		return classClassificationDetected;
 	}
 
 }

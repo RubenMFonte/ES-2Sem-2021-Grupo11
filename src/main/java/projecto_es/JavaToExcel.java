@@ -35,6 +35,7 @@ public class JavaToExcel {
 
 	public JavaToExcel() {
 		lines = new ArrayList<String[]>();
+		list_classes = new ArrayList<ClassDataStructure>();
 	}
 
 	public String getPath_java() {
@@ -99,43 +100,86 @@ public class JavaToExcel {
 		}
 		list_classes = alphbeticOrder(list_classes);
 	}
+	
+	//Só para testar o code smells calculator à prova de bala
+	public void makeClassDataStructureListTESTE(CompilationUnit unit) {
+		
+		
+			ClassDataStructure struct = new ClassDataStructure(unit);
+			list_classes.add(struct);
+		
+		list_classes = alphbeticOrder(list_classes);
+	}
+	//------------------[APAGAR DEPOIS]
 
 	public void makeLines() {
 		int i = 1;
 		for (ClassDataStructure struct : list_classes) {
 			List<MethodDataStructure> lmds = struct.getMethodDataStructureList();
-			for (MethodDataStructure mds : lmds) {
+			//Para anotar classes sem métodos (pus em comentário - desnecessário - se tiver ativo deteta as quem tem no prof 
+			//a JavaClass e OpcodeInfo porém também adiciona outras 2 (Scannable e Constants) que têm atributos final static
+			//if(!(lmds.isEmpty())) {
+				for (MethodDataStructure mds : lmds) {
+					String[] lineData = new String[9];
+					lineData[0] = String.valueOf(i);
+					lineData[1] = struct.getPackageName();
+					lineData[2] = struct.getClassName();
+					lineData[3] = mds.getMethodName();
+					lineData[4] = String.valueOf(struct.getNOMmetric());
+					lineData[5] = String.valueOf(struct.getLOCmetric());
+					lineData[6] = String.valueOf(struct.getWMCmetric());
+					lineData[7] = String.valueOf(mds.getLOCMetric());
+					lineData[8] = String.valueOf(mds.getCYCLOMetric());
+					lines.add(lineData);
+					i++;
+				}
+			/*}else {
 				String[] lineData = new String[9];
 				lineData[0] = String.valueOf(i);
 				lineData[1] = struct.getPackageName();
 				lineData[2] = struct.getClassName();
-				lineData[3] = mds.getMethodName();
+				lineData[3] = struct.getClassName().concat("()");
 				lineData[4] = String.valueOf(struct.getNOMmetric());
 				lineData[5] = String.valueOf(struct.getLOCmetric());
 				lineData[6] = String.valueOf(struct.getWMCmetric());
-				lineData[7] = String.valueOf(mds.getLOCMetric());
-				lineData[8] = String.valueOf(mds.getCYCLOMetric());
+				lineData[7] = "";
+				lineData[8] = "";
 				lines.add(lineData);
 				i++;
-			}
+			}*/
 			// Anotar as innerclasses
 			if (!struct.getInnerClassesList().isEmpty()) {
 				for (ClassDataStructure innerStruct : struct.getInnerClassesList()) {
 					List<MethodDataStructure> lmds2 = innerStruct.getMethodDataStructureList();
-					for (MethodDataStructure mds : lmds2) {
+					//if(!(lmds2.isEmpty())) {
+						for (MethodDataStructure mds : lmds2) {
+							String[] lineData = new String[9];
+							lineData[0] = String.valueOf(i);
+							lineData[1] = innerStruct.getPackageName();
+							lineData[2] = innerStruct.getClassName();
+							lineData[3] = mds.getMethodName();
+							lineData[4] = String.valueOf(innerStruct.getNOMmetric());
+							lineData[5] = String.valueOf(innerStruct.getLOCmetric());
+							lineData[6] = String.valueOf(innerStruct.getWMCmetric());
+							lineData[7] = String.valueOf(mds.getLOCMetric());
+							lineData[8] = String.valueOf(mds.getCYCLOMetric());
+							lines.add(lineData);
+							i++;
+						}
+					/*} else {
 						String[] lineData = new String[9];
 						lineData[0] = String.valueOf(i);
 						lineData[1] = innerStruct.getPackageName();
 						lineData[2] = innerStruct.getClassName();
-						lineData[3] = mds.getMethodName();
+						lineData[3] = innerStruct.getClassName().concat("()");
 						lineData[4] = String.valueOf(innerStruct.getNOMmetric());
 						lineData[5] = String.valueOf(innerStruct.getLOCmetric());
 						lineData[6] = String.valueOf(innerStruct.getWMCmetric());
-						lineData[7] = String.valueOf(mds.getLOCMetric());
-						lineData[8] = String.valueOf(mds.getCYCLOMetric());
+						lineData[7] = "";
+						lineData[8] = "";
 						lines.add(lineData);
 						i++;
-					}
+					}*/
 				}
 			}
 			//

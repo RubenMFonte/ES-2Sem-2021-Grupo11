@@ -55,7 +55,7 @@ public class ExcelToData {
 				
 				System.out.println("OBTAINED " + newMethod.getmethodID());
 				
-				cds.addMethod(newMethod);
+				cds.addMethodDataStructure(newMethod);
 			}
 				
 		} catch (Exception e) {
@@ -90,10 +90,12 @@ public class ExcelToData {
 					System.out.println(cds.getGodC());
 					allObject.add(cds);
 				}
+				
+				
 				MethodBoolean newMethod = new MethodBoolean(/* Para ler methodID - ver classe MethodBoolean para mais info*/ 
 						(int) Double.parseDouble(ReadCellData(cont, 0, wb)),
 										ReadCellData(cont, 3, wb), 
-										Boolean.parseBoolean(ReadCellData(cont, 10, wb)));
+										Boolean.parseBoolean(ReadCellData(cont, 10, wb)));  
 				
 				cds.addMethod(newMethod);
 				System.out.println("HERE" + newMethod.getmethodID());

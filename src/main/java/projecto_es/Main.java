@@ -26,14 +26,54 @@ public class Main {
 				+ "        class C {\r\n"
 				+ "            \r\n"
 				+ "            public int testeC(boolean t) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; }\r\n"
+				+ "            public int testeCinterior(boolean t) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; }\r\n"
+				+ "        }\r\n"
+				+ "        class D {\r\n"
+				+ "            \r\n"
+				+ "            public int testeD(boolean t) { int a = 0; while(i<1) { if(t) return 1; else return 0; } i++; }\r\n"
 				+ "        }\r\n"
 				+ "    }").getResult().get();
 		
+		CompilationUnit testParameters = parser.parse("package projecto_es; "
+				+ "class A {\r\n"
+				+ "    "
+				+ "    public int testeA(ClassDataStructure a, MethodDataStructure b, ExceptionTable.Opcode d) { "
+				+ "			 try {\r\n"
+				+ "      		int[] myNumbers = {1, 2, 3};\r\n"
+				+ "      		System.out.println(myNumbers[10]);\r\n"
+				+ "    		 } catch (Exception e) {\r\n"
+				+ "      		System.out.println(\"Something went wrong.\");\r\n"
+				+ "    		}"
+				+ "	   }\r\n" 
+				+ "}").getResult().get();
+		
+		CompilationUnit testClassWithout = parser.parse("package projecto_es; "
+				+ "class JavaClass {\r\n"
+				+ "    "
+				+ "    private String a;"
+				+ "    		private String e;"
+				+ "    private String i;"
+				+ "    		private String o;"
+				+ "    				private String u;"
+				+ "	   \r\n" 
+				+ "}").getResult().get();
+		
+	
+		//Teste para ver argumentos dos metodos
+		/*ClassOrInterfaceDeclaration cid = (ClassOrInterfaceDeclaration) testParameters.getChildNodesByType(ClassOrInterfaceDeclaration.class).get(0);
+		System.out.println("MAIN CID " + cid.getNameAsString());
+		MethodDeclaration md  = (MethodDeclaration) cid.getChildNodesByType(MethodDeclaration.class).get(0);
+		System.out.println("MAIN METHOD MD " + md.getNameAsString());
+		String a = MethodDataStructure.getParameterTypesTEST(md);
+		System.out.println("ARGUMENTOS FOUND: " + a);
+		System.out.println("NOME METODO FINAL: " + md.getNameAsString().concat(a));*/
+		
 		//Criar Excel com um CompilationUnit
-		/*javaToExcel excelGenerator = new javaToExcel();
-		excelGenerator.makeLinesTESTE(testClass);
-		excelGenerator.setPath_exel("C:\\Users\\perei\\OneDrive\\Documentos\\ES\\testemain.xlsx");		
+		/*JavaToExcel excelGenerator = new JavaToExcel();
+		excelGenerator.makeClassDataStructureListTESTE(testClass);
+		excelGenerator.setPath_exel("C:\\Users\\perei\\OneDrive\\Documentos\\ES\\excels tests main\\testemain_metrics.xlsx");		
 		try {
+			excelGenerator.makeLines();
 			excelGenerator.writeToExcel();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -58,20 +98,20 @@ public class Main {
 		}*/
 		
 		//Extrair a data do Excel [UPDATE]
-		List<ClassDataStructure> classesJasmlNos = ExcelToData.getallClass("C:\\Users\\perei\\OneDrive\\Documentos\\ES\\jasml_metrics.xlsx");
+		List<ClassDataStructure> classesJasmlNos = ExcelToData.getallClass("C:\\Users\\perei\\OneDrive\\Documentos\\ES\\excels tests main\\testemain_metrics.xlsx");
 		System.out.println("Neste Excel gerado, estão presentes: " + classesJasmlNos.size() + " classes");
 		
-		List<ClassBooleanObject> classesJasmlProfs = ExcelToData.getBooleanObjects("C:\\Users\\perei\\OneDrive\\Documentos\\ES\\Code_Smell.xlsx");
+		List<ClassBooleanObject> classesJasmlProfs = ExcelToData.getBooleanObjects("C:\\Users\\perei\\OneDrive\\Documentos\\ES\\excels tests main\\testemain_profs.xlsx");
 		System.out.println("Neste Excel dos profs, estão presentes: " + classesJasmlProfs.size() + " classes");
 		
 		//Após a extração das duas listas, aceder ao singleton da classe CodeSmellsCalculator e inicializar método run
-		CodeSmellsCalculator csc = CodeSmellsCalculator.getCodeSmellsCalculatorInstance();
+		/*CodeSmellsCalculator csc = CodeSmellsCalculator.getCodeSmellsCalculatorInstance();
 		try {
 			csc.run(classesJasmlNos, classesJasmlProfs);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 		//Teste para ver se captura as inner classes [Funciona]
 		/*ClassDataStructure siga = new ClassDataStructure(testClass);
