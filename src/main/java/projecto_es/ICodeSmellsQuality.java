@@ -9,6 +9,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -92,10 +93,12 @@ public class ICodeSmellsQuality {
 	private JLabel tn_result = new JLabel(Integer.toString(0));
 	private JLabel fn = new JLabel("False Negatives [FN]:");
 	private JLabel fn_result = new JLabel(Integer.toString(0));
-	private JPanel panelQualityGraphic;
+	private JPanel panelQualityGraphic = new JPanel();
 	private Canvas canvas;
 	
+	private ChartPanel graphicPanel;
 	
+		
 	private List<CodeSmellStatistics> statistics = new ArrayList<CodeSmellStatistics>(); 
 
 	/**
@@ -330,17 +333,13 @@ public class ICodeSmellsQuality {
 	}
 
 	private void definePanelQualityGraphicContent() {
-System.out.println("TruePositive: " + Integer.parseInt(fp_result.getText()));
-		panelQualityGraphic = new ChartPanel( new PieChart(Integer.parseInt(tp_result.getText()),Integer.parseInt(fp_result.getText()),Integer.parseInt(tn_result.getText()),Integer.parseInt(fn_result.getText())).pie);
-//panelQualityGraphic = new ChartPanel( new PieChart(1,2,3,4).pie);
-
-		//System.out.println(panelQualityGraphic.get);
+	
+		graphicPanel = new ChartPanel( new PieChart(Integer.parseInt(tp_result.getText()),Integer.parseInt(fp_result.getText()),Integer.parseInt(tn_result.getText()),Integer.parseInt(fn_result.getText())).pie);
+		panelQualityGraphic.add(graphicPanel);
 		panelQualityGraphic.setBorder((BorderFactory.createTitledBorder("Chart Statistics")));
 		panelQualityGraphic.setPreferredSize(new Dimension(200,200));
-
-		//canvas = new PieChart();
-		//panelQualityGraphic.add(canvas);
 		panelQualityGraphic.revalidate();
+		panelQualityGraphic.repaint();
 		
 		
 	}
@@ -361,7 +360,7 @@ System.out.println("TruePositive: " + Integer.parseInt(fp_result.getText()));
 			 PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator(  
 				        "Marks {0} : ({2})", new DecimalFormat("0"), new DecimalFormat("0%"));  
 			 
-			 a.setLabelGenerator(labelGenerator);  
+			 a.setLabelGenerator(labelGenerator); 
 		}
 		
 		private DefaultPieDataset dataOnPie(int tp, int tn, int fp, int fn){
@@ -399,10 +398,15 @@ System.out.println("TruePositive: " + Integer.parseInt(fp_result.getText()));
 				if (fileChooser.getSelectedFile() != null) {
 					String excelPathString = fileChooser.getSelectedFile().getAbsolutePath();
 					excelMetricsPath.setText(excelPathString);
+				}else {
+					excelMetricsPath.setText("");
 				}
-    
 			}
 		});
+	}
+	public void popUp(String popUp) {
+		JFrame parent = new JFrame();
+		JOptionPane.showMessageDialog(parent, popUp);
 	}
 	
 	public void selectExcelButtonSpecialists() {
@@ -417,9 +421,9 @@ System.out.println("TruePositive: " + Integer.parseInt(fp_result.getText()));
 				if (fileChooser.getSelectedFile() != null) {
 					String excelPathString = fileChooser.getSelectedFile().getAbsolutePath();
 					excelEvaluationPath.setText(excelPathString);
-					
+				}else {
+					excelMetricsPath.setText("");
 				}
-    
 			}
 		});
 	}
@@ -427,31 +431,46 @@ System.out.println("TruePositive: " + Integer.parseInt(fp_result.getText()));
 	public void updateTableButton() {
 		update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				List<ClassDataStructure> classesJasmlNos = ExcelToData.getallClass(excelMetricsPath.getText());
-				System.out.println("Neste Excel gerado, estão presentes: " + classesJasmlNos.size() + " classes");
-				
-				List<ClassBooleanObject> classesJasmlProfs = ExcelToData.getBooleanObjects(excelEvaluationPath.getText());
-				System.out.println("Neste Excel dos profs, estão presentes: " + classesJasmlProfs.size() + " classes");
-				
-				CodeSmellsCalculator csc = CodeSmellsCalculator.getCodeSmellsCalculatorInstance();
-				try {
-					csc.run(classesJasmlNos, classesJasmlProfs);
-					tableInfo = csc.fillCodeSmellTable();
-					scrollPaneForJTable.setViewportView(tableInfo);
-				} catch (FileNotFoundException error) {
-				// TODO Auto-generated catch block
-					error.printStackTrace();
-				}
-				statistics = csc.getCodeSmellsStatistics();
-				for(CodeSmellStatistics status : statistics) {
-					System.out.println(status.getCodeSmell() + " Statistics " + " VP " + status.getTrue_positive() + " FP " + status.getFalse_positive()
-					+ " FN " + status.getFalse_negative() + " VN " + status.getTrue_negative());
+				if(excelMetricsPath.getText().isEmpty() || excelEvaluationPath.getText().isEmpty()) {
+					popUp("Escolha dois ficheiros excel corretamente!");
+					
+					tableInfo = new JTable(50,7);
+					scrollPaneForJTable.setViewportView(tableInfo); 
+					tp_result.setText("0");
+					tn_result.setText("0");
+					fp_result.setText("0");
+					fn_result.setText("0");
+					
+					refreshGraphic();
+					
+				}else {
+					List<ClassDataStructure> classesJasmlNos = ExcelToData.getallClass(excelMetricsPath.getText());
+					System.out.println("Neste Excel gerado, estão presentes: " + classesJasmlNos.size() + " classes");
+					
+					List<ClassBooleanObject> classesJasmlProfs = ExcelToData.getBooleanObjects(excelEvaluationPath.getText());
+					System.out.println("Neste Excel dos profs, estão presentes: " + classesJasmlProfs.size() + " classes");
+					
+					CodeSmellsCalculator csc = CodeSmellsCalculator.getCodeSmellsCalculatorInstance();
+					try {
+						csc.run(classesJasmlNos, classesJasmlProfs);
+						tableInfo = csc.fillCodeSmellTable();
+						if(tableInfo.getModel().getRowCount() == 0) {
+							tableInfo = new JTable();
+							popUp("Escolha dois ficheiros excel corretamente!");
+						}
+						scrollPaneForJTable.setViewportView(tableInfo);
+					} catch (FileNotFoundException error) {
+					// TODO Auto-generated catch block
+						error.printStackTrace();
 					}
+					statistics = csc.getCodeSmellsStatistics();
+					for(CodeSmellStatistics status : statistics) {
+						System.out.println(status.getCodeSmell() + " Statistics " + " VP " + status.getTrue_positive() + " FP " + status.getFalse_positive()
+						+ " FN " + status.getFalse_negative() + " VN " + status.getTrue_negative());
+						}
 				
-//	scrollPaneForJTable.setViewportView(tableInfo);		
-// System.out.println("update table pressed!!!");
- //System.out.println(tableInfo.getModel().getValueAt(0, 0));
-			}
+					}
+				}
 		});
 	}
 	
@@ -461,26 +480,39 @@ System.out.println("TruePositive: " + Integer.parseInt(fp_result.getText()));
 		codeSmellSelected.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String comboValueSelected = String.valueOf(codeSmellSelected.getSelectedItem());
-System.out.println("CodeSmell combo selected: "+codeSmellSelected.getSelectedItem());
+System.out.println("CodeSmell combo selected: "+String.valueOf(codeSmellSelected.getSelectedItem()));
 					for(int i=0; i<statistics.size(); i++) {
 						if(statistics.get(i).getCodeSmell().toString().equals(comboValueSelected)) {
 							tp_result.setText(String.valueOf(statistics.get(i).getTrue_positive()));
 							tn_result.setText(String.valueOf(statistics.get(i).getTrue_negative()));
 							fp_result.setText(String.valueOf(statistics.get(i).getFalse_positive()));
 							fn_result.setText(String.valueOf(statistics.get(i).getFalse_negative()));
-
-							
-						
-System.out.println("TruePositive: " + String.valueOf(statistics.get(i).getTrue_positive()) + 
-					"\n TrueNegative: " + String.valueOf(statistics.get(i).getTrue_negative()) +
-					"\n FalsePositive: " + String.valueOf(statistics.get(i).getFalse_positive()) +
-					"\n TrueNegative: " + String.valueOf(statistics.get(i).getFalse_negative()) );
 							break;
 						}
+						if(comboValueSelected.equals("")) {
+							tp_result.setText("0");
+							tn_result.setText("0");
+							fp_result.setText("0");
+							fn_result.setText("0");
+						}
 					}
-					definePanelQualityGraphicContent();
+					refreshGraphic();	
 			}
 		});
+	}
+	
+	public void refreshGraphic() {
+		panelQualityGraphic.removeAll();
+		PieChart graphic =new PieChart(Integer.parseInt(tp_result.getText()),Integer.parseInt(fp_result.getText()),Integer.parseInt(tn_result.getText()),Integer.parseInt(fn_result.getText()));
+		
+		graphicPanel = new ChartPanel(graphic.pie);
+		graphicPanel.setPreferredSize(new Dimension(250,300));;
+		panelQualityGraphic.add(graphicPanel);
+		panelQualityGraphic.getPreferredSize();
+		panelQualityGraphic.revalidate();
+		panelQualityGraphic.repaint();
+		
+		tableInfo.setPreferredScrollableViewportSize(new Dimension (720, 450));
 	}
 	
 }
