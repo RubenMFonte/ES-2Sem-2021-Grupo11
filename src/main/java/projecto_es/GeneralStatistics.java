@@ -25,7 +25,7 @@ public class GeneralStatistics {
 			if (!package_counted(packages, package_name)) {
 				packages.add(package_name);
 				count_package++;
-				}
+			}
 		}
 		return count_package;
 	}
@@ -58,31 +58,16 @@ public class GeneralStatistics {
 		return n_package;
 	}
 
-	public void setN_package(int n_package) {
-		this.n_package = n_package;
-	}
-
 	public int getN_classes() {
 		return n_classes;
-	}
-
-	public void setN_classes(int n_classes) {
-		this.n_classes = n_classes;
 	}
 
 	public int getN_methods() {
 		return n_methods;
 	}
 
-	public void setN_methods(int n_methods) {
-		this.n_methods = n_methods;
-	}
-
 	public int getN_lines() {
 		return n_lines;
 	}
 
-	public void setN_lines(int n_lines) {
-		this.n_lines = n_lines;
-	}
 }
