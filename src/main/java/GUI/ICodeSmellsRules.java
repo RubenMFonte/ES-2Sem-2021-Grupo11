@@ -1,4 +1,4 @@
-package projecto_es;
+package GUI;
 
 import java.awt.EventQueue;
 
@@ -53,6 +53,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
+
+import projecto_es.Rule;
+
 import javax.swing.ScrollPaneConstants;
 import javax.swing.ListSelectionModel;
 

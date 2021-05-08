@@ -1,4 +1,4 @@
-package projecto_es;
+package GUI;
 
 import java.awt.EventQueue;
 
@@ -42,6 +42,13 @@ import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
+
+import projecto_es.ClassBooleanObject;
+import projecto_es.ClassDataStructure;
+import projecto_es.ClassObjects;
+import projecto_es.CodeSmellStatistics;
+import projecto_es.CodeSmellsCalculator;
+import projecto_es.ExcelToData;
 
 import java.awt.Component;
 import javax.swing.Box;

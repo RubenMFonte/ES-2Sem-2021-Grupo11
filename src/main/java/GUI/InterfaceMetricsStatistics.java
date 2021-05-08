@@ -1,4 +1,4 @@
-package projecto_es;
+package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -21,6 +21,12 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import projecto_es.ClassDataStructure;
+import projecto_es.ClassObjects;
+import projecto_es.ExcelToData;
+import projecto_es.GeneralStatistics;
+import projecto_es.ListsToInterface;
 
 import java.awt.Component;
 import javax.swing.JTable;

@@ -1,4 +1,4 @@
-package projecto_es;
+package GUI;
 
 import java.awt.EventQueue;
 import java.awt.desktop.AboutEvent;
@@ -18,6 +18,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
 import com.github.javaparser.ast.CompilationUnit;
+
+import projecto_es.JavaToExcel;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 

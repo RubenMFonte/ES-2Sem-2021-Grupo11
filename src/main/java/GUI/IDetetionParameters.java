@@ -1,4 +1,4 @@
-package projecto_es;
+package GUI;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -21,6 +21,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import projecto_es.ConditionJPanel;
+import projecto_es.Rule;
 
 public class IDetetionParameters {
 
