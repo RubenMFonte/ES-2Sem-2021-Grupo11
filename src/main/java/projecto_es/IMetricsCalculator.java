@@ -26,7 +26,7 @@ public class IMetricsCalculator {
 	private JFrame frame;
 	private JTextField path_Java;
 	private JButton select_file;
-	private JButton b_executar;
+	private JButton saveExcelButton;
 	private JTextField path_Exel;
 	private JButton show_Statistics;
 	private JButton goBack;
@@ -119,13 +119,13 @@ public class IMetricsCalculator {
 		});
 	}
 
-	public void setExecutar_Button() {
-		b_executar = new JButton("Salvar Excel");
-		b_executar.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		b_executar.setBounds(516, 83, 119, 35);
-		frame.getContentPane().add(b_executar);
+	public void setsaveExcelButton() {
+		saveExcelButton = new JButton("Salvar Excel");
+		saveExcelButton.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		saveExcelButton.setBounds(516, 83, 119, 35);
+		frame.getContentPane().add(saveExcelButton);
 
-		b_executar.addActionListener(new ActionListener() {
+		saveExcelButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
