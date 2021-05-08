@@ -28,11 +28,12 @@ public class IMetricsCalculator {
 	private JButton select_file;
 	private JButton b_executar;
 	private JTextField path_Exel;
+	private JButton show_Statistics;
+	private JButton goBack;
 	/**
 	 * @wbp.nonvisual location=-41,384
 	 */
-	private JButton show_Statistics;
-	private JButton goBack;
+
 
 	/**
 	 * Launch the application.
@@ -61,7 +62,7 @@ public class IMetricsCalculator {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
+		frame = new JFrame(); 
 		frame.getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 10));
 		frame.setBounds(100, 100, 684, 219);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
