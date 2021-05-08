@@ -115,7 +115,9 @@ public class JavaToExcel {
 	public void makeLines() {
 		int i = 1;
 		for (ClassDataStructure struct : list_classes) {
-			List<MethodDataStructure> lmds = struct.getMethodDataStructureList();
+			@SuppressWarnings("unchecked")
+			List<MethodDataStructure> lmds = (List<MethodDataStructure>)(List<?>) struct.getMethods();
+			
 			//Para anotar classes sem métodos (pus em comentário - desnecessário - se tiver ativo deteta as quem tem no prof 
 			//a JavaClass e OpcodeInfo porém também adiciona outras 2 (Scannable e Constants) que têm atributos final static
 			//if(!(lmds.isEmpty())) {
@@ -150,7 +152,8 @@ public class JavaToExcel {
 			// Anotar as innerclasses
 			if (!struct.getInnerClassesList().isEmpty()) {
 				for (ClassDataStructure innerStruct : struct.getInnerClassesList()) {
-					List<MethodDataStructure> lmds2 = innerStruct.getMethodDataStructureList();
+					@SuppressWarnings("unchecked")
+					List<MethodDataStructure> lmds2 = (List<MethodDataStructure>)(List<?>) innerStruct.getMethods();
 					//if(!(lmds2.isEmpty())) {
 						for (MethodDataStructure mds : lmds2) {
 							String[] lineData = new String[9];

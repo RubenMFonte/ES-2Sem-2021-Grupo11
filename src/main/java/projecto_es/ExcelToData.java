@@ -19,6 +19,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 public class ExcelToData {
 	
+	//É necessário o methodID
+	static final int methodID = 0;
 	static final int packagename =1;
 	static final int classname=2;
 	static final int methodname=3;
@@ -69,7 +71,7 @@ public class ExcelToData {
 					
 					allObject.add(cds);
 				}
-				MethodDataStructure newMethod = new MethodDataStructure(ReadCellData(cont, methodname, wb), (int) Double.parseDouble(ReadCellData(cont, locmethod, wb)),
+				MethodDataStructure newMethod = new MethodDataStructure((int) Double.parseDouble(ReadCellData(cont,methodID, wb)), ReadCellData(cont, methodname, wb), (int) Double.parseDouble(ReadCellData(cont, locmethod, wb)),
 						(int) Double.parseDouble(ReadCellData(cont,cyclomethod, wb)));
 				
 				
@@ -107,7 +109,7 @@ public class ExcelToData {
 		return value;
 	}
 	public static void main(String[] args) {
-		String path =( "C:\\Users\\catar\\Desktop\\Code_Smells.xlsx");
+		String path =("C:\\Users\\perei\\OneDrive\\Documentos\\ES\\excels tests main\\testemain_profs.xlsx");
 		
 		List<ClassObjects> end= getallClass(path,true);
 		ClassBooleanObject cry= (ClassBooleanObject)end.get(0);

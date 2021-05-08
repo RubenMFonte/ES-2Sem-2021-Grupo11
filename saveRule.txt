@@ -1,9 +1,10 @@
-1:God_class:true:LOC_CLASS:EQ:5:AND:LOC_CLASS:EQ:16:OR:LOC_CLASS:GE:16
+1:God_class:false:CYCLO_METHOD:EQ:5:AND:CYCLO_METHOD:EQ:16:OR:CYCLO_METHOD:GE:16
 2:God_class:false:LOC_CLASS:EQ:5
-3:God_class:false:LOC_CLASS:EQ:5
+3:God_class:true:LOC_CLASS:EQ:5
 4:Long_method:true:LOC_METHOD:EQ:7
 5:Long_method:false:LOC_METHOD:EQ:9
 6:Long_method:false:LOC_METHOD:GT:7
 7:Long_method:false:LOC_METHOD:LT:7
 8:God_class:false:NOM_CLASS:NE:7
 9:God_class:false:LOC_CLASS:EQ:5
+10:God_class:false:NOM_CLASS:EQ:200:OR:LOC_CLASS:NE:100

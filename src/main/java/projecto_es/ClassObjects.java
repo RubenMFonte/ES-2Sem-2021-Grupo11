@@ -5,8 +5,8 @@ import java.util.List;
 
 public abstract class ClassObjects {
 
-	protected String packageName; // PackageDeclaration
-	protected String className; // ClassOrInterfaceDeclaration
+	protected String packageName; 
+	protected String className; 
 	protected List<ClassMethods> lmds = new ArrayList<>();
 	
 	

@@ -380,8 +380,10 @@ public class InterfaceMetricsStatistics extends JFrame {
 				scrollPane_methodsMetrics.setViewportView(metricsMethodsJlist);
 				scrollPane_4.setViewportView(statisticsJlist);
 				
-				
-				setAllClass(ExcelToData.getallClass(textField.getText()));
+				List<ClassObjects> classesObject = ExcelToData.getallClass(textField.getText(), false);
+				@SuppressWarnings("unchecked")
+				List<ClassDataStructure> classesData = (List<ClassDataStructure>)(List<?>) classesObject;
+				setAllClass(classesData);
 				ListsToInterface.getListsToInterfaceInstance().setDataList(allClass);
 				setPackageJList(ListsToInterface.getListsToInterfaceInstance().getPackageJList());
 				//setClassJList(ListsToInterface.getListsToInterfaceInstance().getClassJList());

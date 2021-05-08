@@ -39,7 +39,7 @@ class ListsToInterfaceTest {
 	static void setUpBeforeClass() throws Exception {
 		
 		ClassDataStructure classe1 = new ClassDataStructure("Package1", "Class1", "20", "2", "2");
-		classe1.addMethod("Method1", 1, 2);
+		classe1.addMethodDataStructure("Method1", 1, 2);
 		ClassDataStructure classe2 = new ClassDataStructure("Package2", "Class2", "40", "4", "4");
 		dataList.add(classe1);
 		dataList.add(classe2);

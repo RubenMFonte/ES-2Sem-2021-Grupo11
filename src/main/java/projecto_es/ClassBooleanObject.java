@@ -18,7 +18,7 @@ public class ClassBooleanObject extends ClassObjects {
 	}
 	
 	
-	public void addMethod(String methodName, Boolean lmethod) {
+	public void addMethodBoolean(String methodName, Boolean lmethod) {
 		MethodBoolean mds = new MethodBoolean(methodName,lmethod);
 		this.addMethod(mds);
 	}

@@ -26,7 +26,7 @@ class ClassBooleanObjectTest {
 		List<ClassMethods> methodsOn = classe.getMethods();
 		System.out.println(methodsOn.size());
 		int methodsBefore = methodsOn.size();
-		classe.addMethod(methodName, false);
+		classe.addMethodBoolean(methodName, false);
 		List<ClassMethods> methodsOnUpdate = classe.getMethods();
 		System.out.println(methodsOnUpdate.size());
 		int methodsAfter= methodsOnUpdate.size();

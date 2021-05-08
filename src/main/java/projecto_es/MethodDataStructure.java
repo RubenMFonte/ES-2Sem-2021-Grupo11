@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.body.CallableDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 
@@ -27,55 +28,56 @@ public class MethodDataStructure extends ClassMethods{
 	
 	private int loc_method;
 	private int cyclo_method;
-
-	private HashMap<String, Boolean> codeSmellsEvaluation = new HashMap<>();
+	private HashMap<String, Boolean> methodCodeSmellSpecialistValue = new HashMap<>();
+	//Atributos Necessários
+	private int methodID;
+	private String methodClassificationDetected;
 	
-	public MethodDataStructure (MethodDeclaration md_received) {
+	public MethodDataStructure (CallableDeclaration md_received) {
 		super("");
 		String methodName = md_received.getNameAsString();
-		String complementToMethodName = getParameterTypes(md_received);
-		this.methodName = methodName.concat(complementToMethodName);
-		calculateMetricsMethods(md_received);
+		String methodArguments = getParameters(md_received);
+		this.methodName = methodName.concat(methodArguments);
+		calculateMethodMetrics(md_received);
 	}
 	
-	public MethodDataStructure (String methodName, int loc_method, int cyclo_method) {
+	public MethodDataStructure (int methodID, String methodName, int loc_method, int cyclo_method) {
 		super(methodName);
-				this.loc_method = loc_method;
+		this.methodID = methodID;
+		this.loc_method = loc_method;
 		this.cyclo_method = cyclo_method;
 	}
 	
-	private void calculateMetricsMethods(MethodDeclaration md_received) {
-		this.cyclo_method = MetricsCalculator.Cyclo_method(md_received);
-		this.loc_method = MetricsCalculator.LOC_method(md_received);
+	private void calculateMethodMetrics(CallableDeclaration md_received) {
+		this.cyclo_method = MetricsCalculator.getCYCLO_method(md_received);
+		this.loc_method = MetricsCalculator.getLOC_method(md_received);
 	}
 	
-	private String getParameterTypes (MethodDeclaration md_received){
-		String paramTypesComplement = "";
-		List <Parameter> param = md_received.getChildNodesByType(Parameter.class);
-		for(Parameter param_find : param) {
-			List<Node> paramCamps = param_find.getChildNodes();
-			for(Node param_type_find : paramCamps) {
-				if(param_type_find.getClass().getPackageName().equals("com.github.javaparser.ast.type")) {
-					paramTypesComplement += param_type_find+",";					
-					
-				}else {}
-			}
+	private String getParameters(CallableDeclaration md) {
+		String arguments = "";
+		List<Parameter> parameters = md.getParameters();
+		for (Parameter parameter : parameters) {
+			arguments += parameter.getTypeAsString() + ",";
 		}
-		if(paramTypesComplement.equals("")) {
+		if (arguments.equals("")) {
 			return "()";
-		}else {	
-			return "("+ paramTypesComplement.substring(0, paramTypesComplement.length()-1)+")";
+		} else {
+			return "(" + arguments.substring(0, arguments.length() - 1) + ")";
 		}
-		
 	}
 	
-	public void setCodeSmellsEvaluation(String codeSmell, boolean codeSmellEvaluation) {
-		codeSmellsEvaluation.put(codeSmell, codeSmellEvaluation);
+	public void setMethodCodeSmellSpecialistValue(String codeSmellName, boolean codeSmellSpecialistValue) {
+		methodCodeSmellSpecialistValue.put(codeSmellName, codeSmellSpecialistValue);
 	}
-	
-	public Boolean getCodeSmellsEvaluation(String codeSmell) {
-		if(codeSmellsEvaluation.containsKey(codeSmell)) return codeSmellsEvaluation.get(codeSmell);
+
+	public Boolean getMethodCodeSmellSpecialistValue(String codeSmellName) {
+		if (methodCodeSmellSpecialistValue.containsKey(codeSmellName))
+			return methodCodeSmellSpecialistValue.get(codeSmellName);
 		return null;
+	}
+	
+	public int getmethodID() {
+			return methodID;
 	}
 	
 	
@@ -86,5 +88,14 @@ public class MethodDataStructure extends ClassMethods{
 	public int getCYCLOMetric () {
 		return cyclo_method;	
 	}
+	
+	public void setMethodClassificationDetected(String classificationDetected) {
+		this.methodClassificationDetected = classificationDetected;
+	}
+
+	public String getMethodClassificationDetected() {
+		return methodClassificationDetected;
+	}
+
 	
 }

@@ -444,10 +444,14 @@ public class ICodeSmellsQuality {
 					refreshGraphic();
 					
 				}else {
-					List<ClassDataStructure> classesJasmlNos = ExcelToData.getallClass(excelMetricsPath.getText());
+					List<ClassObjects> classesObjectJasmlNos = ExcelToData.getallClass(excelMetricsPath.getText(), false);
+					@SuppressWarnings("unchecked")
+					List<ClassDataStructure> classesJasmlNos = (List<ClassDataStructure>)(List<?>) classesObjectJasmlNos;
 					System.out.println("Neste Excel gerado, estão presentes: " + classesJasmlNos.size() + " classes");
 					
-					List<ClassBooleanObject> classesJasmlProfs = ExcelToData.getBooleanObjects(excelEvaluationPath.getText());
+					List<ClassObjects> classesObjectJasmlProfs = ExcelToData.getallClass(excelEvaluationPath.getText(), true);
+					@SuppressWarnings("unchecked")
+					List<ClassBooleanObject> classesJasmlProfs = (List<ClassBooleanObject>)(List<?>) classesObjectJasmlProfs;
 					System.out.println("Neste Excel dos profs, estão presentes: " + classesJasmlProfs.size() + " classes");
 					
 					CodeSmellsCalculator csc = CodeSmellsCalculator.getCodeSmellsCalculatorInstance();

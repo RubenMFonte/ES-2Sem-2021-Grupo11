@@ -65,11 +65,12 @@ public class CodeSmellsCalculator {
 		for(int i=0; i<classDataStructureList.size(); i++) {
 			ClassDataStructure data = classDataStructureList.get(i);
 			for(int j = 0; j<data.getMethods().size(); j++) {
+				MethodDataStructure data_mds = (MethodDataStructure) data.getMethods().get(j);
 				statisticsJT[line][0] = data.getClassName();
 				statisticsJT[line][1] = data.getClassClassificationDetected();
-				statisticsJT[line][2] = String.valueOf(data.getMethodDataStructureList().get(j).getmethodID());
-				statisticsJT[line][3] = data.getMethodDataStructureList().get(j).getMethodName();
-				statisticsJT[line][4] = data.getMethodDataStructureList().get(j).getMethodClassificationDetected();
+				statisticsJT[line][2] = String.valueOf(data_mds.getmethodID());
+				statisticsJT[line][3] = data_mds.getMethodName();
+				statisticsJT[line][4] = data_mds.getMethodClassificationDetected();
 				line++;
 			}
 		}
@@ -83,9 +84,10 @@ public class CodeSmellsCalculator {
 			if (rule.getCodeSmell().equals("Long_method")) {
 				for (int i = 0; i < classDataStructureList.size(); i++) {
 					if(!classDataStructureList.get(i).getClassClassificationDetected().contains("Não Detetado")) {
-						for(MethodDataStructure method : classDataStructureList.get(i).getMethodDataStructureList()) {
-							if(method.getMethodClassificationDetected() == null) 
-								calculateCodeSmellStatistics(null, method, rule, css);										
+						for(ClassMethods method : classDataStructureList.get(i).getMethods()) {		
+							MethodDataStructure cast = (MethodDataStructure) method;
+							if(cast.getMethodClassificationDetected() == null) 
+								calculateCodeSmellStatistics(null, cast, rule, css);										
 						}
 					}
 				}
@@ -261,13 +263,18 @@ public class CodeSmellsCalculator {
 				System.out.println("[ANTES] Este é o valor do Code_Smell: " + ourClass.getClassCodeSmellSpecialistValue("God_class") );
 				ourClass.setClassCodeSmellSpecialistValue("God_class", v.getGodC());	
 				System.out.println("[DEPOIS] Este é o valor do Code_Smell: " + ourClass.getClassCodeSmellSpecialistValue("God_class"));
-				defineLongMethodValueFromSpecialistToMethod(ourClass.getMethodDataStructureList(), v.getLmds());
+				@SuppressWarnings("unchecked")
+				List<MethodDataStructure> lmds = (List<MethodDataStructure>)(List<?>) ourClass.getMethods();
+				@SuppressWarnings("unchecked")
+				List<MethodBoolean> mb = (List<MethodBoolean>) (List<?>) v.getMethods();
+				defineLongMethodValueFromSpecialistToMethod(lmds, mb);
 			}catch(Exception e) {	
 				//e.printStackTrace();
 				System.out.println("NULO");
 				ourClass.setClassClassificationDetected("Não Detetado - Classe Inexistente");
-				for(MethodDataStructure method : ourClass.getMethodDataStructureList()) {
-					method.setMethodClassificationDetected("Não Detetado - Devido a classe Inexistente");
+				for(ClassMethods method : ourClass.getMethods()) {
+					MethodDataStructure method_cast = (MethodDataStructure) method;
+					method_cast.setMethodClassificationDetected("Não Detetado - Devido a classe Inexistente");
 				}
 			}
 			
@@ -306,8 +313,9 @@ public class CodeSmellsCalculator {
 		initProcessToCalculateCodeSmellsStatistics();
 		for(ClassDataStructure c : classDataStructureList) {
 			System.out.println("VERIFY " + c.getClassClassificationDetected());
-			for(MethodDataStructure m : c.getMethodDataStructureList()) {
-				System.out.println("                      Method " + m.getMethodClassificationDetected());
+			for(ClassMethods m : c.getMethods()) {
+				MethodDataStructure m_cast = (MethodDataStructure) m;
+				System.out.println("                      Method " + m_cast.getMethodClassificationDetected());
 			}
 		}
 	}

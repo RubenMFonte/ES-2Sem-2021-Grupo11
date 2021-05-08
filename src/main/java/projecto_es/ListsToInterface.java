@@ -92,8 +92,8 @@ public class ListsToInterface {
 		DefaultListModel<String> listTemp = new DefaultListModel<String>();
 		
 		for(int i=0; i<this.dataList.size(); i++)
-			for(int j=0; j<this.dataList.get(i).getMethodDataStructureList().size(); j++) {
-			listTemp.add(i, this.dataList.get(i).getMethodDataStructureList().get(j).getMethodName());
+			for(int j=0; j<this.dataList.get(i).getMethods().size(); j++) {
+			listTemp.add(i, this.dataList.get(i).getMethods().get(j).getMethodName());
 		}
 		JList<String> methodsJList = new JList<String>(listTemp);
 		return methodsJList;
@@ -141,10 +141,11 @@ public class ListsToInterface {
 			DefaultListModel<String> metricsNamesList = new DefaultListModel<String>();
 			for(int i=0; i<this.dataList.size(); i++) {
 					if(dataList.get(i).getClassName().equals(className))
-						for(int j=0; j<dataList.get(i).getMethodDataStructureList().size(); j++) {
-							if(dataList.get(i).getMethodDataStructureList().get(j).getMethodName().equals(methodName)){
-								String loc_metric = "LOC_metric: " + dataList.get(i).getMethodDataStructureList().get(j).getLOCMetric();
-								String cyclo_method = "Cyclo_method: " + dataList.get(i).getMethodDataStructureList().get(j).getCYCLOMetric();
+						for(int j=0; j<dataList.get(i).getMethods().size(); j++) {
+							if(dataList.get(i).getMethods().get(j).getMethodName().equals(methodName)){
+								MethodDataStructure method = (MethodDataStructure) dataList.get(i).getMethods().get(j);
+								String loc_metric = "LOC_metric: " + method.getLOCMetric();
+								String cyclo_method = "Cyclo_method: " + method.getCYCLOMetric();
 								metricsNamesList.addElement(loc_metric);
 								metricsNamesList.addElement(cyclo_method);
 								break;
@@ -160,8 +161,8 @@ public class ListsToInterface {
 		DefaultListModel<String> methodsNamesList = new DefaultListModel<String>();
 		for(int i=0; i<this.dataList.size(); i++) {
 			if(dataList.get(i).getClassName().equals(className)) {
-				for(int j=0; j<dataList.get(i).getMethodDataStructureList().size(); j++) {
-					methodsNamesList.addElement(dataList.get(i).getMethodDataStructureList().get(j).getMethodName());
+				for(int j=0; j<dataList.get(i).getMethods().size(); j++) {
+					methodsNamesList.addElement(dataList.get(i).getMethods().get(j).getMethodName());
 				}
 					break;
 				}
