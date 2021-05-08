@@ -1,4 +1,4 @@
-package tests;
+package projecto_es;
 
 import static org.junit.jupiter.api.Assertions.*;
 
