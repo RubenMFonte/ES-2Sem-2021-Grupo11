@@ -90,7 +90,7 @@ public class IMetricsCalculator {
 		frame.setVisible(true);
 
 		setSelecionarProjeto_Button();
-		setExecutar_Button();
+		setsaveExcelButton();
 		setShowStatisitcs_Button();
 		set_GoBackButton();
 
@@ -119,7 +119,7 @@ public class IMetricsCalculator {
 		});
 	}
 
-	public void setsaveExcelButton() {
+	public void setsaveExcelButton() {  
 		saveExcelButton = new JButton("Salvar Excel");
 		saveExcelButton.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		saveExcelButton.setBounds(516, 83, 119, 35);
