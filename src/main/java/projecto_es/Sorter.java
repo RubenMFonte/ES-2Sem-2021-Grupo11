@@ -12,7 +12,7 @@ public class Sorter {
 		this.list_sorted = list;
 		sort_it();
 	}
-
+	
 	public void sort_it() {
 		Collections.addAll(list_sorted);
 		Collections.sort(list_sorted);
@@ -21,8 +21,8 @@ public class Sorter {
 	
 	public List<String> getListSorted(){
 		return list_sorted;
-	}
 
+	}
 	public class SortIgnoreCase implements Comparator<Object> {
 		public int compare(Object o1, Object o2) {
 			String s1 = (String) o1;
