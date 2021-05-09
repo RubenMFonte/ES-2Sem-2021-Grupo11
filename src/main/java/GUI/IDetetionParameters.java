@@ -30,17 +30,32 @@ public class IDetetionParameters {
 	private JPanel panel;
 	private JPanel panelSOUTH;
 	private JScrollPane scrollPane;
+	/**
+	 * List of {@link ConditionJPanel}
+	 */
 	private List<ConditionJPanel> conditionPanels = new ArrayList<ConditionJPanel>();
 	private JPanel panelsouthLEFT;
 	private JPanel panelsouthRIGHT;
-	private JButton insertCond = new JButton("Insert New Condition");
-	private JButton removeCond = new JButton("Remove Last Condition");
-	private JButton cancelButton = new JButton("Cancel");
-	private JButton saveButton = new JButton("Save");
+	private JButton insertCond = new JButton("Inserir nova condição");
+	private JButton removeCond = new JButton("Remove última condição");
+	private JButton cancelButton = new JButton("Cancelar");
+	private JButton saveButton = new JButton("Salvar");
+	/**
+	 *  String with the name of the code smell
+	 */
+	
 	private String code_smell;
+	/**
+	 * Boolean that indicates if it is a new Rule or one that is going to be edited
+	 */
 	private boolean newRule = false;
+	/**
+	 * The rule that is going to be created or edited
+	 */
 	private Rule rule;
-
+	/**
+	 * Launch the application.
+	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -55,21 +70,35 @@ public class IDetetionParameters {
 			}
 		});
 	}
+	/**
+	 * Constructor that initialize the attribute rule and code_smell. Used when the user creates a new Rule
+	 * @param code_smell name of the code smell
+	 */
 
 	public IDetetionParameters(String code_smell) {
 		this(new Rule(":" + code_smell + ":false::::"), code_smell);
 		newRule = true;
 		this.code_smell = code_smell;
 	}
+	
+	/**
+	 * Constructor that initialize the attribute rule and code_smell. Used when the user edits a Rule
+	 * @param rule_arg parameter 
+	 * @param code_smell name of the code smell
+	 */
 
 	public IDetetionParameters(Rule rule_arg, String code_smell) {
 		this.rule = rule_arg;
 		this.code_smell = code_smell;
 		initialize();
 	}
-
+	
+	/**
+	 * Initialize the content of the frame
+	 */
+	
 	private void initialize() {
-		frame = new JFrame("Detetion Parameters");
+		frame = new JFrame("Criar Regra");
 		frame.setBounds(100, 100, 800, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
@@ -140,6 +169,10 @@ public class IDetetionParameters {
 		frame.setLocationRelativeTo(null);
 
 	}
+	
+	/**
+	 *Method to close the class frame and return to the {@link ICodeSmellsRule} frame.  
+	 */
 
 	private void exitWindow() {
 		frame.dispose();
@@ -150,6 +183,10 @@ public class IDetetionParameters {
 		}
 	}
 
+	/**
+	 * Method that write to the saveRule.txt file the new version of the Rule
+	 */
+	
 	private void updateRule() {
 		File rulesFile = new File("saveRule.txt");
 
@@ -188,6 +225,10 @@ public class IDetetionParameters {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Method that write to the saveRule.txt the new Rule created
+	 */
 
 	private void saveNewRule() {
 		File rulesFile = new File("saveRule.txt");
@@ -233,6 +274,11 @@ public class IDetetionParameters {
 		}
 
 	}
+	/**
+	 * Method to filter the String added to the file saveRule.txt. It is responsible to remove ":" character.
+	 * @param beforeChange String before being filtered
+	 * @return String after being filtered
+	 */
 
 	private String changeString(String beforeChange) {
 		int lengthOfBeforeChange = beforeChange.length();
@@ -245,6 +291,11 @@ public class IDetetionParameters {
 		afterChange = verifyLastLogicalOperator(afterChange);
 		return afterChange;
 	}
+	
+	/**
+	 * Method responsible to write the String that is going to be written in the saveRule.txt file
+	 * @return
+	 */
 
 	private String getRuleString() {
 		StringBuffer stringBuffer = new StringBuffer();
@@ -258,6 +309,11 @@ public class IDetetionParameters {
 
 		return stringBuffer.toString();
 	}
+	/**
+	 * Method responsible to add  a new {@Link ConditionJPanel} to the list {@Link conditionPanels}. The new {@Link ConditionJPanel} will be added to the
+	 * frame and the user will be able to add a new condition to the Rule being created or edited.
+	 * @param conditions appended previously
+	 */
 
 	private void addConditionPanel(String condition) {
 		if (conditionPanels.size() >= 1) {
@@ -279,6 +335,11 @@ public class IDetetionParameters {
 		panel.add(iic);
 		conditionPanels.add(iic);
 	}
+	
+	/**
+	 * Method to add an action to the button {@link insertCond}. The action on the Button will validate if all the fields have been filled and then will add
+	 * a new {@link ConditionJPanel}
+	 */
 
 	private void checkForNewCond() {
 		insertCond.addActionListener(new ActionListener() {
@@ -292,6 +353,11 @@ public class IDetetionParameters {
 			}
 		});
 	}
+	
+	/**
+	 * Method to add an action to the button {@link removeCond}. The action on the button is responsible for removing the last {@link ConditionJPanel} 
+	 * inserted. It will also verify if the Condition can be remove, considering a Rule must have at least one condition
+	 */
 
 	private void checkForRemCond() {
 		removeCond.addActionListener(new ActionListener() {
@@ -314,6 +380,11 @@ public class IDetetionParameters {
 			}
 		});
 	}
+	/**
+	 * Method that verifies if the last element of the String is a Logical Operator
+	 * @param rule String with the content of the Rule
+	 * @return final String that is going to be added in the saveRule.txt 
+	 */
 
 	private String verifyLastLogicalOperator(String rule) {
 		String[] split = rule.split(":");
@@ -326,6 +397,12 @@ public class IDetetionParameters {
 			return rule;
 		}
 	}
+	/**
+	 * Method that filters the String that is going to be added in the saveRule.txt. The method is responsible to remove the Logical Operator at the end
+	 * the String
+	 * @param rule String with the content of the Rule
+	 * @return Rule filtered
+	 */
 
 	private String removeLastLogicalOperator(String rule) {
 		String[] split = rule.split(":");
@@ -340,13 +417,18 @@ public class IDetetionParameters {
 		}
 		return return_rule;
 	}
+	
+	/**
+	 * This Method will verify if all the Fields of a {@link ConditionJPanel} have been filled
+	 * @return
+	 */
 
 	private boolean validateValues() {
 
 		boolean isValid = true;
 
 		StringBuilder errorMessage = new StringBuilder();
-		errorMessage.append("Please fill in the required values:\n");
+		errorMessage.append("Por favor preencha os campos necesarios:\n");
 
 		for (int i = 0; i < conditionPanels.size(); i++) {
 			boolean validateLogicOperator = true;
