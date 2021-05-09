@@ -17,46 +17,37 @@ import java.util.List;
 public class StaticFunctions {
 	/**
 	 * Gets a rule and a file and tries to write the {@link Rule} on said file
+	 * 
 	 * @param rule Rule to be written
 	 * @param file File to be written on
 	 * @return A boolean on the success of the task
 	 * @throws IOException If file doesn't exist
 	 */
-	public static Boolean saveRule(Rule rule, File file) throws IOException {
+	public static Boolean saveRule(Rule rule, File file)  {
 		int cont = 0;
-		Scanner myReader = new Scanner(file);
-		while (myReader.hasNextLine()) {
-			String data = myReader.nextLine();
-			cont++;
-		}
-		myReader.close();
-
-		if (rule == null) {
-			return false;
-		}
-		rule.changeID(cont + 1);
 		try {
+			Scanner myReader = new Scanner(file);
+			while (myReader.hasNextLine()) {
+				String data = myReader.nextLine();
+				cont++;
+			}
+			myReader.close();
+
+			if (rule == null) {
+				return false;
+			}
+			rule.changeID(cont + 1);
 			FileWriter fileWriter = new FileWriter(file, true);
 			PrintWriter out = new PrintWriter(fileWriter);
 			out.println(rule.toString());
 			out.close();
 
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
 			return false;
 		}
 		return true;
-	}
-	/**
-	 * Sorts the list of string alpabetically
-	 * @param list_string List to be sorted
-	 * @return Sorted list
-	 */
-	public static List<String> sortAlphabetically(List<String> list_string) {
-		Sorter s = new Sorter(list_string);
-		List<String> return_list = s.getListSorted();
-		return return_list;
 	}
 
 //	public static void main(String[] args) {
@@ -86,23 +77,5 @@ public class StaticFunctions {
 //			e.printStackTrace();
 //		}
 //	}
-	public static void main(String[] args) {
-		List<String> list = new ArrayList<String>();
-		String a1 = "manga.ac";
-		String a2 = "Ronaldo";
-		String a3 = "lol";
-		String a4 = "benfica";
-		String a5 = "Benfico";
-		String a6 = "manga.aB";
-		list.add(a1);
-		list.add(a2);
-		list.add(a3);
-		list.add(a4);
-		list.add(a5);
-		list.add(a6);
-		list = sortAlphabetically(list);
-		for (String s : list)
-			System.out.println(s);
-	}
 
 }
