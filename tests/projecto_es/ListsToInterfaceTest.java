@@ -46,10 +46,6 @@ class ListsToInterfaceTest {
 		dataList.add(classe2);
 		
 		statistics = new GeneralStatistics(dataList);
-		statistics.setN_package(1);
-		statistics.setN_classes(2);
-		statistics.setN_methods(2);
-		statistics.setN_lines(150);
 		
 		MethodDataStructure methodStructure = new MethodDataStructure(2, "MethodName",2,3);
 		lmds.add(methodStructure);
@@ -105,10 +101,10 @@ class ListsToInterfaceTest {
 
 	@Test
 	void testShowGeneralMetrics() {
-	 Assertions.assertTrue("Number of Packages: 1".equals(listsToInterfaceTest.showGeneralMetrics(statistics).getModel().getElementAt(0).toString()));
+	 Assertions.assertTrue("Number of Packages: 2".equals(listsToInterfaceTest.showGeneralMetrics(statistics).getModel().getElementAt(0).toString()));
 	 Assertions.assertTrue("Number of Classes: 2".equals(listsToInterfaceTest.showGeneralMetrics(statistics).getModel().getElementAt(1).toString()));
-	 Assertions.assertTrue("Number of Methods: 2".equals(listsToInterfaceTest.showGeneralMetrics(statistics).getModel().getElementAt(2).toString()));
-	 Assertions.assertTrue("Number of Lines: 150".equals(listsToInterfaceTest.showGeneralMetrics(statistics).getModel().getElementAt(3).toString()));
+	 Assertions.assertTrue("Number of Methods: 1".equals(listsToInterfaceTest.showGeneralMetrics(statistics).getModel().getElementAt(2).toString()));
+	 Assertions.assertTrue("Number of Lines: 6".equals(listsToInterfaceTest.showGeneralMetrics(statistics).getModel().getElementAt(3).toString()));
 		 
 }
 

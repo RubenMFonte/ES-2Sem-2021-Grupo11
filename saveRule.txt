@@ -8,3 +8,6 @@
 8:God_class:false:NOM_CLASS:NE:7
 9:God_class:false:LOC_CLASS:EQ:5
 10:God_class:false:NOM_CLASS:EQ:200:OR:LOC_CLASS:NE:100
+11:God_class:false:LOC_CLASS:EQ:2
+12:God_class:false:LOC_CLASS:EQ:2
+13:God_class:false:LOC_CLASS:EQ:2

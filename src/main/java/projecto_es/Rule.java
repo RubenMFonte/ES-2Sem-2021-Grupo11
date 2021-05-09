@@ -212,23 +212,5 @@ public class Rule {
 		return string;
 	}
 	
-	// teste de exemplo
-	public static void main(String[] args) {
-		String a = "0:God_Class:false:WMC_CLASS:LT:4";
-		String b = "LOC_METHOD:EQ:6";
-		String c = "CYCLO_METHOD:GT:7";
-		String d = a + ":" + "AND" + ":" + b + ":" + "OR" + ":" + c;
-		Rule rule = new Rule(d);
-		System.out.println(d);
-		System.out.println(rule.toString());
-		System.out.println(rule.onlyConditions());
-		System.out.println(rule.getCondition(2));
-		System.out.println("Numero de conditions: " + rule.numberOfConditions());
-		rule.changeID(2);
-		System.out.println(rule.getCodeSmell());
-		System.out.println(rule.toString());
-		System.out.println("condition index: " + rule.getCondition(0));
-
-	}
 
 }

@@ -15,7 +15,7 @@ class ExcelToDataTest {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		String path = "C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\Ronaldo3.xlsx";
+		String path = "C:\\Users\\catar\\Desktop\\Livro.xlsx";
 		booleanObject = ExcelToData.getallClass(path, true);
 		dataStructure = ExcelToData.getallClass(path, false);
 	}

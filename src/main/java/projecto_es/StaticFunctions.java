@@ -50,32 +50,5 @@ public class StaticFunctions {
 		return true;
 	}
 
-//	public static void main(String[] args) {
-//		/// EXEMPLO DE USO DA FUNÇÃO saveRule
-//		try {
-//			String a = "0:Long_method:false:WMC_CLASS:LT:4";
-//			String b = "LOC_METHOD:EQ:6";
-//			String c = "CYCLO_METHOD:GT:7";
-//			String d = a + ":" + "AND" + ":" + b + ":" + "OR" + ":" + c;
-//			String f = a + ":" + "OR" + ":" + b + ":" + "OR" + ":" + c;
-//			Rule rule = new Rule(d);
-//			Rule rule2 = new Rule(f);
-//			File myObj = new File("saveRule.txt");
-//			Boolean go = saveRule(rule, myObj);
-//			// System.out.print(go);
-//			saveRule(rule2, myObj);
-//			// File myObj = new File("C:\\Users\\catar\\Desktop\\saveRule.txt");
-//			Scanner myReader = new Scanner(myObj);
-//			// System.out.print(myObj.getPath());
-//			while (myReader.hasNextLine()) {
-//				String data = myReader.nextLine();
-//				System.out.println(data);
-//			}
-//			myReader.close();
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
 
 }
