@@ -2,6 +2,7 @@ package GUI;
 import java.awt.EventQueue;
 	import java.awt.event.ActionEvent;
 	import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -14,6 +15,9 @@ import java.io.IOException;
 	import java.awt.event.MouseAdapter;
 	import java.awt.event.MouseEvent;
 import javax.swing.SwingConstants;
+
+import projecto_es.Rule;
+import projecto_es.StaticFunctions;
 
 import java.awt.Font;
 	
@@ -36,6 +40,14 @@ public class IMenu {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					try {
+						File f = new File("saveRule.txt");
+						if(!f.exists()) {
+							f.createNewFile();
+							Rule defaultGodClass = new Rule("1:God_class:true:LOC_CLASS:EQ:5:AND:NOM_CLASS:EQ:10:AND:WMC_CLASS:EQ:3");
+							Rule defaultLongMethod = new Rule("6:Long_method:false:LOC_METHOD:GT:7");
+							StaticFunctions.saveRule(defaultGodClass, f);
+							StaticFunctions.saveRule(defaultLongMethod, f);
+						}
 						IMenu window = new IMenu();
 						window.frame.setVisible(true);
 					} catch (Exception e) {

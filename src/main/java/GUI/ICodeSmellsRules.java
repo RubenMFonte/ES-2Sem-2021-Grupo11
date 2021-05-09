@@ -124,7 +124,7 @@ public class ICodeSmellsRules {
 		frmCodeSmells = new JFrame();
 		frmCodeSmells.setResizable(false);
 		frmCodeSmells.setTitle("Code Smells & Rules");
-		frmCodeSmells.setBounds(100, 100, 1100, 800);
+		frmCodeSmells.setBounds(100, 100, 1111, 800);
 		frmCodeSmells.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		newRule = new JButton("Criar Regra");
