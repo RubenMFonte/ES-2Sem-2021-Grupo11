@@ -61,14 +61,9 @@ public class ClassDataStructure extends ClassObjects{
 	 * <p>A Hash Map that receives the key is a String with the name of the code smell and a value Boolean that represents if the code smells is true or false</p>
 	 */
 	private HashMap<String, Boolean> classCodeSmellSpecialistValue = new HashMap<>();
-	/**
-	 * List of ClassDataStructure of classes within the class
-	 */
+	//Atributos necessários
 	private List<ClassDataStructure> innerClassList = new ArrayList<>();
-	/**
-	 * The classification of the evaluation of the code smell by the user's active rule compared to the specialist's evaluation
-	 */
-	private String classClassificationDetected;
+	private String classClassificationDetected = "";
 	
 	/**
 	 * <p>Creates a ClassDataStructure using a Compilation Unit from a java class</p>
@@ -109,7 +104,7 @@ public class ClassDataStructure extends ClassObjects{
 	}
 	
 	/**
-	 * Creates a ClassDataStructure using the arguments, used to populate the {@link innerClassList}
+	 * <p></p>
 	 * @param packageName Name of the package where the class is
 	 * @param classNameToConcat
 	 * @param innerClass
@@ -122,21 +117,10 @@ public class ClassDataStructure extends ClassObjects{
 		calculateClassDataStructureInformation(innerClass);
 	}
 	
-	/**
-	 * <p>Creates an object MethodDataStructure using the arguments and adds it to the list of methods.</p>
-	 * @param methodID The method's ID in the excel file
-	 * @param methodName The method name
-	 * @param loc_method The number of lines in the method
-	 * @param cyclo_method Cyclomatic complexity of the method
-	 */
-	public void addMethodDataStructure(int methodID, String methodName, int loc_method, int cyclo_method) {	
-		MethodDataStructure mds = new MethodDataStructure(methodID, methodName, loc_method, cyclo_method);
-		this.addMethod(mds);
-	}
 	
 	/**
-	 * Populates the {@link innerClassList} of a given class
-	 * @param classInterfaceDeclaration Class to populate
+	 * 
+	 * @param classInterfaceDeclaration
 	 */
 	private void calculateClassDataStructureInformation(ClassOrInterfaceDeclaration classInterfaceDeclaration) {
 		this.wmc_class = MetricsCalculator.getWMC_class(classInterfaceDeclaration);
@@ -153,7 +137,11 @@ public class ClassDataStructure extends ClassObjects{
 				innerClassList.add(innerClass);
 			}
 		}
-	
+		/*List<MethodDeclaration> methods = cid.getMethods();
+		for (MethodDeclaration md : methods) {
+			MethodDataStructure mds_part = new MethodDataStructure(md);
+			lmds.add(mds_part);
+		}*/
 	}
 	
 	/**
@@ -216,8 +204,8 @@ public class ClassDataStructure extends ClassObjects{
 	}
 	
 	/**
-	 * Sets {@link classClassificationDetected}
-	 * @param classificationDetected {@link classClassificationDetected}
+	 * 
+	 * @param classificationDetected
 	 */
 	public void setClassClassificationDetected(String classificationDetected) {
 		this.classClassificationDetected = classificationDetected;
