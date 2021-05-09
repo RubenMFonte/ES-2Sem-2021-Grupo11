@@ -49,23 +49,18 @@ public class CodeSmellsCalculator {
 			if (rule.getCodeSmell().equals("Long_method")) {
 				for (int i = 0; i < dataList.size(); i++) {
 					for(MethodDataStructure method : dataList.get(i).getMethodDataStructureList()) {
-						detention(null, method, rule, css);
+						detection(null, method, rule, css);
 					}
 				}
 			}
 			if (rule.getCodeSmell().equals("God_class")) {
 				for (int i = 0; i < dataList.size(); i++) {
-					detention(dataList.get(i), null, rule, css);
+					detection(dataList.get(i), null, rule, css);
 				}
 			}
 			statisics.add(css);
 		}
-		System.out.println("--------------SEE STATUS----------------");
-		for(CodeSmellStatistics status : statisics) {
-			System.out.println(status.getCodeSmell() + " Statistics " + " VP " + status.getTrue_positive() + " FP " + status.getFalse_positive()
-			+ " FN " + status.getFalse_negative() + " VN " + status.getTrue_negative());				
-		}
-		System.out.println("--------------END STATUS----------------");
+			
 	}
 
 	public List<ClassDataStructure> getDataList() {
@@ -115,76 +110,34 @@ public class CodeSmellsCalculator {
 		// detention();
 	}
 
-	public void detention(ClassDataStructure classToDetect, MethodDataStructure methodToDetect, Rule regra, CodeSmellStatistics css) {
+	public void detection(ClassDataStructure classToDetect, MethodDataStructure methodToDetect, Rule regra, CodeSmellStatistics css) {
 		List<Condition> conditionsActive = regra.getConditions();
 		List<Boolean> bol = new ArrayList<>();
 		for (int i = 0; i < conditionsActive.size(); i++) {
-			System.out.println(i + "º" + " condição encontrada " + conditionsActive.get(i));
 			// boolean detectV = checkMetric(conditionsActive.get(i), classToDetect);
 			int metric_value;
 			if(classToDetect==null) {
 				metric_value = checkMetricMethod(conditionsActive.get(i), methodToDetect);
 			}else {
-				metric_value = checkMetricClass(conditionsActive.get(i), classToDetect);
+				metric_value = classToDetect.checkMetricClass(conditionsActive.get(i));
 			}
-			System.out.println("MÉTRICA " + metric_value);
 			boolean b = checkNO(conditionsActive.get(i), metric_value);
-			System.out.println("VALOR BOOLEANO FINAL " + b);
 			bol.add(b);
 		}
-		System.out.println("Hora de ver os valores booleanos das condições");
-		for (int j = 0; j < bol.size(); j++) {
-			System.out.println("Na " + j + "º" + " -> " + bol.get(j));
-		}
-		System.out.println("Vamos ver os Logical Operators ");
-		for (LogicalOperator op : regra.getLogicalOperators()) {
-			System.out.println("Operador encontrado " + op);
-		}
-		System.out.println("Operação Final ");
 		boolean finalValue = bol.get(0);
 		if (!(bol.size() == 1)) {
 			for (int w = 0; w < regra.getLogicalOperators().size(); w++) {
 				finalValue = finalOP(finalValue, (boolean) bol.get(w + 1), regra.getLogicalOperators().get(w));
 			}
 		}
-		System.out.println("VALOR OBTIDO FINAL BOOLEANO " + finalValue);
+
 		if(classToDetect==null) {
-			System.out.println("O que está no metodo de code smell eval " + methodToDetect.getCodeSmellsEvaluation("Long_method"));
-			String sentence = evaluate(css, finalValue, methodToDetect.getCodeSmellsEvaluation("Long_method"));
-			System.out.println("Este deu: " + sentence);
+			String sentence = css.evaluate(finalValue, methodToDetect.getCodeSmellsEvaluation("Long_method"));
 			methodToDetect.setCodeSmellDetected(sentence);
 		}else {
-			System.out.println("O que está na classe de code smell eval " + classToDetect.getCodeSmellsEvaluation("God_class"));
-			String sentence = evaluate(css, finalValue, classToDetect.getCodeSmellsEvaluation("God_class"));
-			System.out.println("Este deu: " + sentence);
+			String sentence = css.evaluate(finalValue, classToDetect.getCodeSmellsEvaluation("God_class"));
 			classToDetect.setCodeSmellDetected(sentence);
 		}
-
-		System.out.println(css.getCodeSmell() + " Statistics " + " VP " + css.getTrue_positive() + " FP " + css.getFalse_positive()
-				+ " FN " + css.getFalse_negative() + " VN " + css.getTrue_negative());
-	}
-
-	private String evaluate(CodeSmellStatistics sts, boolean our, boolean specialist) {
-		String ll = "";
-		if (our == true && specialist == true) {
-			sts.increase_truePositive();
-			ll = "Verdadeiro Positivo";
-		}
-		if (our == true && specialist == false) {
-			sts.increase_falsePositive();
-			ll = "Falso Positivo";
-		}
-		if (our == false && specialist == true) {
-			sts.increase_falseNegative();
-			;
-			ll = "Falso Negativo";
-		}
-		if (our == false && specialist == false) {
-			sts.increase_trueNegative();
-			;
-			ll = "Verdadeiro Negativo";
-		}
-		return ll;
 	}
 
 	private boolean finalOP(boolean value, boolean valueToCompareWith, LogicalOperator logicalOperator) {
@@ -197,28 +150,11 @@ public class CodeSmellsCalculator {
 		return true;
 	}
 
-	private int checkMetricClass(Condition a, ClassDataStructure classToDetect) {
-		switch (a.getMetric()) {
-		case NOM_CLASS:
-			System.out.println("NOM_CLASS");
-			return classToDetect.getNOMmetric();
-		case LOC_CLASS:
-			System.out.println("LOC_CLASS");
-			return classToDetect.getLOCmetric();
-		case WMC_CLASS:
-			System.out.println("WMC_CLASS");
-			return classToDetect.getWMCmetric();
-		}
-		return 0;
-	}
-
 	private int checkMetricMethod(Condition a, MethodDataStructure methodToDetect) {
 		switch (a.getMetric()) {
 		case LOC_METHOD:
-			System.out.println("LOC_METHOD");
 			return methodToDetect.getLOCMetric();
 		case CYCLO_METHOD:
-			System.out.println("CYCLO_METHOD");
 			return methodToDetect.getCYCLOMetric();
 		}
 		return 0;

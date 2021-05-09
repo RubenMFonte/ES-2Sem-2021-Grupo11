@@ -19,8 +19,6 @@ public class ConditionJPanel extends JPanel {
 	private JLabel metric = new JLabel("Metric");
 	
 	private JComboBox metricsAvailable;
-	//new JComboBox(new String[] {"", "NOM_CLASS", "LOC_CLASS", "WMC_CLASS", "LOC_METHOD", "CYCLO_METHOD"});
-	
 	private JLabel noperator = new JLabel("Numeric Operator");
 	private JComboBox noperatorsAvailable = new JComboBox(new String[] {"", "EQ","NE","GT","GE","LT","LE"});
 	private JLabel threshold = new JLabel("Threshold");
@@ -30,10 +28,7 @@ public class ConditionJPanel extends JPanel {
 	private String code_smell;
 	private static final Color DEFAULT_COLOR = new Color(0,0,0,0);
 	
-	/**
-	 * Create the panel.
-	 */
-	
+
 	public ConditionJPanel(String conditionNumber, String code_smell)
 	{
 		this(conditionNumber, "", "", "", "", code_smell);
@@ -85,75 +80,68 @@ public class ConditionJPanel extends JPanel {
         	    		.addComponent(noperatorsAvailable)
         	    		.addComponent(limit)
         	    		.addComponent(loperatorsAvailable))
-        	);
-        
-        /*l.setHorizontalGroup(l.createSequentialGroup()
-            .addGroup(l.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                .addComponent(metric)
-                .addComponent(noperator)
-                .addComponent(threshold)
-            	.addComponent(lo))
-            .addGroup(l.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(metricsAvailable)
-                .addComponent(noperatorsAvailable)
-                .addComponent(limit)
-                .addComponent(loperatorsAvailable))
-        );
-       l.setVerticalGroup(l.createSequentialGroup()
-            .addGroup(l.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(metric)
-                .addComponent(metricsAvailable))
-            .addGroup(l.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(noperator)
-                .addComponent(noperatorsAvailable))
-            .addGroup(l.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(threshold)
-                .addComponent(limit))
-            .addGroup(l.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(lo)
-                    .addComponent(loperatorsAvailable))
-        );*/
-
-		
+        	);		
 	}
 	
 	public boolean validatePanel(boolean validateLogicalOperator, StringBuilder errorMessage, int conditionIndex)
 	{
 		boolean validation = true;
-		String missingValues = "";
 		
-		if(metricsAvailable.getSelectedIndex() == 0)
-		{
-			validation = false;
-			missingValues += "- Metric\n";
-		}
+		validation = validateMetric(errorMessage) && validateNumericOperator(errorMessage) && validateThreshold(errorMessage);
 		
-		if(noperatorsAvailable.getSelectedIndex() == 0)
-		{
-			validation = false;
-			missingValues += "- Numeric Operator\n";
-		}
-		
-		if(limit.getText().length() == 0 || !limit.getText().matches("[0-9]+"))
-		{
-			validation = false;
-			missingValues += "- Threshold\n";
-		}
 		
 		if(validateLogicalOperator)
 		{
-			if(loperatorsAvailable.getSelectedIndex() == 0)
-			{
-				validation = false;
-				missingValues += "- Logic Operator\n";
-			}
+			validation &= validateLogicalOperator(errorMessage);
 		}
 		
-		if(validation == false) errorMessage.append("Condition " + conditionIndex + "\n" + missingValues);
+		if(validation == false) errorMessage.insert(0, "Condition " + conditionIndex + "\n");
 		
 		return validation;
 	}
+	
+	private boolean validateMetric(StringBuilder errorMessage) {
+		if(metricsAvailable.getSelectedIndex() == 0)
+		{
+			errorMessage.append("- Metric\n");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean validateNumericOperator(StringBuilder errorMessage) {
+		if(noperatorsAvailable.getSelectedIndex() == 0)
+		{
+			errorMessage.append("- Numeric Operator\n");
+			return false;
+		}
+		
+		return true;
+	}
 
+	private boolean validateThreshold(StringBuilder errorMessage) {
+		
+		if(limit.getText().length() == 0 || !limit.getText().matches("[0-9]+"))
+		{
+			errorMessage.append("- Threshold\n");
+			return false;
+		}
+		
+		return true;
+	}
+
+	private boolean validateLogicalOperator(StringBuilder errorMessage) {
+		
+		if(loperatorsAvailable.getSelectedIndex() == 0)
+		{
+			errorMessage.append("- Logic Operator\n");
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public String getConditionAsString()
 	{
 		return (String)metricsAvailable.getSelectedItem() + ":" +

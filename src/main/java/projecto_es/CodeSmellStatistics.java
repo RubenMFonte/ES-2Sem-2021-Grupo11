@@ -80,4 +80,27 @@ public class CodeSmellStatistics {
 		System.out.println("true_negative: " + true_negative);
 	}
 
+	public String evaluate(boolean our, boolean specialist) {
+		String ll = "";
+		if (our == true && specialist == true) {
+			increase_truePositive();
+			ll = "Verdadeiro Positivo";
+		}
+		if (our == true && specialist == false) {
+			increase_falsePositive();
+			ll = "Falso Positivo";
+		}
+		if (our == false && specialist == true) {
+			increase_falseNegative();
+			;
+			ll = "Falso Negativo";
+		}
+		if (our == false && specialist == false) {
+			increase_trueNegative();
+			;
+			ll = "Verdadeiro Negativo";
+		}
+		return ll;
+	}
+
 }

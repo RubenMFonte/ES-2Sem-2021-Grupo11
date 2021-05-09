@@ -172,4 +172,19 @@ public class ClassDataStructure {
 		return codeSmellDetected;
 	}
 
+	public int checkMetricClass(Condition a) {
+		switch (a.getMetric()) {
+		case NOM_CLASS:
+			System.out.println("NOM_CLASS");
+			return getNOMmetric();
+		case LOC_CLASS:
+			System.out.println("LOC_CLASS");
+			return getLOCmetric();
+		case WMC_CLASS:
+			System.out.println("WMC_CLASS");
+			return getWMCmetric();
+		}
+		return 0;
+	}
+
 }

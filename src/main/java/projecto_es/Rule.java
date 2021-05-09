@@ -5,47 +5,64 @@ import java.util.List;
 
 public class Rule {
 
-	// Este array é do formato ArrayList[(id),(code
-	// smell),(active),(condition1),(logicalOperator),(condition2),...]
 	private ArrayList<String> list;
-	private ArrayList<Condition> conditions;
-	private ArrayList<LogicalOperator> logicalOperator;
+	private ArrayList<LogicalOperator> logicalOperators;
+	private ConditionsList conditionsList = new ConditionsList();
 
-	// Assume-se que a string que entra nesta função +e do formato
+	// String that is received follows the format:
 	// "id:codeSmell:active:Metrics:NumericOperator:threshold:LogicalOperator:Metrics:NumericOperator:threshold:LogicalOperator:..."
+	private static final int INDEX_ID = 0;
+	private static final int INDEX_CODESMELL = 1;
+	private static final int INDEX_IS_ACTIVATED = 2;
+	private static final int INDEX_CONDITIONS_BEGIN = 3;
+	
+	private static final int OFFSET_NUMERIC_OPERATOR = 1;
+	private static final int OFFSET_THRESHOLD = 2;
+	private static final int OFFSET_LOGIC_OPERATOR = 3;
+	
+	private static final int CONDITION_LENGTH = 3;
+	
+	public static void main(String[] args) {
+		Rule teste = new Rule("1:God Class:active:LOC_CLASS:==:5");
+		System.out.println(teste.getCodeSmell());
+	}
+	
 	public Rule(String rule) {
 		list = new ArrayList<>();
 		String[] values = rule.split(":");
-		list.add(values[0]);
-		list.add(values[1]);
-		list.add(values[2]);
-		LogicalOperator operator;
+		
+		list.add(values[Rule.INDEX_ID]);
+		list.add(values[Rule.INDEX_CODESMELL]);
+		list.add(values[Rule.INDEX_IS_ACTIVATED]);
+		
 		Condition condition;
-		conditions = new ArrayList<>();
-		logicalOperator = new ArrayList<>();
-		for (int i = 3; i < values.length; i++) {
-			if (i == 5) {
-				condition = new Condition(values[i - 2] + ":" + values[i - 1] + ":" + values[i]);
-				conditions.add(condition);
-				list.add(condition.toString());
-			} else if ((i - 1) % 4 == 0) {
-				if (values[i - 3].equals("AND")) {
-					operator = LogicalOperator.AND;
-				} else {
-					operator = LogicalOperator.OR;
-				}
-				condition = new Condition(values[i - 2] + ":" + values[i - 1] + ":" + values[i]);
-				logicalOperator.add(operator);
-				conditions.add(condition);
-				addCondition(operator, condition);
-
+		conditionsList.setConditions(new ArrayList<>());
+		logicalOperators = new ArrayList<>();
+		
+		for (int i = Rule.INDEX_CONDITIONS_BEGIN; i < values.length; i += Rule.CONDITION_LENGTH) {
+			
+			condition = new Condition(values[i] + ":" + values[i + Rule.OFFSET_NUMERIC_OPERATOR] + ":" + values[i + Rule.OFFSET_THRESHOLD]);
+			
+			addCondition(condition);
+			
+			if(values.length <= i + Rule.OFFSET_LOGIC_OPERATOR) break;
+			
+			else {
+				
+				if( values[i + Rule.OFFSET_LOGIC_OPERATOR].equals("AND") ) addOperator(LogicalOperator.AND);
+				else if( values[i + Rule.OFFSET_LOGIC_OPERATOR].equals("OR") ) addOperator(LogicalOperator.OR);
 			}
 		}
 	}
 
-	public void addCondition(LogicalOperator operator, Condition condition) {
-		list.add(operator.toString());
+	public void addCondition(Condition condition) {
+		conditionsList.getConditions().add(condition);
 		list.add(condition.toString());
+	}
+
+	public void addOperator(LogicalOperator operator) {
+		list.add(operator.toString());
+		logicalOperators.add(operator);
 	}
 
 	public String onlyConditions() {
@@ -73,9 +90,7 @@ public class Rule {
 	}
 
 	public void switchActive() {
-		if(list.get(2).equals("true")) {
-			list.set(2, "false");
-		}else list.set(2, "true");
+		list.set(INDEX_IS_ACTIVATED, list.get(Rule.INDEX_IS_ACTIVATED).equals("true") ? "false" : "true");
 	}
 
 	public ArrayList<String> getList() {
@@ -83,16 +98,11 @@ public class Rule {
 	}
 
 	public int numberOfConditions() {
-		return conditions.size();
+		return conditionsList.numberOfConditions();
 	}
 
 	public Condition getCondition(int index) {
-		if (index < conditions.size())
-			return conditions.get(index);
-		else {
-			System.out.println("Erro: Index maior do que o tamanho da lista de condições");
-			return null;
-		}
+		return conditionsList.getCondition(index);
 	}
 	
 	public List<String> getConditionsArray()
@@ -112,8 +122,8 @@ public class Rule {
 	}
 
 	public LogicalOperator getLogicalOperator(int index) {
-		if (index < logicalOperator.size())
-			return logicalOperator.get(index);
+		if (index < logicalOperators.size())
+			return logicalOperators.get(index);
 		else {
 			System.out.println("Erro: Index maior do que o tamanho da lista de condições");
 			return null;
@@ -129,15 +139,13 @@ public class Rule {
 		return list.get(0) + ":" + list.get(1) + ":" + list.get(2);
 	}
 	
-	// Necessárias
 	public List<Condition> getConditions(){
-		return conditions;
+		return conditionsList.getConditions();
 	}
 	
 	public List<LogicalOperator> getLogicalOperators(){
-		return logicalOperator;
+		return logicalOperators;
 	}
-	//
 	
 	@Override
 	public String toString() {
@@ -151,25 +159,6 @@ public class Rule {
 			}
 		}
 		return string;
-	}
-	
-	// teste de exemplo
-	public static void main(String[] args) {
-		String a = "0:God_Class:false:WMC_CLASS:LT:4";
-		String b = "LOC_METHOD:EQ:6";
-		String c = "CYCLO_METHOD:GT:7";
-		String d = a + ":" + "AND" + ":" + b + ":" + "OR" + ":" + c;
-		Rule rule = new Rule(d);
-		System.out.println(d);
-		System.out.println(rule.toString());
-		System.out.println(rule.onlyConditions());
-		System.out.println(rule.getCondition(2));
-		System.out.println("Numero de conditions: " + rule.numberOfConditions());
-		rule.changeID(2);
-		System.out.println(rule.getCodeSmell());
-		System.out.println(rule.toString());
-		System.out.println("condition index: " + rule.getCondition(0));
-
 	}
 
 }

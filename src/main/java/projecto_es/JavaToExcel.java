@@ -66,42 +66,35 @@ public class JavaToExcel {
 		for (CompilationUnit comp : compUnits) {
 			ClassDataStructure struct = new ClassDataStructure(comp);
 			List<MethodDataStructure> lmds = struct.getMethodDataStructureList();
-			for (MethodDataStructure mds : lmds) {
-				String[] lineData = new String[9];
-				lineData[0] = String.valueOf(i);
-				lineData[1] = struct.getPackageName();
-				lineData[2] = struct.getClassName();
-				lineData[3] = mds.getMethodName();
-				lineData[4] = String.valueOf(struct.getNOMmetric());
-				lineData[5] = String.valueOf(struct.getLOCmetric());
-				lineData[6] = String.valueOf(struct.getWMCmetric());
-				lineData[7] = String.valueOf(mds.getLOCMetric());
-				lineData[8] = String.valueOf(mds.getCYCLOMetric());
-				lines.add(lineData);
-				i++;
-			}
+			
+			i = addMethods(i, struct, lmds);
+			
 			//Anotar as innerclasses
 			if(!struct.getInnerClassesList().isEmpty()) {
 				for(ClassDataStructure innerStruct : struct.getInnerClassesList()) {
 					List<MethodDataStructure> lmds2 = innerStruct.getMethodDataStructureList();
-					for (MethodDataStructure mds : lmds2) {
-						String[] lineData = new String[9];
-						lineData[0] = String.valueOf(i);
-						lineData[1] = innerStruct.getPackageName();
-						lineData[2] = innerStruct.getClassName();
-						lineData[3] = mds.getMethodName();
-						lineData[4] = String.valueOf(innerStruct.getNOMmetric());
-						lineData[5] = String.valueOf(innerStruct.getLOCmetric());
-						lineData[6] = String.valueOf(innerStruct.getWMCmetric());
-						lineData[7] = String.valueOf(mds.getLOCMetric());
-						lineData[8] = String.valueOf(mds.getCYCLOMetric());
-						lines.add(lineData);
-						i++;
-					}
+					i = addMethods(i, innerStruct, lmds2);
 				}
 			}
-			//
 		}
+	}
+
+	private int addMethods(int i, ClassDataStructure struct, List<MethodDataStructure> lmds) {
+		for (MethodDataStructure mds : lmds) {
+			String[] lineData = new String[9];
+			lineData[0] = String.valueOf(i);
+			lineData[1] = struct.getPackageName();
+			lineData[2] = struct.getClassName();
+			lineData[3] = mds.getMethodName();
+			lineData[4] = String.valueOf(struct.getNOMmetric());
+			lineData[5] = String.valueOf(struct.getLOCmetric());
+			lineData[6] = String.valueOf(struct.getWMCmetric());
+			lineData[7] = String.valueOf(mds.getLOCMetric());
+			lineData[8] = String.valueOf(mds.getCYCLOMetric());
+			lines.add(lineData);
+			i++;
+		}
+		return i;
 	}
 
 	public void writeToExcel() throws IOException {
