@@ -1,4 +1,4 @@
-package tests;
+package projecto_es;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,7 +39,8 @@ class ListsToInterfaceTest {
 	static void setUpBeforeClass() throws Exception {
 		
 		ClassDataStructure classe1 = new ClassDataStructure("Package1", "Class1", "20", "2", "2");
-		classe1.addMethodDataStructure("Method1", 1, 2);
+		MethodDataStructure mds = new MethodDataStructure(1, "Method1", 1, 2);
+		classe1.addMethod(mds);
 		ClassDataStructure classe2 = new ClassDataStructure("Package2", "Class2", "40", "4", "4");
 		dataList.add(classe1);
 		dataList.add(classe2);
@@ -50,7 +51,7 @@ class ListsToInterfaceTest {
 		statistics.setN_methods(2);
 		statistics.setN_lines(150);
 		
-		MethodDataStructure methodStructure = new MethodDataStructure("MethodName",2,3);
+		MethodDataStructure methodStructure = new MethodDataStructure(2, "MethodName",2,3);
 		lmds.add(methodStructure);
 		
 		

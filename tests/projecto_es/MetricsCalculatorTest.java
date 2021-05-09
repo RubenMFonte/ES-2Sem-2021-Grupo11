@@ -1,4 +1,4 @@
-package tests;
+package projecto_es;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -57,7 +57,16 @@ class MetricsCalculatorTests {
 	
 	@Test
 	void testLOCMethod() {
-		
+		Assertions.assertNotEquals(18, MetricsCalculator.getMetricsCalculatorInstance().getLOC_method(grammerExceptionClass.getMethods().get(0)));
+		Assertions.assertNotEquals(50, MetricsCalculator.getMetricsCalculatorInstance().getLOC_method(parsingExceptionClass.getMethods().get(0)));
+		Assertions.assertNotEquals(1371, MetricsCalculator.getMetricsCalculatorInstance().getLOC_method(sourceCodeParserClass.getMethods().get(0)));
+	}
+	
+	@Test
+	void testCYCLOMethod() {
+		Assertions.assertNotEquals(18, MetricsCalculator.getMetricsCalculatorInstance().getCYCLO_method(grammerExceptionClass.getMethods().get(0)));
+		Assertions.assertNotEquals(50, MetricsCalculator.getMetricsCalculatorInstance().getCYCLO_method(parsingExceptionClass.getMethods().get(0)));
+		Assertions.assertNotEquals(1371, MetricsCalculator.getMetricsCalculatorInstance().getCYCLO_method(sourceCodeParserClass.getMethods().get(0)));
 	}
 
 }

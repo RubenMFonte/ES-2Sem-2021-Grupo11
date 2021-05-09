@@ -33,11 +33,6 @@ public class JavaToExcel {
 		list_classes = new ArrayList<ClassDataStructure>();
 	}
 
-	public JavaToExcel() {
-		lines = new ArrayList<String[]>();
-		list_classes = new ArrayList<ClassDataStructure>();
-	}
-
 	public String getPath_java() {
 		return path_java;
 	}
@@ -100,17 +95,6 @@ public class JavaToExcel {
 		}
 		list_classes = alphbeticOrder(list_classes);
 	}
-	
-	//Só para testar o code smells calculator à prova de bala
-	public void makeClassDataStructureListTESTE(CompilationUnit unit) {
-		
-		
-			ClassDataStructure struct = new ClassDataStructure(unit);
-			list_classes.add(struct);
-		
-		list_classes = alphbeticOrder(list_classes);
-	}
-	//------------------[APAGAR DEPOIS]
 
 	public void makeLines() {
 		int i = 1;
@@ -120,7 +104,7 @@ public class JavaToExcel {
 			
 			//Para anotar classes sem métodos (pus em comentário - desnecessário - se tiver ativo deteta as quem tem no prof 
 			//a JavaClass e OpcodeInfo porém também adiciona outras 2 (Scannable e Constants) que têm atributos final static
-			//if(!(lmds.isEmpty())) {
+			if(!(lmds.isEmpty())) {
 				for (MethodDataStructure mds : lmds) {
 					String[] lineData = new String[9];
 					lineData[0] = String.valueOf(i);
@@ -135,7 +119,7 @@ public class JavaToExcel {
 					lines.add(lineData);
 					i++;
 				}
-			/*}else {
+			}else {
 				String[] lineData = new String[9];
 				lineData[0] = String.valueOf(i);
 				lineData[1] = struct.getPackageName();
@@ -148,7 +132,7 @@ public class JavaToExcel {
 				lineData[8] = "";
 				lines.add(lineData);
 				i++;
-			}*/
+			}
 			// Anotar as innerclasses
 			if (!struct.getInnerClassesList().isEmpty()) {
 				for (ClassDataStructure innerStruct : struct.getInnerClassesList()) {

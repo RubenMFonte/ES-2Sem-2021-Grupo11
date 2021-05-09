@@ -60,12 +60,12 @@ public class ClassDataStructure extends ClassObjects{
 				PackageDeclaration packageDeclaration = (PackageDeclaration) child;
 				String packageName = packageDeclaration.getNameAsString();
 				this.packageName = packageName;
-			} else if (child.getClass() == ClassOrInterfaceDeclaration.class) {
+			} 
+			if (child.getClass() == ClassOrInterfaceDeclaration.class) {
 				ClassOrInterfaceDeclaration classInterfaceDeclaration = (ClassOrInterfaceDeclaration) child;
 				String className = classInterfaceDeclaration.getNameAsString();
 				this.className = className;
 				calculateClassDataStructureInformation(classInterfaceDeclaration);
-			} else {
 			}
 		}
 	}
@@ -86,10 +86,10 @@ public class ClassDataStructure extends ClassObjects{
 		calculateClassDataStructureInformation(innerClass);
 	}
 
-	public void addMethodDataStructure(int methodID, String methodName, int loc_method, int cyclo_method) {	
+	/*public void addMethodDataStructure(int methodID, String methodName, int loc_method, int cyclo_method) {	
 		MethodDataStructure mds = new MethodDataStructure(methodID, methodName, loc_method, cyclo_method);
 		this.addMethod(mds);
-	}
+	}*/
 
 	private void calculateClassDataStructureInformation(ClassOrInterfaceDeclaration classInterfaceDeclaration) {
 		this.wmc_class = MetricsCalculator.getWMC_class(classInterfaceDeclaration);
@@ -100,17 +100,13 @@ public class ClassDataStructure extends ClassObjects{
 			if (child.getClass() == MethodDeclaration.class || child.getClass() == ConstructorDeclaration.class) {
 				MethodDataStructure methodOnClass = new MethodDataStructure((CallableDeclaration) child);
 				this.lmds.add(methodOnClass);
-			} else if (child.getClass() == ClassOrInterfaceDeclaration.class) {
+			} 
+			if (child.getClass() == ClassOrInterfaceDeclaration.class) {
 				ClassOrInterfaceDeclaration innerClassInterfaceDeclaration = (ClassOrInterfaceDeclaration) child;
 				ClassDataStructure innerClass = new ClassDataStructure(packageName, className, innerClassInterfaceDeclaration);
 				innerClassList.add(innerClass);
 			}
 		}
-		/*List<MethodDeclaration> methods = cid.getMethods();
-		for (MethodDeclaration md : methods) {
-			MethodDataStructure mds_part = new MethodDataStructure(md);
-			lmds.add(mds_part);
-		}*/
 	}
 	
 	public List<ClassDataStructure> getInnerClassesList() {
@@ -139,9 +135,9 @@ public class ClassDataStructure extends ClassObjects{
 		return wmc_class;
 	}
 	
-	public HashMap<String, Boolean> getCodeSmellsEvaluation() {
+	/*public HashMap<String, Boolean> getCodeSmellsEvaluation() {
 		return classCodeSmellSpecialistValue;
-	}
+	}*/
 
 	public void setClassClassificationDetected(String classificationDetected) {
 		this.classClassificationDetected = classificationDetected;

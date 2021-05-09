@@ -80,7 +80,6 @@ public class MethodDataStructure extends ClassMethods{
 			return methodID;
 	}
 	
-	
 	public int getLOCMetric () {
 		return loc_method;	
 	}

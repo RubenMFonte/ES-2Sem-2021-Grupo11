@@ -35,8 +35,8 @@ class ExcelToDataTest {
 		nom.add("6");
 		methodsb.add( new MethodBoolean("Mname1",true));
 		methodsb.add( new MethodBoolean("Mname2",false));
-		methodsdata.add(new MethodDataStructure("Mname1",3,1));
-		methodsdata.add(new MethodDataStructure("Mname2",4,2));
+		methodsdata.add(new MethodDataStructure(1, "Mname1",3,1));
+		methodsdata.add(new MethodDataStructure(2, "Mname2",4,2));
 		classes.add("Cname1");
 		classes.add("Cname2");
 		packages.add("Pname1" );
