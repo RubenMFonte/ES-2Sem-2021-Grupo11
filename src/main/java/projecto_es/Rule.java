@@ -5,14 +5,25 @@ import java.util.List;
 
 public class Rule {
 
-	// Este array é do formato ArrayList[(id),(code
-	// smell),(active),(condition1),(logicalOperator),(condition2),...]
+	/**
+	 * List with the rule in the format ArrayList[(id),(code smell),(active),(condition1),(logicalOperator),(condition2),...]
+	 */ 
 	private ArrayList<String> list;
+	/**
+	 * List of the conditions of the rule
+	 */
 	private ArrayList<Condition> conditions;
+	/**
+	 * List of the {@link LogicalOperator} of the rule
+	 */
 	private ArrayList<LogicalOperator> logicalOperator;
 
-	// Assume-se que a string que entra nesta função +e do formato
+	// Assume-se que a string que entra nesta função é do formato
 	// "id:codeSmell:active:Metrics:NumericOperator:threshold:LogicalOperator:Metrics:NumericOperator:threshold:LogicalOperator:..."
+	/**
+	 * Creates a Rule with a formatted string
+	 * @param rule formatted string (ex.:"id:codeSmell:active:Metrics:NumericOperator:threshold:LogicalOperator:Metrics:NumericOperator:threshold:LogicalOperator:...")
+	 */
 	public Rule(String rule) {
 		list = new ArrayList<>();
 		String[] values = rule.split(":");
@@ -42,12 +53,19 @@ public class Rule {
 			}
 		}
 	}
-
+	/**
+	 * Adds a {@link LogicalOperator} and a {@link Condition} to the {@link list}
+	 * @param operator Logical operator connecting the new condition
+	 * @param condition New condition to be added
+	 */
 	public void addCondition(LogicalOperator operator, Condition condition) {
 		list.add(operator.toString());
 		list.add(condition.toString());
 	}
-
+	/**
+	 * Returns all the conditions of the Rule
+	 * @return String
+	 */
 	public String onlyConditions() {
 		String string = "";
 		for (int i = 3; i < list.size(); i++) {
@@ -59,33 +77,54 @@ public class Rule {
 		}
 		return string;
 	}
-
+	/**
+	 * Change the ID of the Rule with the given id
+	 * @param id New ID
+	 */
 	public void changeID(int id) {
 		list.set(0, Integer.toString(id));
 	}
-
+	/**
+	 * Returns the ID
+	 * @return String ID
+	 */
 	public String getID() {
 		return list.get(0);
 	}
-
+	/**
+	 * Returns a boolean indicating if the rule is active
+	 * @return
+	 */
 	public boolean isActive() {
 		return Boolean.parseBoolean(list.get(2));
 	}
-
+	/**
+	 * Switch the rule to active if it's inactive, or vice-versa
+	 */
 	public void switchActive() {
 		if(list.get(2).equals("true")) {
 			list.set(2, "false");
 		}else list.set(2, "true");
 	}
-
+	/**
+	 * Returns {@link list}
+	 * @return {@link list}
+	 */
 	public ArrayList<String> getList() {
 		return list;
 	}
-
+	/**
+	 * Returns the number of conditions
+	 * @return Number of conditions
+	 */
 	public int numberOfConditions() {
 		return conditions.size();
 	}
-
+	/**
+	 * Get a {@link Condition} by giving it's position in the array
+	 * @param index Position of the condition
+	 * @return Condition, null if the index is bigger than the number of conditions
+	 */
 	public Condition getCondition(int index) {
 		if (index < conditions.size())
 			return conditions.get(index);
@@ -94,7 +133,10 @@ public class Rule {
 			return null;
 		}
 	}
-	
+	/**
+	 * Returns a list with just the conditions
+	 * @return List of Strings
+	 */
 	public List<String> getConditionsArray()
 	{		
 		ArrayList<String> conditions = new ArrayList<>();
@@ -110,7 +152,11 @@ public class Rule {
 		
 		return conditions;
 	}
-
+	/**
+	 * Get a {@link LogicalOperator} by giving it's position in the array
+	 * @param index Position of the LogicalOperator
+	 * @return LogicalOperator, null if the index is bigger than the number of LogicalOperators
+	 */
 	public LogicalOperator getLogicalOperator(int index) {
 		if (index < logicalOperator.size())
 			return logicalOperator.get(index);
@@ -119,26 +165,39 @@ public class Rule {
 			return null;
 		}
 	}
-	
+	/**
+	 * Return the code smell the rule is for
+	 * @return String code smell
+	 */
 	public String getCodeSmell() {
 		return list.get(1);
 	}
-	
+	/**
+	 * Returns the ID, Code smell and if it's active
+	 * @return String
+	 */
 	public String getHeader()
 	{
 		return list.get(0) + ":" + list.get(1) + ":" + list.get(2);
 	}
 	
-	// Necessárias
+	/**
+	 * Returns {@link conditions}
+	 * @return {@link conditions}
+	 */
 	public List<Condition> getConditions(){
 		return conditions;
 	}
-	
+	/**
+	 * Returns {@link logicalOperator}
+	 * @return {@link logicalOperator}
+	 */
 	public List<LogicalOperator> getLogicalOperators(){
 		return logicalOperator;
 	}
-	//
-	
+	/**
+	 * Overrides the default method toString() to return a formatted string
+	 */
 	@Override
 	public String toString() {
 		String string;

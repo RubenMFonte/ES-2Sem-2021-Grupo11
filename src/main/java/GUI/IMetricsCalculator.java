@@ -133,11 +133,7 @@ public class IMetricsCalculator {
 			public void actionPerformed(ActionEvent e) {
 				JavaToExcel jte = new JavaToExcel(path_Java.getText());
 				if (!path_Java.getText().equals("")) {
-					try {
-						jte.run();
-					} catch (IOException e1) {
-						System.out.println("IOException");
-					}
+					jte.run();
 					if (jte.getMetricsCalculator().getCompilationUnits().size() == 0) {
 						popUp("O projeto selecionado não é um projeto Java. Por favor selecione um projeto Java");
 					} else {

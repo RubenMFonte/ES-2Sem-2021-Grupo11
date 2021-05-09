@@ -1,4 +1,5 @@
-package projecto_es;
+package GUI;
+
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -15,7 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 public class ConditionJPanel extends JPanel {
-
+	
 	private JLabel metric = new JLabel("Metric");
 	
 	private JComboBox metricsAvailable;

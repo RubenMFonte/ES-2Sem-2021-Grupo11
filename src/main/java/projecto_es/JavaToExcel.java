@@ -20,48 +20,89 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.github.javaparser.ast.CompilationUnit;
 
 public class JavaToExcel {
-
+	/**
+	 * Path of the java project
+	 */
 	private String path_java;
+	/**
+	 * Array with the lines to in the excel
+	 */
 	private ArrayList<String[]> lines;
+	/**
+	 * Path of the excel
+	 */
 	private String path_exel;
+	/**
+	 * Instance of metrics calculator
+	 */
 	private MetricsCalculator mc;
+	/**
+	 * List of the classes of the project
+	 */
 	private List<ClassDataStructure> list_classes;
-
+	/**
+	 * Creates a JavaToExcel with a path and initializes the {@link path_java}, {@link lines} and {@link list_classes}
+	 * @param path_java {@link path_java}
+	 */
 	public JavaToExcel(String path_java) {
 		this.path_java = path_java;
 		lines = new ArrayList<String[]>();
 		list_classes = new ArrayList<ClassDataStructure>();
 	}
-
+	/**
+	 * Creates a JavaToExcel initializing {@link lines} and {@link list_classes}
+	 */
 	public JavaToExcel() {
 		lines = new ArrayList<String[]>();
 		list_classes = new ArrayList<ClassDataStructure>();
 	}
-
+	/**
+	 * Return {@link path_java}
+	 * @return {@link path_java}
+	 */
 	public String getPath_java() {
 		return path_java;
 	}
-
+	/**
+	 * Sets the path of the java file
+	 * @param path_java {@link path_java}
+	 */
 	public void setPath_java(String path_java) {
 		this.path_java = path_java;
 	}
-
+	/**
+	 * Return {@link path_excel}
+	 * @return {@link path_excel}
+	 */
 	public String getPath_exel() {
 		return path_exel;
 	}
-
+	/**
+	 * Return {@link mc}
+	 * @return {@link mc}
+	 */
 	public MetricsCalculator getMetricsCalculator() {
 		return this.mc;
 	}
-
+	/**
+	 * Sets the path of the excel file
+	 * @param path_excel {@link path_excel}
+	 */
 	public void setPath_exel(String path_exel) {
 		this.path_exel = path_exel;
 	}
-
+	/**
+	 * Returns {@link lines}
+	 * @return {@link lines}
+	 */
 	public List<String[]> getLineS() {
 		return lines;
 	}
-
+	/**
+	 * Sorts the classes in alphabetical order
+	 * @param list List of {@link ClassDataStructure} to sort
+	 * @return A list of ClassDataStructure sorted
+	 */
 	public List<ClassDataStructure> alphbeticOrder(List<ClassDataStructure> list) {
 		List<String> class_names = new ArrayList<String>();
 		for (int i = 0; i < list.size(); i++) {
@@ -91,7 +132,10 @@ public class JavaToExcel {
 		}
 		return return_list;
 	}
-
+	/**
+	 * Fills the list of classes {@link list_classes}
+	 * @param mc {@link MetricsCalculator}
+	 */
 	public void makeClassDataStructureList(MetricsCalculator mc) {
 		List<CompilationUnit> compUnits = mc.getCompilationUnits();
 		for (CompilationUnit comp : compUnits) {
@@ -111,7 +155,9 @@ public class JavaToExcel {
 		list_classes = alphbeticOrder(list_classes);
 	}
 	//------------------[APAGAR DEPOIS]
-
+	/**
+	 * Fills the arraylist {@link lines}
+	 */
 	public void makeLines() {
 		int i = 1;
 		for (ClassDataStructure struct : list_classes) {
@@ -188,7 +234,10 @@ public class JavaToExcel {
 			//
 		}
 	}
-
+	/**
+	 * Writes the excel file using the content of {@link lines}
+	 * @throws IOException If file is not found
+	 */
 	public void writeToExcel() throws IOException {
 
 		Workbook excel = new XSSFWorkbook();
@@ -228,14 +277,15 @@ public class JavaToExcel {
 		excel.close();
 		System.out.println("Completed");
 	}
-
-	public void run() throws IOException {
+	/**
+	 * Initializes the rest of the field variables not initialized in the constructor
+	 */
+	public void run() {
 		Path p = Paths.get(path_java);
 		mc = MetricsCalculator.getMetricsCalculatorInstance();
 		mc.run(p);
 		makeClassDataStructureList(mc);
 		makeLines();
-//		writeToExcel();
 	}
 
 }

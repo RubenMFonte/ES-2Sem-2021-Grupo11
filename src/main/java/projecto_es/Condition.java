@@ -1,17 +1,33 @@
 package projecto_es;
 
 public class Condition {
-
+	/**
+	 * {@link Metrics} being used in the condition
+	 */
 	private Metrics metric;
-	private NumericOperator no;
+	/**
+	 * {@link NumericOperator} being used in the condition
+	 */
+	private NumericOperator numericOperator;
+	/**
+	 * Limit of the metric
+	 */
 	private int threshold;
-
-	public Condition(Metrics metric, NumericOperator no, int threshold) {
+	/**
+	 * Creates a Condition with the arguments
+	 * @param metric {@link metric}
+	 * @param numericOperator {@link numericOperator}
+	 * @param threshold {@link threshold}
+	 */
+	public Condition(Metrics metric, NumericOperator numericOperator, int threshold) {
 		this.metric = metric;
-		this.no = no;
+		this.numericOperator = numericOperator;
 		this.threshold = threshold;
 	}
-
+	/**
+	 * Creates a Condition from a formatted string
+	 * @param condition Formatted string with the Condition variables
+	 */
 	public Condition(String condition) {
 		String[] values = condition.split(":");
 
@@ -29,41 +45,55 @@ public class Condition {
 			System.out.println("Erro no metrics");
 
 		if (values[1].equals("==") || values[1].equals("EQ")) {
-			no = NumericOperator.EQ;
+			numericOperator = NumericOperator.EQ;
 		} else if (values[1].equals(">") || values[1].equals("GT")) {
-			no = NumericOperator.GT;
+			numericOperator = NumericOperator.GT;
 		} else if (values[1].equals("<") || values[1].equals("LT")) {
-			no = NumericOperator.LT;
+			numericOperator = NumericOperator.LT;
 		} else if (values[1].equals(">=") || values[1].equals("GE")) {
-			no = NumericOperator.GE;
+			numericOperator = NumericOperator.GE;
 		} else if (values[1].equals("<=") || values[1].equals("LE")) {
-			no = NumericOperator.LE;
+			numericOperator = NumericOperator.LE;
 		} else if (values[1].equals("!=") || values[1].equals("NE")) {
-			no = NumericOperator.NE;
+			numericOperator = NumericOperator.NE;
 		} else
 			System.out.println("Erro no Numeric Operator");
 
 		threshold = Integer.parseInt(values[2]);
 	}
-
+	/**
+	 * Returns {@link metric}
+	 * @return {@link metric}
+	 */
 	public Metrics getMetric() {
 		return metric;
 	}
-
+	/**
+	 * Returns {@link numericOperator}
+	 * @return {@link numericOperator}
+	 */
 	public NumericOperator getNumericOperator() {
-		return no;
+		return numericOperator;
 	}
-
+	/**
+	 * Returns {@link threshold}
+	 * @return {@link threshold}
+	 */
 	public int getThreshold() {
 		return threshold;
 	}
-
+	/**
+	 * Overrides the default method toString() to return a formatted string
+	 */
 	@Override
 	public String toString() {
-		return metric + ":" + no + ":" + threshold;
+		return metric + ":" + numericOperator + ":" + threshold;
 	}
-
+	/**
+	 * Returns a string formatted to be read by the user
+	 * @return Formatted string
+	 */
 	public String toStringFormatted() {
-		return metric + " " + no.getComparator() + " " + threshold;
+		return metric + " " + numericOperator.getComparator() + " " + threshold;
 	}
 }

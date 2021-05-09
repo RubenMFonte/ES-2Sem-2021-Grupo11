@@ -22,16 +22,25 @@ import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinte
 
 public class MetricsCalculator {
 
-	// Singleton instance
+	/**
+	 * Singleton instance
+	 */
 	private static MetricsCalculator metricsCalculator = null;
 
-	// Class variables
+	/**
+	 * List of Compilation Units
+	 */
 	private List<CompilationUnit> compilationUnits;
-
+	/**
+	 * Creates a MetricsCalculator initializing the {@link compilationUnits}
+	 */
 	private MetricsCalculator() {
 		compilationUnits = new ArrayList<CompilationUnit>();
 	}
-
+	/**
+	 * Returns an instance of MetricsCalculator
+	 * @return a MetricsCalculator, if null creates one
+	 */
 	public static MetricsCalculator getMetricsCalculatorInstance() {
 		if (metricsCalculator == null)
 			metricsCalculator = new MetricsCalculator();
@@ -39,7 +48,11 @@ public class MetricsCalculator {
 		return metricsCalculator;
 	}
 
-
+	/**
+	 * 
+	 * @param method
+	 * @return
+	 */
 	private static boolean isMethodOrConstructor(Node method) {
 		return method.getClass() == MethodDeclaration.class || method.getClass() == ConstructorDeclaration.class;
 	}
@@ -110,7 +123,11 @@ public class MetricsCalculator {
 		return complexity;
 
 	}
-
+	/**
+	 * Returns the number of lines of a class given a class declaration
+	 * @param classNode Class declaration
+	 * @return Number of lines
+	 */
 	public static int getLOC_Class(ClassOrInterfaceDeclaration classNode) {
 		String classBody = LexicalPreservingPrinter.print(LexicalPreservingPrinter.setup(classNode));
 
@@ -118,7 +135,11 @@ public class MetricsCalculator {
 
 		return lines.length;
 	}
-	
+	/**
+	 * Returns the number of methods of a class given a class declaration
+	 * @param class Class declaration
+	 * @return Number of methods
+	 */
 	public static int getNOM_class(ClassOrInterfaceDeclaration classe) {
 
 		int numberOfMethods = 0;
@@ -131,7 +152,11 @@ public class MetricsCalculator {
 
 		return numberOfMethods;
 	}
-
+	/**
+	 * Returns the cyclomatic complexity of a class given a class declaration
+	 * @param class Class declaration
+	 * @return Cyclomatic complexity
+	 */
 	public static int getWMC_class(ClassOrInterfaceDeclaration classe) {
 
 		List<Node> methods = classe.getChildNodes();
@@ -145,7 +170,11 @@ public class MetricsCalculator {
 		
 		return sum_cyclo_class;
 	}
-
+	/**
+	 * Returns the number of lines of a method given a method declaration
+	 * @param method Method declaration
+	 * @return Number of lines of the method
+	 */
 	public static int getLOC_method(CallableDeclaration method) {
 		int lines = 1;
 		int size = method.getChildNodes().size();
@@ -156,7 +185,11 @@ public class MetricsCalculator {
 		}
 		return lines;
 	}
-
+	/**
+	 * Returns the cyclomatic complexity of a method given a mehtod declaration
+	 * @param method Method declaration
+	 * @return Cyclomatic complexity of the method
+	 */
 	public static int getCYCLO_method(CallableDeclaration method) {
 
 		int complexity = 1;
@@ -175,7 +208,10 @@ public class MetricsCalculator {
 		return Optional.ofNullable(filename).filter(f -> f.contains("."))
 				.map(f -> f.substring(filename.lastIndexOf(".") + 1));
 	}
-
+	/**
+	 * Gets all the java files from the project passed as argument and populates the {@link compilationUnits}
+	 * @param filename Name of the java project
+	 */
 	private void populateCompilationUnitsList(Path filename) {
 		JavaParser parser = new JavaParser();
 
@@ -199,11 +235,17 @@ public class MetricsCalculator {
 		}
 
 	}
-
+	/**
+	 * Returns {@link compilationUnits}
+	 * @return {@link compilationUnits}
+	 */
 	public List<CompilationUnit> getCompilationUnits() {
 		return compilationUnits;
 	}
-
+	/**
+	 * Populates the {@link compilationUnits}
+	 * @param filename Name of the java project
+	 */
 	public void run(Path filename) {
 
 		populateCompilationUnitsList(filename);

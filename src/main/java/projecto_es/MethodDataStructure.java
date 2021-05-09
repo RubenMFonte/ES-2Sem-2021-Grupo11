@@ -9,30 +9,46 @@ import com.github.javaparser.ast.body.CallableDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 
-
+/**
+ * Semelhança de funcionamento à classe [ClassDataStruture].
+	  
+	  Só um pequeno adjuste: para além do nome do método é necessário a colocação dos respetivos types dos parâmetros (boolean,int,...).
+	  
+	  Para tal, foi necessário percorrer os parâmetros presentes no método e para cada parâmetro composto pelos: type e nome, retirar apenas o campo 
+	  relevante a inserir, sendo este o type. Por isso, é feita uma verificação para perceber se o pacote da classe dos nós filhos dos [Parameter] 
+	  era o que acabava em "type" para depois se retirar o tipo do type (type tanto pode ser [PrimitiveType] -> (int,boolean,...); tanto como
+	  [ClassOrInterfacetype -> (String,...)].
+	 
+	  Depois da extração, é feita uma manipulação de String de forma a aparecer como pretendido.
+	 
+ *
+ *
+ */
 public class MethodDataStructure extends ClassMethods{
-	
-	/*Semelhança de funcionamento à classe [ClassDataStruture].
-	 * 
-	 * Só um pequeno adjuste: para além do nome do método é necessário a colocação dos respetivos types dos parâmetros (boolean,int,...).
-	 * 
-	 * Para tal, foi necessário percorrer os parâmetros presentes no método e para cada parâmetro composto pelos: type e nome, retirar apenas o campo 
-	 * relevante a inserir, sendo este o type. Por isso, é feita uma verificação para perceber se o pacote da classe dos nós filhos dos [Parameter] 
-	 * era o que acabava em "type" para depois se retirar o tipo do type (type tanto pode ser [PrimitiveType] -> (int,boolean,...); tanto como
-	 * [ClassOrInterfacetype -> (String,...)].
-	 * 
-	 *  Depois da extração, é feita uma manipulação de String de forma a aparecer como pretendido.
-	 * 
+	/**
+	 * Number of lines of the method
+	 */
+	private int loc_method;
+	/**
+	 * Cyclomatic complexity of the method
+	 */
+	private int cyclo_method;
+	/**
+	 * <p>A Hash Map that receives the key is a String with the name of the code smell and a value Boolean that represents if the code smells is true or false</p>
+	 */
+	private HashMap<String, Boolean> methodCodeSmellSpecialistValue = new HashMap<>();
+	/**
+	 * Method's ID
+	 */
+	private int methodID;
+	/**
 	 * 
 	 */
-	
-	private int loc_method;
-	private int cyclo_method;
-	private HashMap<String, Boolean> methodCodeSmellSpecialistValue = new HashMap<>();
-	//Atributos Necessários
-	private int methodID;
 	private String methodClassificationDetected;
-	
+	/**
+	 * 
+	 * @param md_received
+	 */
 	public MethodDataStructure (CallableDeclaration md_received) {
 		super("");
 		String methodName = md_received.getNameAsString();
@@ -40,19 +56,32 @@ public class MethodDataStructure extends ClassMethods{
 		this.methodName = methodName.concat(methodArguments);
 		calculateMethodMetrics(md_received);
 	}
-	
+	/**
+	 * Creates a MethodDataStructure with the arguments
+	 * @param methodID {@link methodID}
+	 * @param methodName {@link methodName}
+	 * @param loc_method {@link loc_method}
+	 * @param cyclo_method {@link cyclo_method}
+	 */
 	public MethodDataStructure (int methodID, String methodName, int loc_method, int cyclo_method) {
 		super(methodName);
 		this.methodID = methodID;
 		this.loc_method = loc_method;
 		this.cyclo_method = cyclo_method;
 	}
-	
+	/**
+	 * 
+	 * @param md_received
+	 */
 	private void calculateMethodMetrics(CallableDeclaration md_received) {
 		this.cyclo_method = MetricsCalculator.getCYCLO_method(md_received);
 		this.loc_method = MetricsCalculator.getLOC_method(md_received);
 	}
-	
+	/**
+	 * 
+	 * @param md
+	 * @return
+	 */
 	private String getParameters(CallableDeclaration md) {
 		String arguments = "";
 		List<Parameter> parameters = md.getParameters();
@@ -65,34 +94,57 @@ public class MethodDataStructure extends ClassMethods{
 			return "(" + arguments.substring(0, arguments.length() - 1) + ")";
 		}
 	}
-	
+	/**
+	 * <p>Takes the name of a code smell and if it's true or false to the class, then adds the pair to the HashMap {@link methodCodeSmellSpecialistValue}</p> 
+	 * @param codeSmellName Name of the code smell
+	 * @param codeSmellSpecialistValue Indicates if the method has the code smell
+	 */
 	public void setMethodCodeSmellSpecialistValue(String codeSmellName, boolean codeSmellSpecialistValue) {
 		methodCodeSmellSpecialistValue.put(codeSmellName, codeSmellSpecialistValue);
 	}
-
+	/**
+	 * Returns the value of the boolean that pairs with the given code smell.
+	 * @param codeSmellName Name of the code smell
+	 * @return A boolean, null of the code smell doens't exist in the hash map.
+	 */
 	public Boolean getMethodCodeSmellSpecialistValue(String codeSmellName) {
 		if (methodCodeSmellSpecialistValue.containsKey(codeSmellName))
 			return methodCodeSmellSpecialistValue.get(codeSmellName);
 		return null;
 	}
-	
+	/**
+	 * Returns {@link methodID}
+	 * @return {@link methodID}
+	 */
 	public int getmethodID() {
 			return methodID;
 	}
 	
-	
+	/**
+	 * Returns {@link loc_method}
+	 * @return {@link loc_method}
+	 */
 	public int getLOCMetric () {
 		return loc_method;	
 	}
-	
+	/**
+	 * Returns {@link cyclo_method}
+	 * @return {@link cyclo_method}
+	 */
 	public int getCYCLOMetric () {
 		return cyclo_method;	
 	}
-	
+	/**
+	 * 
+	 * @param classificationDetected
+	 */
 	public void setMethodClassificationDetected(String classificationDetected) {
 		this.methodClassificationDetected = classificationDetected;
 	}
-
+	/**
+	 * Returns {@link methodClassificationDetected}
+	 * @return {@link methodClassificationDetected}
+	 */
 	public String getMethodClassificationDetected() {
 		return methodClassificationDetected;
 	}

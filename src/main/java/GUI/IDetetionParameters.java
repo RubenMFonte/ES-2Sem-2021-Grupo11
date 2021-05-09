@@ -22,7 +22,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import projecto_es.ConditionJPanel;
 import projecto_es.Rule;
 
 public class IDetetionParameters {

@@ -17,15 +17,31 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 
 public class CodeSmellsCalculator {
 	
-	// Singleton instance
+	/**
+	 *  Singleton instance
+	 */
 	private static CodeSmellsCalculator codeSmellsCalculator = null;
 
 	// Class variables
+	/**
+	 * List of {@link ClassDataStructure} the user
+	 */
 	private List<ClassDataStructure> classDataStructureList;
+	/**
+	 * List of {@link ClassBooleanObject} from the specialist
+	 */
 	private List<ClassBooleanObject> classWithSpecialistValues;
+	/**
+	 * List of active rules
+	 */
 	private List<Rule> activeRules;
+	/**
+	 * List of {@link CodeSmellStastistics}
+	 */
 	private List<CodeSmellStatistics> statistics;
-
+	/**
+	 * Creates a CodeSmellsCalculator initializing all the field variables.
+	 */
 	public CodeSmellsCalculator() {
 		classDataStructureList = new ArrayList<ClassDataStructure>();
 		classWithSpecialistValues = new ArrayList<ClassBooleanObject>();
@@ -33,14 +49,22 @@ public class CodeSmellsCalculator {
 		statistics = new ArrayList<CodeSmellStatistics>();
 
 	}
-	
+	/**
+	 * Returns an instance of CodeSmellsCalculator
+	 * @return a CodeSmellsCalculator, if null creates one
+	 */
 	public static CodeSmellsCalculator getCodeSmellsCalculatorInstance() {
 		if (codeSmellsCalculator == null)
 			codeSmellsCalculator = new CodeSmellsCalculator();
 
 		return codeSmellsCalculator;
 	}
-
+	
+	/**
+	 * Gets the file with the given name and adds the active rules to the list of active rules
+	 * @param filename Name of the file
+	 * @throws FileNotFoundException File with the given name not found
+	 */
 	public void getCodeSmellsActiveRules(String filename) throws FileNotFoundException {
 		File saveRule = new File(filename);
 		Scanner myReader = new Scanner(saveRule);
@@ -53,7 +77,10 @@ public class CodeSmellsCalculator {
 		myReader.close();
 	}
 
-	// Podem alterar a assinatura do método se vos for conveniente
+	/**
+	 * Returns a JTable with the data from the list of ClassDataStructure
+	 * @return A JTable
+	 */
 	public JTable fillCodeSmellTable() {
 		String[] columnNames = { "Class", "is_God_Class", "Method ID", "Method Name", "is_long_method" };
 		int statisticsJTNumberLines = 0;
@@ -77,7 +104,9 @@ public class CodeSmellsCalculator {
 		return new JTable(statisticsJT, columnNames);
 	}
 
-	// Podem alterar a assinatura do método se vos for conveniente
+	/**
+	 * Calculate each of the {@link CodeSmellStatistics} and adds it to the list of CodeSmellStatistics
+	 */
 	public void initProcessToCalculateCodeSmellsStatistics() {
 		for (Rule rule : activeRules) {
 			CodeSmellStatistics css = new CodeSmellStatistics(rule.getCodeSmell(), 0, 0, 0, 0);
@@ -108,6 +137,13 @@ public class CodeSmellsCalculator {
 		System.out.println("--------------END STATUS----------------");
 	}
 
+	/**
+	 * Calculates the values of {@link CodeSmellStatistics} using the arguments
+	 * @param classToDetect Class being used to calculate the statistics
+	 * @param methodToDetect Method being used to calculate the statistics
+	 * @param regra Active rule watching out for the code smell
+	 * @param css CodeSmellStatistics being calculated
+	 */
 	public void calculateCodeSmellStatistics(ClassDataStructure classToDetect, MethodDataStructure methodToDetect, Rule regra, CodeSmellStatistics css) {
 		List<Condition> conditionsActive = regra.getConditions();
 		List<Boolean> bol = new ArrayList<>();
@@ -156,7 +192,13 @@ public class CodeSmellsCalculator {
 		System.out.println(css.getCodeSmell() + " Statistics " + " VP " + css.getTrue_positive() + " FP " + css.getFalse_positive()
 				+ " FN " + css.getFalse_negative() + " VN " + css.getTrue_negative());
 	}
-
+	/**
+	 * Returns a string with classification of the evaluation on a code smell  
+	 * @param sts The {@link CodeSmellStatistics} being updated
+	 * @param our The user evaluation
+	 * @param specialist The specialist evaluation
+	 * @return A String
+	 */
 	private String classificationBetweenEvaluationAndSpecialist(CodeSmellStatistics sts, boolean our, boolean specialist) {
 		String classification = "";
 		if (our == true && specialist == true) {
@@ -179,7 +221,13 @@ public class CodeSmellsCalculator {
 		}
 		return classification;
 	}
-
+	/**
+	 * Compares the booleans and returns according with the {@link LogicalOperator} in use
+	 * @param value Boolean being compared
+	 * @param valueToCompareWith Boolean being compared to
+	 * @param logicalOperator AND or OR
+	 * @return A boolean 
+	 */
 	private boolean compareConditionBooleans(boolean value, boolean valueToCompareWith, LogicalOperator logicalOperator) {
 		switch (logicalOperator) {
 		case AND:
@@ -189,7 +237,12 @@ public class CodeSmellsCalculator {
 		}
 		return true;
 	}
-
+	/**
+	 * Returns the metric from the {@link ClassDataStructure} that matches the one in the {@link Condition}
+	 * @param {@link Condition} being used to evaluate
+	 * @param classToDetect Class being evaluated
+	 * @return The metric that matches the one in the condition a, 0 if none matches
+	 */
 	private int giveClassMetricValue(Condition a, ClassDataStructure classToDetect) {
 		switch (a.getMetric()) {
 		case NOM_CLASS:
@@ -204,7 +257,12 @@ public class CodeSmellsCalculator {
 		}
 		return 0;
 	}
-
+	/**
+	 * Returns the metric from the {@link MethodDataStructure} that matches the one in the {@link Condition}
+	 * @param {@link Condition} being used to evaluate
+	 * @param methodToDetect Method being evaluated
+	 * @return The metric that matches the one in the condition a, 0 if none matches
+	 */
 	private int giveMethodMetricValue(Condition a, MethodDataStructure methodToDetect) {
 		switch (a.getMetric()) {
 		case LOC_METHOD:
@@ -216,7 +274,12 @@ public class CodeSmellsCalculator {
 		}
 		return 0;
 	}
-
+	/**
+	 * Returns a boolean after comparing the threshold and the {@link NumericOperator} that matches the one in the {@link Condition}
+	 * @param {@link Condition} being used to evaluate 
+	 * @param metric_value Threshold of the {@link Condition}
+	 * @return A boolean depending on the {@link NumericOperator}, true if there's no matches
+	 */
 	private boolean giveConditionBooleanValue(Condition a, int metric_value) {
 		switch (a.getNumericOperator()) {
 		case EQ:
@@ -252,7 +315,9 @@ public class CodeSmellsCalculator {
 		}
 		return true;
 	}
-	
+	/**
+	 * Gets the code smell evaluation from the {@link classWithSpecialistValues} and saves it in the same method in the {@link classDataStructureList}
+	 */
 	private void defineGodClassValueFromSpecialistToClass() {
 		for(ClassDataStructure ourClass : classDataStructureList) {
 			System.out.println("Nesta Classe: " + ourClass.getClassName());
@@ -280,7 +345,9 @@ public class CodeSmellsCalculator {
 			
 		}
 	}
-	
+	/**
+	 * Gets the code smell evaluation from the {@link classWithSpecialistValues} and saves it in the same method in the {@link classDataStructureList}
+	 */
 	private void defineLongMethodValueFromSpecialistToMethod(List<MethodDataStructure> lmds, List<MethodBoolean> mb) {
 		for(MethodDataStructure ourMethod : lmds) {
 			System.out.println("Neste Método: " + ourMethod.getMethodName());
@@ -304,7 +371,12 @@ public class CodeSmellsCalculator {
 		}
 	}
 	
-	
+	/**
+	 * Defines all the variables needed for the {@link CodeSmellsCalculator}
+	 * @param classesJasmlNos List of {@link ClassDataStructure} from the user excel
+	 * @param classesJasmlProfs List of {@link ClassBooleanObject} from the specialist excel
+	 * @throws FileNotFoundException File with the rules not found
+	 */
 	public void run(List<ClassDataStructure> classesJasmlNos, List<ClassBooleanObject> classesJasmlProfs) throws FileNotFoundException {
 		this.classDataStructureList = classesJasmlNos;
 		this.classWithSpecialistValues = classesJasmlProfs;
@@ -319,19 +391,31 @@ public class CodeSmellsCalculator {
 			}
 		}
 	}
-	
+	/**
+	 * Returns {@link classDataStructureList}
+	 * @return {@link classDataStructureList}
+	 */
 	public List<ClassDataStructure> getClassDataStructureList() {
 		return classDataStructureList;
 	}
-
+	/**
+	 * Returns {@link activeRules}
+	 * @return {@link activeRules}
+	 */
 	public List<Rule> getActiveRules() {
 		return activeRules;
 	}
-
+	/**
+	 * Returns {@link statistics}
+	 * @return {@link statistics}
+	 */
 	public List<CodeSmellStatistics> getCodeSmellsStatistics() {
 		return statistics;
 	}
-
+	/**
+	 * Sets {@link statistics}
+	 * @param statistics {@link statistics}
+	 */
 	public void setCodeSmellsStatistics(List<CodeSmellStatistics> statistics) {
 		this.statistics = statistics;
 	}

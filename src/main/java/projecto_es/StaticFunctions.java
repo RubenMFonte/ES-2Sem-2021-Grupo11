@@ -15,7 +15,13 @@ import java.util.stream.Collectors;
 import java.util.List;
 
 public class StaticFunctions {
-
+	/**
+	 * Gets a rule and a file and tries to write the {@link Rule} on said file
+	 * @param rule Rule to be written
+	 * @param file File to be written on
+	 * @return A boolean on the success of the task
+	 * @throws IOException If file doesn't exist
+	 */
 	public static Boolean saveRule(Rule rule, File file) throws IOException {
 		int cont = 0;
 		Scanner myReader = new Scanner(file);
@@ -42,7 +48,11 @@ public class StaticFunctions {
 		}
 		return true;
 	}
-
+	/**
+	 * Sorts the list of string alpabetically
+	 * @param list_string List to be sorted
+	 * @return Sorted list
+	 */
 	public static List<String> sortAlphabetically(List<String> list_string) {
 		Sorter s = new Sorter(list_string);
 		List<String> return_list = s.getListSorted();

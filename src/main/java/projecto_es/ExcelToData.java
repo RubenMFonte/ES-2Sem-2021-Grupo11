@@ -19,19 +19,56 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 public class ExcelToData {
 	
-	//É necessário o methodID
+	/**
+	 * Number of the cell with the methods's ID
+	 */
 	static final int methodID = 0;
+	/**
+	 * Number of the cell with the package name
+	 */
 	static final int packagename =1;
+	/**
+	 * Number of the cell with the class's name
+	 */
 	static final int classname=2;
+	/**
+	 * Number of the cell with the method's name
+	 */
 	static final int methodname=3;
+	/**
+	 * Number of the cell with the number of methods within the class
+	 */
 	static final int nomclass=4;
+	/**
+	 * Number of the cell with the number of lines of the class
+	 */
 	static final int locclass=5;
+	/**
+	 * Number of the cell with the cyclomatic complexity of the class
+	 */
 	static final int wmcclass=6;
+	/**
+	 * Number of the cell with the classification of the active rule about the code smell God Class
+	 */
 	static final int godclass=7;
+	/**
+	 * Number of the cell with the number of lines of the method
+	 */
 	static final int locmethod=8;
+	/**
+	 * Number of the cell with the cyclomatic complexity of the method
+	 */
 	static final int cyclomethod=9;
+	/**
+	 * Number of the cell with the classification of the active rule about the code smell Long Method
+	 */
 	static final int longmethod = 10;
-
+	/**
+	 * Returns a list of {@link ClassObjects} from the excel file with the args name
+	 * @param args Name of the excel file
+	 * @param bObjects
+	 * @return A list of {@link ClassDataStructure} if the bObjects is , list of {@link ClassBooleanObject} if bObjects is
+	 */
 	public static List<ClassObjects> getallClass(String args, Boolean bObjects ) {
 		List<ClassObjects> allObject = new ArrayList<>();
 		try {
@@ -85,7 +122,13 @@ public class ExcelToData {
 		}
 		return allObject ;
 	}
-	
+	/**
+	 * Reads the data from the specified cell
+	 * @param vRow Number of the row
+	 * @param vColumn Number of the column
+	 * @param wb The workbook it's reading from
+	 * @return A string with the data of the cell
+	 */
 	 static String ReadCellData(int vRow, int vColumn, Workbook wb) {
 		String value = null;
 		Sheet sheet = wb.getSheetAt(0);
