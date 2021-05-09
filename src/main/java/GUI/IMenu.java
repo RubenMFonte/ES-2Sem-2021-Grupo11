@@ -88,7 +88,9 @@ public class IMenu {
 			frame.setLocationRelativeTo(null);
 		}
 	
-		
+		/**
+		 * Initiates the {@link InterfaceMetricsStatistics}
+		 */
 		public void setShowStatisitcs() {
 			show_statistics = new JButton("Visualizar Estat\u00EDsticas");
 			show_statistics.setBounds(39, 150, 209, 57);
@@ -106,7 +108,9 @@ public class IMenu {
 				}
 			});
 		}
-		
+		/**
+		 * Initiates the {@link ICodeSmellsRules}, it needs a text file with the rules to exist or it won't open the new interface
+		 */
 		public void setCodeRules() {
 			code_rules = new JButton("CodeSmells e regras");
 			code_rules.setBounds(285, 83, 209, 57);
@@ -127,6 +131,9 @@ public class IMenu {
 				}
 			});
 		}
+		/**
+		 * Initiates the {@link IMetricsCalculator}
+		 */
 		public void setCreateExcel() {
 			create_excel = new JButton("Criar Excel com métricas");
 			create_excel.setBounds(39, 83, 209, 57);
@@ -142,6 +149,9 @@ public class IMenu {
 				}
 			});
 		}
+		/**
+		 * Initiates the {@link ICodeSmellsQuality}
+		 */
 		public void setQualityCodeSmells() {
 			quality_codesmells= new JButton("Deten\u00E7\u00E3o e Qualidade dos CodeSmells");
 			quality_codesmells.setFont(new Font("Tahoma", Font.BOLD, 9));

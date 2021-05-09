@@ -74,9 +74,21 @@ public class ICodeSmellsRules {
 	private JLabel labelCodeSmellsDisp;
 	private JLabel ruleHistory;
 	private JLabel activeRule;
+	/**
+	 * List with all the rules
+	 */
 	private List<Rule> allRules;
+	/**
+	 * List with all the code smells
+	 */
 	private List<String> allCodeSmells;
+	/**
+	 * List with the rules that are on display
+	 */
 	private List<Rule> rulesOnDisplay;
+	/**
+	 * Selected code smell from {@link codeSmells}
+	 */
 	private String codeSmell;
 	/**
 	 * Launch the application.
@@ -174,7 +186,10 @@ public class ICodeSmellsRules {
 		frmCodeSmells.setResizable(false);
 		frmCodeSmells.setLocationRelativeTo(null);
 	}
-
+	/**
+	 * Updates the {@link allRules} with all the rules from the text file
+	 * @throws FileNotFoundException If the file is not found
+	 */
 	public void updateRules() throws FileNotFoundException {
 		allRules = new ArrayList<>();
 		File saveRule = new File("saveRule.txt");
@@ -185,7 +200,11 @@ public class ICodeSmellsRules {
 		}
 		myReader.close();
 	}
-
+	/**
+	 * Gets all the rules for a given code smell
+	 * @param codeSmell Code smell in question
+	 * @return The list of rules of the code smell in question
+	 */
 	public List<Rule> filterRule(String codeSmell) {
 		List<Rule> listFiltered = new ArrayList<>();
 		for (int i = 0; i < allRules.size(); i++) {
@@ -194,7 +213,10 @@ public class ICodeSmellsRules {
 		}
 		return listFiltered;
 	}
-
+	/**
+	 * Creates the JTable with the rules of the given list
+	 * @param rulesList List with the rules
+	 */
 	public void createTable(List<Rule> rulesList) {
 		String[] columnNames = { "Regra", "Condição" };
 		String[][] allRulesJT = new String[rulesList.size()][2];
@@ -220,7 +242,10 @@ public class ICodeSmellsRules {
 		rulesScrollPane.setViewportView(rules);
 
 	}
-	
+	/**
+	 * Makes it so the cell has the optimal size for the data that's in it
+	 * @param colIndex Index of the column
+	 */
 	private void setColumnWidth(int colIndex) {
 		DefaultTableColumnModel colModel = (DefaultTableColumnModel) rules.getColumnModel();
 	    TableColumn col = colModel.getColumn(colIndex);
@@ -236,7 +261,10 @@ public class ICodeSmellsRules {
 		
 		col.setPreferredWidth(width + 10);
 	}
-
+	/**
+	 * Makes the given rule appear in the {@link activatedRule}
+	 * @param rule Activated rule
+	 */
 	public void createActivedRule(Rule rule) {
 		String[] columnNames = { "Regra", "Condição" };
 		String[][] activeRule = new String[1][2];
@@ -258,13 +286,9 @@ public class ICodeSmellsRules {
 		activatedRule.setFillsViewportHeight(true);
 		activatedRuleScrollPane.setViewportView(activatedRule);
 	}
-
-	public void printRows() {
-		for (int i = 0; i < rules.getRowCount(); i++) {
-			System.out.println("linha " + i + " = " + rules.getValueAt(i, 0) + ":" + rules.getValueAt(i, 1));
-		}
-	}
-
+	/**
+	 * Changes the rules on display based on the selected code smell
+	 */
 	public void selectAction() {
 		codeSmells.addListSelectionListener(new ListSelectionListener() {
 
@@ -279,7 +303,11 @@ public class ICodeSmellsRules {
 		});
 		;
 	}
-
+	/**
+	 * Checks which rule is active
+	 * @param filterRule List of rules already filtered for a code smell
+	 * @return The active rule
+	 */
 	public Rule findActiveCodeSmell(List<Rule> filterRule) {
 		for (int i = 0; i < filterRule.size(); i++) {
 			if (filterRule.get(i).isActive() == true)
@@ -287,7 +315,9 @@ public class ICodeSmellsRules {
 		}
 		return null;
 	}
-
+	/**
+	 * Initializes and creates the rest of the components for the GUI
+	 */
 	public void draw() {
 
 		goBack = new JButton("<");
@@ -343,12 +373,17 @@ public class ICodeSmellsRules {
 
 		frmCodeSmells.getContentPane().setLayout(groupLayout);
 	}
-
+	/**
+	 * Shows a pop up with a message
+	 * @param popUp Message to be shown
+	 */
 	public void popUp(String popUp) {
 		JFrame parent = new JFrame();
 		JOptionPane.showMessageDialog(parent, popUp);
 	}
-
+	/**
+	 * Initiates the {@link IDetetionParameters} to create a rule for the selected code smell
+	 */
 	public void createRule() {
 		newRule.addActionListener(new ActionListener() {
 			@Override
@@ -360,7 +395,9 @@ public class ICodeSmellsRules {
 		});
 
 	}
-
+	/**
+	 * Initiates the {@link IDetetionParameters} to edit the selected rule
+	 */
 	public void editRule() {
 		editRule.addActionListener(new ActionListener() {
 
@@ -377,7 +414,9 @@ public class ICodeSmellsRules {
 
 		});
 	}
-
+	/**
+	 * Returns to the {@link IMenu}
+	 */
 	public void goBack() {
 		goBack.addActionListener(new ActionListener() {
 
@@ -389,7 +428,9 @@ public class ICodeSmellsRules {
 			}
 		});
 	}
-
+	/**
+	 * Activates the selected rule and deactivates the active rule
+	 */
 	public void activatedRule() {
 		activateRule.addActionListener(new ActionListener() {
 
@@ -427,7 +468,11 @@ public class ICodeSmellsRules {
 			}
 		});
 	}
-
+	/**
+	 * Finds the given rule in the text file and changes it's active status
+	 * @param rule {@link Rule} to change
+	 * @throws IOException If the file doesn't exist or not found
+	 */
 	public void replaceRule(Rule rule) throws IOException {
 		BufferedReader file = new BufferedReader(new FileReader("saveRule.txt"));
 		StringBuffer inputBuffer = new StringBuffer();

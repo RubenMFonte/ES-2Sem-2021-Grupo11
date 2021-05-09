@@ -64,10 +64,10 @@ public class ExcelToData {
 	 */
 	static final int longmethod = 10;
 	/**
-	 * Returns a list of {@link ClassObjects} from the excel file with the args name
+	 * This function receives the path from an excel file and a boolean to indicate that the boolean is discarded
 	 * @param args Name of the excel file
 	 * @param bObjects
-	 * @return A list of {@link ClassDataStructure} if the bObjects is false , list of {@link ClassBooleanObject} if bObjects is true
+	 * @return A list of {@link ClassObjects}[Abstract], {@link ClassDataStructure} if the bObjects is false, list of {@link ClassBooleanObject} if bObjects is true
 	 */
 	public static List<ClassObjects> getallClass(String args, Boolean bObjects ) {
 		List<ClassObjects> allObject = new ArrayList<>();

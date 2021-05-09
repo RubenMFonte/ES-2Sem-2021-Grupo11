@@ -99,7 +99,9 @@ public class IMetricsCalculator {
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 	}
-
+	/**
+	 * Select the project that you want to get the metrics from
+	 */
 	public void setSelecionarProjeto_Button() {
 		select_file = new JButton("Selecionar Projeto");
 		select_file.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -120,7 +122,9 @@ public class IMetricsCalculator {
 			}
 		});
 	}
-
+	/**
+	 * Asks the user the path it wants to save the excel with the metrics and then creates the excel
+	 */
 	public void setExecutar_Button() {
 		b_executar = new JButton("Salvar Excel");
 		b_executar.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -147,7 +151,9 @@ public class IMetricsCalculator {
 		});
 
 	}
-
+	/**
+	 * Initiates the {@link InterfaceMetricsStatistics} with the path of the created excel
+	 */
 	public void setShowStatisitcs_Button() {
 		show_Statistics = new JButton("Ver Estatisiticas");
 		show_Statistics.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -168,12 +174,18 @@ public class IMetricsCalculator {
 			}
 		});
 	}
-
+	/**
+	 * Shows a pop up with a message
+	 * @param popUp Message to be shown
+	 */
 	public void popUp(String popUp) {
 		JFrame parent = new JFrame();
 		JOptionPane.showMessageDialog(parent, popUp);
 	}
-
+	/**
+	 * Saves the excel with the data from the project selected, uses {@link JavaToExcel#writeToExcel()}
+	 * @param jte {@link JavaToExcel}
+	 */
 	public void saveFile(JavaToExcel jte) {
 		JFileChooser save_exel = new JFileChooser();
 		save_exel.setDialogTitle("Salvar ficheiro excel");
@@ -201,7 +213,9 @@ public class IMetricsCalculator {
 			}
 		}
 	}
-
+	/**
+	 * Returns to the {@link IMenu}
+	 */
 	public void set_GoBackButton() {
 		goBack = new JButton("<");
 		goBack.setBounds(13, 128, 119, 35);
@@ -217,7 +231,11 @@ public class IMetricsCalculator {
 			}
 		});
 	}
-
+	/**
+	 * Gets the name of the project and puts a suffix "_metrics.xlsx"
+	 * @param project Name of the project
+	 * @return Name of the project plus "_metrics.xlsx"
+	 */
 	public String generate_nameFile(String project) {
 		boolean stop = false;
 		int i;

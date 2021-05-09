@@ -42,12 +42,12 @@ public class MethodDataStructure extends ClassMethods{
 	 */
 	private int methodID;
 	/**
-	 * 
+	 * The classification of the evaluation of the code smell by the user's active rule compared to the specialist's evaluation
 	 */
 	private String methodClassificationDetected;
 	/**
-	 * 
-	 * @param md_received
+	 * Creates a MethodDataStructure using the name of the method
+	 * @param md_received Declaration of the method
 	 */
 	public MethodDataStructure (CallableDeclaration md_received) {
 		super("");
@@ -70,17 +70,17 @@ public class MethodDataStructure extends ClassMethods{
 		this.cyclo_method = cyclo_method;
 	}
 	/**
-	 * 
-	 * @param md_received
+	 * Calculates the {@link loc_method} and {@link cyclo_method} of the method
+	 * @param md_received Declaration of the method
 	 */
 	private void calculateMethodMetrics(CallableDeclaration md_received) {
 		this.cyclo_method = MetricsCalculator.getCYCLO_method(md_received);
 		this.loc_method = MetricsCalculator.getLOC_method(md_received);
 	}
 	/**
-	 * 
-	 * @param md
-	 * @return
+	 * Returns the parameters of the method given
+	 * @param md Method to get the parameters
+	 * @return The parameters of the method, an empty string if it doens't have any parameters
 	 */
 	private String getParameters(CallableDeclaration md) {
 		String arguments = "";
@@ -135,8 +135,8 @@ public class MethodDataStructure extends ClassMethods{
 		return cyclo_method;	
 	}
 	/**
-	 * 
-	 * @param classificationDetected
+	 * Sets {@link methodClassificationDetected}
+	 * @param classificationDetected {@link methodClassificationDetected}
 	 */
 	public void setMethodClassificationDetected(String classificationDetected) {
 		this.methodClassificationDetected = classificationDetected;

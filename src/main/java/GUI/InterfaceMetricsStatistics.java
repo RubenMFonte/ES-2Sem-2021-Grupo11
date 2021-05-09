@@ -42,25 +42,7 @@ import java.util.List;
 
 public class InterfaceMetricsStatistics extends JFrame {
 
-	public GeneralStatistics getStatisticsGeneral() {
-		return statisticsGeneral;
-	}
-
-	public void setStatisticsGeneral(GeneralStatistics statisticsGeneral) {
-		this.statisticsGeneral = statisticsGeneral;
-	}
-
-	public JList<String> getMetricsMethodsJlist() {
-		return metricsMethodsJlist;
-	}
-
-	public void setMetricsMethodsJlist(JList<String> metricsMethodsJlist) {
-		this.metricsMethodsJlist = metricsMethodsJlist;
-	}
-
 	private JPanel contentPane;
-	private JTable table;
-	private JTable table_1;
 
 	private JList<String> packageJList = new JList<String>();
 	private JList<String> classJList = new JList<String>();
@@ -75,11 +57,44 @@ public class InterfaceMetricsStatistics extends JFrame {
 	private JTextField textField;
 
 	private String excelPath;
-
+	/**
+	 * List with the classes
+	 */
 	private List<ClassDataStructure> allClass;
+	/**
+	 * {@link GeneralSatistics}
+	 */
 	private GeneralStatistics statisticsGeneral;
 	private JScrollPane scrollPane_2;
 	private JButton buttonShowStatistics;
+	/**
+	 * Returns {@link statisticsGeneral}
+	 * @return {@link statisticsGeneral}
+	 */
+	public GeneralStatistics getStatisticsGeneral() {
+		return statisticsGeneral;
+	}
+	/**
+	 * Sets  {@link statisticsGeneral}
+	 * @param statisticsGeneral  {@link statisticsGeneral}
+	 */
+	public void setStatisticsGeneral(GeneralStatistics statisticsGeneral) {
+		this.statisticsGeneral = statisticsGeneral;
+	}
+	/**
+	 * Returns {@link metricsMethodsJlist}
+	 * @return {@link metricsMethodsJlist}
+	 */
+	public JList<String> getMetricsMethodsJlist() {
+		return metricsMethodsJlist;
+	}
+	/**
+	 * Sets  {@link metricsMethodsJlist}
+	 * @param metricsMethodsJlist  {@link metricsMethodsJlist}
+	 */
+	public void setMetricsMethodsJlist(JList<String> metricsMethodsJlist) {
+		this.metricsMethodsJlist = metricsMethodsJlist;
+	}
 	
 	
 	/**
@@ -97,22 +112,25 @@ public class InterfaceMetricsStatistics extends JFrame {
 			}
 		});
 	}
-
 	/**
 	 * Create the frame.
 	 */
-
 	public InterfaceMetricsStatistics() {
 		initialize();
 		setVisible(true);
 	}
-
+	/**
+	 * Creates the frame with the path given
+	 * @param excelPath Path given
+	 */
 	public InterfaceMetricsStatistics(String excelPath) {
 		initialize();
 		setVisible(true);
 		textField.setText(excelPath);
 	}
-
+	/**
+	 * Initialize the contents of the frame.
+	 */
 	private void initialize() {		
 		
 		setTitle("Visualizar Estatísticas");
@@ -411,83 +429,101 @@ public class InterfaceMetricsStatistics extends JFrame {
 //		selectActionJListPackages();
 	}
 
-/*	public void selectActionJListPackages() {
-System.out.println("entrou no selectAction antes do valueChanged...");
-		packageJList.addListSelectionListener(new ListSelectionListener() {
-				
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-System.out.println("entrou no selectAction...");
-		int index = packageJList.getSelectedIndex();
-				if (packageJList.getSelectedIndex() != -1) {
-					packageString = (String)packageJList.getSelectedValue();
-					JList<String> classesJList_Temp = ListsToInterface.getListsToInterfaceInstance().showClasses(packageString);
-					setClassJList(classesJList_Temp);
-					scrollPane_2.setViewportView(classesJList_Temp);
-					System.out.println("1entrou no selectAction...");
-      		}else {
-					System.out.println("error: Package not selected!");
-				}
-			
-			} 
-		});
-		;
-	}
-*/	
+	/**
+	 * Sets {@link methodJList} 
+	 * @param methodsJList List of methods
+	 */
 	public void setMethodsJList(JList methodsJList) {
 		this.methodsJList = methodsJList;
 	}
-	
+	/**
+	 * Sets {@link textField}
+	 * @param textField {@link textField}
+	 */
 	public void setTextField(JTextField textField) {
 		this.textField = textField;
 	}
-
+	/**
+	 * Returns the JList with the names of the packages
+	 * @return JList with Strings
+	 */
 	public JList<String> getPackageJList() {
 		return packageJList;
 	}
-
+	/**
+	 * Sets JList with the names of the packages
+	 * @param packageJList JList with the packages' names
+	 */
 	public void setPackageJList(JList packageJList) {
 		this.packageJList = packageJList;
 	}
-
+	/**
+	 * Returns the JList with the names of the classes
+	 * @return JList with Strings
+	 */
 	public JList<String> getClassJList() {
 		return classJList;
 	}
-
+	/**
+	 * Sets JList with the names of the classes
+	 * @param packageJList JList with the classes' names
+	 */
 	public void setClassJList(JList<String> classJList) {
 		this.classJList = classJList;
 	}
-
+	/**
+	 * Returns the JList with the names of the metrics of the class and their value
+	 * @return JList with Strings
+	 */
 	public JList<String> getMetricsClassJlist() {
 		return metricsClassJlist;
 	}
-
+	/**
+	 * Sets JList with the metrics of the classes
+	 * @param packageJList JList with the classes' metrics
+	 */
 	public void setMetricsClassJlist(JList<String> metricsClassJlist) {
 		this.metricsClassJlist = metricsClassJlist;
 	}
-
+	/**
+	 * Returns the JList with the statistics
+	 * @return JList with Strings
+	 */
 	public JList<String> getStatisticsJlist() {
 		return statisticsJlist;
 	}
-
+	/**
+	 * Sets JList with the statistics
+	 * @param packageJList JList with the statistics
+	 */
 	public void setStatisticsJlist(JList<String> statisticsJlist) {
 		this.statisticsJlist = statisticsJlist;
 	}
-
+	/**
+	 * Returns the JList with the names of the methods
+	 * @return JList with Strings
+	 */
 	public JList<String> getMethodsJList() {
 		return methodsJList;
 	}
-
+	/**
+	 * Returns {@link allClass}
+	 * @return {@link allClass}
+	 */
 	public List<ClassDataStructure> getAllClass() {
 		return allClass;
 	}
-
+	/**
+	 * Sets {@link allClass}
+	 * @param allClass {@link allClass}
+	 */
 	public void setAllClass(List<ClassDataStructure> allClass) {
 		this.allClass = allClass;
 	}
-
-	
-
+	/**
+	 * Returns {@link buttonShowStatistics}
+	 * @return {@link buttonShowStatistics}
+	 */
 	public JButton getButtonShowStatistics() {
 		return buttonShowStatistics;
 	}

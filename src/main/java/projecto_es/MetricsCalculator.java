@@ -49,14 +49,18 @@ public class MetricsCalculator {
 	}
 
 	/**
-	 * 
-	 * @param method
-	 * @return
+	 * Returns a boolean depending if the method given is a method or a constructor
+	 * @param method Method to be evaluated
+	 * @return True if it's a method or a constructor, false if it's neither
 	 */
 	private static boolean isMethodOrConstructor(Node method) {
 		return method.getClass() == MethodDeclaration.class || method.getClass() == ConstructorDeclaration.class;
 	}
-
+	/**
+	 * Returns the cyclomatic complexity of the statement
+	 * @param statement To get the complexity of
+	 * @return Complexity of the statement
+	 */
 	public static int getStatementComplexity(Statement statement) {
 
 		int complexity = 0;
@@ -100,17 +104,30 @@ public class MetricsCalculator {
 
 		return complexity;
 	}
-
+	/**
+	 * Checks if the entry is the default and subtracts 1 from the complexity
+	 * @param complexity Cyclomatic complexity of the class
+	 * @param entry Entry to be checked
+	 * @return complexity
+	 */
 	private static int subtractDefaultCase(int complexity, SwitchEntry entry) {
 		if (entry.getLabels().size() == 0)
 			complexity--;
 		return complexity;
 	}
-
+	/**
+	 * Returns a boolean depending if the statement given is an if, while or a do statement
+	 * @param statement Statement to be evaluated
+	 * @return True if it's an if, while or a do statement, false if it's neither
+	 */
 	private static boolean isIfWhileOrDoStatement(Statement statement) {
 		return statement.getClass() == IfStmt.class || statement.getClass() == WhileStmt.class || statement.getClass() == DoStmt.class;
 	}
-
+	/**
+	 * Returns the complexity of the block by adding the complexity of all statements
+	 * @param block	Has the statements to get the complexity
+	 * @return Complexity of the block
+	 */
 	private static int getCodeBodyComplexity(BlockStmt block) {
 
 		int complexity = 0;
@@ -186,7 +203,7 @@ public class MetricsCalculator {
 		return lines;
 	}
 	/**
-	 * Returns the cyclomatic complexity of a method given a mehtod declaration
+	 * Returns the cyclomatic complexity of a method given a method declaration
 	 * @param method Method declaration
 	 * @return Cyclomatic complexity of the method
 	 */
@@ -203,7 +220,11 @@ public class MetricsCalculator {
 
 		return complexity;
 	}
-
+	/**
+	 * Gets the extension of the file
+	 * @param filename Name of the file
+	 * @return The extension of the file
+	 */
 	private Optional<String> getExtensionByStringHandling(String filename) {
 		return Optional.ofNullable(filename).filter(f -> f.contains("."))
 				.map(f -> f.substring(filename.lastIndexOf(".") + 1));

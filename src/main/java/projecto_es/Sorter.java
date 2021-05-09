@@ -19,7 +19,7 @@ public class Sorter {
 		sort_it();
 	}
 	/**
-	 * 
+	 * Sorts the {@link list} alphabetically and ignoring case sensitivity
 	 */
 	public void sort_it() {
 		Collections.addAll(list);
