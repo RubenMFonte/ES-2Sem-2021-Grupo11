@@ -50,8 +50,8 @@ public class GeneralStatistics {
 	}
 	/**
 	 * Checks if a package has already been counted
-	 * @param Packages List of all counted packages
-	 * @param Package_name Name of the package being checked
+	 * @param packages List of all counted packages
+	 * @param package_name Name of the package being checked
 	 * @return A boolean
 	 */
 	public boolean package_counted(List<String> packages, String package_name) {

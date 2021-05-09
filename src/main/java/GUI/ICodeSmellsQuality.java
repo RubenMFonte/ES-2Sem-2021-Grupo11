@@ -92,17 +92,17 @@ public class ICodeSmellsQuality {
 	private JLabel codeS = new JLabel("Code Smell Selected:");
 	private JComboBox codeSmellSelected = new JComboBox(new String[] {"", "God_class", "Long_method"});
 	private JPanel panelLayoutQualityData;
-	private JLabel tp = new JLabel("True Positives [VP]:");
+	private JLabel tp = new JLabel("True Positives [TP]:");
 	/**
 	 * Number of True Positives.
 	 */
 	private JLabel tp_result = new JLabel(Integer.toString(0));
-	private JLabel fp = new JLabel("False Positives [TN]:");
+	private JLabel fp = new JLabel("False Positives [FP]:");
 	/**
 	 * Number of False Positives.
 	 */
 	private JLabel fp_result = new JLabel(Integer.toString(0));
-	private JLabel tn = new JLabel("True Negatives [FP]:");
+	private JLabel tn = new JLabel("True Negatives [TN]:");
 	/**
 	 * Number of True Negatives.
 	 */
@@ -212,10 +212,10 @@ public class ICodeSmellsQuality {
 	 */
 	private void defineJTableContent() {
 		
-		 String[] columnNames = { "Class", "is_God_Class", "Classificação", "Method ID", "Method Name", "is_long_method", "Classificação" };
+		 String[] columnNames = { "Class", "is_God_Class", "Method ID", "Method Name", "is_long_method"};
 		 DefaultTableModel model = new DefaultTableModel(); 
 	
-		 tableInfo = new JTable(50,7);
+		 tableInfo = new JTable(50,5);
 		 for(int i=0;i<columnNames.length;i++){
 
 			 TableColumn tc = tableInfo.getColumnModel().getColumn(i);
@@ -341,20 +341,20 @@ public class ICodeSmellsQuality {
     									.addComponent(tp))
     									
     							.addGroup(l.createSequentialGroup()
-    									.addComponent(tn))
-    									
-    							.addGroup(l.createSequentialGroup()
     									.addComponent(fp))
     									
     							.addGroup(l.createSequentialGroup()
     									.addComponent(fn))
     									
+    							.addGroup(l.createSequentialGroup()
+    									.addComponent(tn))
+    									
     							)
     					.addGroup(l.createParallelGroup(GroupLayout.Alignment.TRAILING)
     							.addComponent(tp_result)
     							.addComponent(fp_result)
-    							.addComponent(tn_result)
-    							.addComponent(fn_result))
+    							.addComponent(fn_result)
+    							.addComponent(tn_result))
     					
     		);
         
@@ -366,11 +366,11 @@ public class ICodeSmellsQuality {
         	    	.addComponent(fp)
             	    .addComponent(fp_result))
         	    .addGroup(l.createParallelGroup(GroupLayout.Alignment.LEADING)
-        	    	.addComponent(tn)
-            	    .addComponent(tn_result))
-        	    .addGroup(l.createParallelGroup(GroupLayout.Alignment.LEADING)
         	    	.addComponent(fn)
             	    .addComponent(fn_result))
+        	    .addGroup(l.createParallelGroup(GroupLayout.Alignment.LEADING)
+        	    	.addComponent(tn)
+            	    .addComponent(tn_result))
         	);
 	}
 
@@ -519,6 +519,9 @@ public class ICodeSmellsQuality {
 					refreshGraphic();
 					
 				}else {
+					CodeSmellsCalculator csc = CodeSmellsCalculator.getCodeSmellsCalculatorInstance();
+					csc.clearStatistics();
+					
 					List<ClassObjects> classesObjectJasmlNos = ExcelToData.getallClass(excelMetricsPath.getText(), false);
 					@SuppressWarnings("unchecked")
 					List<ClassDataStructure> classesJasmlNos = (List<ClassDataStructure>)(List<?>) classesObjectJasmlNos;
@@ -529,7 +532,7 @@ public class ICodeSmellsQuality {
 					List<ClassBooleanObject> classesJasmlProfs = (List<ClassBooleanObject>)(List<?>) classesObjectJasmlProfs;
 					System.out.println("Neste Excel dos profs, estão presentes: " + classesJasmlProfs.size() + " classes");
 					
-					CodeSmellsCalculator csc = CodeSmellsCalculator.getCodeSmellsCalculatorInstance();
+					
 					try {
 						csc.run(classesJasmlNos, classesJasmlProfs);
 						tableInfo = csc.fillCodeSmellTable();

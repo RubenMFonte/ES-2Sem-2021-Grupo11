@@ -18,12 +18,12 @@ import javax.swing.JTextField;
 
 
 /**
-* <h1>Condition Panel</h1>
+* 
 * The ConditionJPanel class allows the creation of a JPanel (extending JPanel class) with specific features regarding the graphic definition by the user of a condition within a rule: 
-* 		Metric metric that will be used; 
-* 		Numeric operator : EQ(==); NE(!=); GT(>); GE(>=); LT(<); LE(<=);
+* Metric metric that will be used; 
+* 		Numeric operator : EQ; NE; GT; GE; LT; LE;
 * 		Threshold: Value to compare with.
-* 		Logical Operator: AND(&&); OR(||) to join between conditions.
+* 		Logical Operator: AND; OR to join between conditions.
 
 * 
 *
@@ -170,12 +170,12 @@ public class ConditionJPanel extends JPanel {
 	}
 	
 	/**This method is used to verify if the panel has all of its components:
-	 * <ul>
-  	 *	<li>Metric;</li>
-  	 *	<li>Numeric Operator;</li>
-  	 *	<li>Threshold;</li>
-  	 *	<li>Logical Operator</li>
-	 *</ul>
+	 * 
+  	 *	Metric;
+  	 *	Numeric Operator;
+  	 *	Threshold;
+  	 *	Logical Operator
+	 *
 	 * filled.
 	 * 
 	 * In case not, it doesn't allow user to save rule conditions 
@@ -293,8 +293,8 @@ public class ConditionJPanel extends JPanel {
 	}
 	
 	/**
-	 * Returns {@link lo}
-	 * @return {@link lo}
+	 * Returns {@link logicalOperator}
+	 * @return {@link logicalOperator}
 	 */
 
 	public JLabel getLo() {

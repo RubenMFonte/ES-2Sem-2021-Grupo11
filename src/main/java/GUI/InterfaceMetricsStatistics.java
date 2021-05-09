@@ -62,7 +62,7 @@ public class InterfaceMetricsStatistics extends JFrame {
 	 */
 	private List<ClassDataStructure> allClass;
 	/**
-	 * {@link GeneralSatistics}
+	 *  GeneralSatistics
 	 */
 	private GeneralStatistics statisticsGeneral;
 	private JScrollPane scrollPane_2;
@@ -423,7 +423,7 @@ public class InterfaceMetricsStatistics extends JFrame {
 	}
 
 	/**
-	 * Sets {@link methodJList} 
+	 * Sets methodJList
 	 * @param methodsJList List of methods
 	 */
 	public void setMethodsJList(JList methodsJList) {
@@ -459,7 +459,7 @@ public class InterfaceMetricsStatistics extends JFrame {
 	}
 	/**
 	 * Sets JList with the names of the classes
-	 * @param packageJList JList with the classes' names
+	 * @param classJList JList with the classes' names
 	 */
 	public void setClassJList(JList<String> classJList) {
 		this.classJList = classJList;
@@ -473,7 +473,7 @@ public class InterfaceMetricsStatistics extends JFrame {
 	}
 	/**
 	 * Sets JList with the metrics of the classes
-	 * @param packageJList JList with the classes' metrics
+	 * @param metricsClassJlist JList with the classes' metrics
 	 */
 	public void setMetricsClassJlist(JList<String> metricsClassJlist) {
 		this.metricsClassJlist = metricsClassJlist;
@@ -487,7 +487,7 @@ public class InterfaceMetricsStatistics extends JFrame {
 	}
 	/**
 	 * Sets JList with the statistics
-	 * @param packageJList JList with the statistics
+	 * @param statisticsJlist  JList with the statistics
 	 */
 	public void setStatisticsJlist(JList<String> statisticsJlist) {
 		this.statisticsJlist = statisticsJlist;

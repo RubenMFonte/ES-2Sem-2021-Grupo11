@@ -154,7 +154,7 @@ public class MetricsCalculator {
 	}
 	/**
 	 * Returns the number of methods of a class given a class declaration
-	 * @param class Class declaration
+	 * @param classe  declaration
 	 * @return Number of methods
 	 */
 	public static int getNOM_class(ClassOrInterfaceDeclaration classe) {
@@ -171,7 +171,7 @@ public class MetricsCalculator {
 	}
 	/**
 	 * Returns the cyclomatic complexity of a class given a class declaration
-	 * @param class Class declaration
+	 * @param classe  declaration
 	 * @return Cyclomatic complexity
 	 */
 	public static int getWMC_class(ClassOrInterfaceDeclaration classe) {

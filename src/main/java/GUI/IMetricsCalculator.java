@@ -31,9 +31,7 @@ public class IMetricsCalculator {
 	private JButton select_file;
 	private JButton b_executar;
 	private JTextField path_Exel;
-	/**
-	 * @wbp.nonvisual location=-41,384
-	 */
+	
 	private JButton show_Statistics;
 	private JButton goBack;
 

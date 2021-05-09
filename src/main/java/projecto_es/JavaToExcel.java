@@ -71,8 +71,8 @@ public class JavaToExcel {
 		this.path_java = path_java;
 	}
 	/**
-	 * Return {@link path_excel}
-	 * @return {@link path_excel}
+	 * Return {@link path_exel}
+	 * @return {@link path_exel}
 	 */
 	public String getPath_exel() {
 		return path_exel;
@@ -85,8 +85,8 @@ public class JavaToExcel {
 		return this.mc;
 	}
 	/**
-	 * Sets the path of the excel file
-	 * @param path_excel {@link path_excel}
+	 * Sets the path of the exel file
+	 * @param path_exel {@link path_exel}
 	 */
 	public void setPath_exel(String path_exel) {
 		this.path_exel = path_exel;

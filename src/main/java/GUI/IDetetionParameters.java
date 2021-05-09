@@ -171,7 +171,7 @@ public class IDetetionParameters {
 	}
 	
 	/**
-	 *Method to close the class frame and return to the {@link ICodeSmellsRule} frame.  
+	 *Method to close the class frame and return to the ICodeSmellsRule frame.  
 	 */
 
 	private void exitWindow() {
@@ -310,9 +310,9 @@ public class IDetetionParameters {
 		return stringBuffer.toString();
 	}
 	/**
-	 * Method responsible to add  a new {@Link ConditionJPanel} to the list {@Link conditionPanels}. The new {@Link ConditionJPanel} will be added to the
+	 * Method responsible to add  a new ConditionJPanel to the list conditionPanel}. The new  ConditionJPanel will be added to the
 	 * frame and the user will be able to add a new condition to the Rule being created or edited.
-	 * @param conditions appended previously
+	 * @param condition appended previously
 	 */
 
 	private void addConditionPanel(String condition) {

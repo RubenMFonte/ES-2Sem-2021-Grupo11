@@ -21,7 +21,7 @@ public class StaticFunctions {
 	 * @param rule Rule to be written
 	 * @param file File to be written on
 	 * @return A boolean on the success of the task
-	 * @throws IOException If file doesn't exist
+	 * 
 	 */
 	public static Boolean saveRule(Rule rule, File file)  {
 		int cont = 0;

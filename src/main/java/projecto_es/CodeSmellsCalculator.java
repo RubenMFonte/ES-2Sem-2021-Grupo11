@@ -36,7 +36,7 @@ public class CodeSmellsCalculator {
 	 */
 	private List<Rule> activeRules;
 	/**
-	 * List of {@link CodeSmellStastistics}
+	 * List of  CodeSmellStastistics
 	 */
 	private List<CodeSmellStatistics> statistics;
 	/**
@@ -239,8 +239,8 @@ public class CodeSmellsCalculator {
 		return true;
 	}
 	/**
-	 * Returns the metric from the {@link ClassDataStructure} that matches the one in the {@link Condition}
-	 * @param {@link Condition} being used to evaluate
+	 * Returns the metric from the  ClassDataStructure that matches the one in the  Condition
+	 * @param  a being used to evaluate
 	 * @param classToDetect Class being evaluated
 	 * @return The metric that matches the one in the condition a, 0 if none matches
 	 */
@@ -259,8 +259,8 @@ public class CodeSmellsCalculator {
 		return 0;
 	}
 	/**
-	 * Returns the metric from the {@link MethodDataStructure} that matches the one in the {@link Condition}
-	 * @param {@link Condition} being used to evaluate
+	 * Returns the metric from the  MethodDataStructure that matches the one in the Condition
+	 * @param  a being used to evaluate
 	 * @param methodToDetect Method being evaluated
 	 * @return The metric that matches the one in the condition a, 0 if none matches
 	 */
@@ -276,10 +276,10 @@ public class CodeSmellsCalculator {
 		return 0;
 	}
 	/**
-	 * Returns a boolean after comparing the threshold and the {@link NumericOperator} that matches the one in the {@link Condition}
-	 * @param {@link Condition} being used to evaluate 
-	 * @param metric_value Threshold of the {@link Condition}
-	 * @return A boolean depending on the {@link NumericOperator}, true if there's no matches
+	 * Returns a boolean after comparing the threshold and the  NumericOperator that matches the one in the  Condition
+	 * @param  a being used to evaluate 
+	 * @param metric_value Threshold of the  Condition
+	 * @return A boolean depending on the  NumericOperator, true if there's no matches
 	 */
 	private boolean giveConditionBooleanValue(Condition a, int metric_value) {
 		switch (a.getNumericOperator()) {
