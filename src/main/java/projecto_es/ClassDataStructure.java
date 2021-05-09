@@ -63,7 +63,7 @@ public class ClassDataStructure extends ClassObjects{
 	private HashMap<String, Boolean> classCodeSmellSpecialistValue = new HashMap<>();
 	//Atributos necessários
 	private List<ClassDataStructure> innerClassList = new ArrayList<>();
-	private String classClassificationDetected;
+	private String classClassificationDetected = "";
 	
 	/**
 	 * <p>Creates a ClassDataStructure using a Compilation Unit from a java class</p>
@@ -117,17 +117,6 @@ public class ClassDataStructure extends ClassObjects{
 		calculateClassDataStructureInformation(innerClass);
 	}
 	
-	/**
-	 * <p>Creates an object MethodDataStructure using the arguments and adds it to the list of methods.</p>
-	 * @param methodID The method's ID in the excel file
-	 * @param methodName The method name
-	 * @param loc_method The number of lines in the method
-	 * @param cyclo_method Cyclomatic complexity of the method
-	 */
-	public void addMethodDataStructure(int methodID, String methodName, int loc_method, int cyclo_method) {	
-		MethodDataStructure mds = new MethodDataStructure(methodID, methodName, loc_method, cyclo_method);
-		this.addMethod(mds);
-	}
 	
 	/**
 	 * 

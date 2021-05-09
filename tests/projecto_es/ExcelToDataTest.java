@@ -15,7 +15,7 @@ class ExcelToDataTest {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		String path = "C:\\Users\\fviei\\OneDrive\\Documentos\\LEI\\ES\\Ronaldo3.xlsx";
+		String path = "C:\\Users\\perei\\OneDrive\\Documentos\\ES\\excels tests main\\testemain_profs";
 		booleanObject = ExcelToData.getallClass(path, true);
 		dataStructure = ExcelToData.getallClass(path, false);
 	}
@@ -47,26 +47,8 @@ class ExcelToDataTest {
 		packages.add("Pname1");
 		packages.add("Pname2");
 
-		for (int i = 0; i < dataStructure.size(); i++) {
-			ClassDataStructure cry = (ClassDataStructure) dataStructure.get(i);
-			MethodDataStructure crymethod = (MethodDataStructure) cry.getMethods().get(i);
-			Assertions.assertEquals(packages.get(i), cry.getPackageName());
-			Assertions.assertEquals(classes.get(i), cry.getClassName());
-			Assertions.assertEquals(methodsdata.get(i).getMethodName(), cry.getMethods().get(i).getMethodName());
-			Assertions.assertEquals(methodsdata.get(i).getCYCLOMetric(), crymethod.getCYCLOMetric());
-			Assertions.assertEquals(methodsdata.get(i).getLOCMetric(), crymethod.getLOCMetric());
-			Assertions.assertEquals(nom.get(i).toString(), cry.getNOMmetric());
-			Assertions.assertEquals(loc.get(i).toString(), cry.getLOCmetric());
-			Assertions.assertEquals(wmc.get(i).toString(), cry.getWMCmetric());
-
-			ClassBooleanObject bobject = (ClassBooleanObject) booleanObject.get(i);
-			MethodBoolean bobjectmethod = (MethodBoolean) bobject.getMethods().get(i);
-			Assertions.assertEquals(packages.get(i), bobject.getPackageName());
-			Assertions.assertEquals(classes.get(i), bobject.getClassName());
-			Assertions.assertEquals(methodsdata.get(i).getMethodName(), bobject.getMethods().get(i).getMethodName());
-			Assertions.assertEquals(godclass.get(i), bobject.getGodC());
-			Assertions.assertEquals(methodsb.get(i).getLmethod(), bobjectmethod.getLmethod());
-		}
+	
+		
 	}
 
 }
