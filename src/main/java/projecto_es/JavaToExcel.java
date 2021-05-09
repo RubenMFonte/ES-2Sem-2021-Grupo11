@@ -115,10 +115,6 @@ public class JavaToExcel {
 		}
 		Sorter s = new Sorter(class_names);
 		class_names = s.getListSorted();
-//		System.out.println("-----Lista ordenada------");
-//		for (int i = 0; i < class_names.size(); i++)
-//			System.out.println(i + ": " + class_names.get(i));
-//		System.out.println("--------Fim da lista ordenada---------");
 		List<ClassDataStructure> return_list = new ArrayList<>();
 		for (int i = 0; i < class_names.size(); i++) {
 			for (int j = 0; j < list.size(); j++) {
@@ -145,16 +141,7 @@ public class JavaToExcel {
 		list_classes = alphbeticOrder(list_classes);
 	}
 	
-	//Só para testar o code smells calculator à prova de bala
-	public void makeClassDataStructureListTESTE(CompilationUnit unit) {
-		
-		
-			ClassDataStructure struct = new ClassDataStructure(unit);
-			list_classes.add(struct);
-		
-		list_classes = alphbeticOrder(list_classes);
-	}
-	//------------------[APAGAR DEPOIS]
+
 	/**
 	 * Fills the arraylist {@link lines}
 	 */
@@ -164,9 +151,7 @@ public class JavaToExcel {
 			@SuppressWarnings("unchecked")
 			List<MethodDataStructure> lmds = (List<MethodDataStructure>)(List<?>) struct.getMethods();
 			
-			//Para anotar classes sem métodos (pus em comentário - desnecessário - se tiver ativo deteta as quem tem no prof 
-			//a JavaClass e OpcodeInfo porém também adiciona outras 2 (Scannable e Constants) que têm atributos final static
-			//if(!(lmds.isEmpty())) {
+
 				for (MethodDataStructure mds : lmds) {
 					String[] lineData = new String[9];
 					lineData[0] = String.valueOf(i);
@@ -181,26 +166,11 @@ public class JavaToExcel {
 					lines.add(lineData);
 					i++;
 				}
-			/*}else {
-				String[] lineData = new String[9];
-				lineData[0] = String.valueOf(i);
-				lineData[1] = struct.getPackageName();
-				lineData[2] = struct.getClassName();
-				lineData[3] = struct.getClassName().concat("()");
-				lineData[4] = String.valueOf(struct.getNOMmetric());
-				lineData[5] = String.valueOf(struct.getLOCmetric());
-				lineData[6] = String.valueOf(struct.getWMCmetric());
-				lineData[7] = "";
-				lineData[8] = "";
-				lines.add(lineData);
-				i++;
-			}*/
-			// Anotar as innerclasses
 			if (!struct.getInnerClassesList().isEmpty()) {
 				for (ClassDataStructure innerStruct : struct.getInnerClassesList()) {
 					@SuppressWarnings("unchecked")
 					List<MethodDataStructure> lmds2 = (List<MethodDataStructure>)(List<?>) innerStruct.getMethods();
-					//if(!(lmds2.isEmpty())) {
+					
 						for (MethodDataStructure mds : lmds2) {
 							String[] lineData = new String[9];
 							lineData[0] = String.valueOf(i);
@@ -215,20 +185,6 @@ public class JavaToExcel {
 							lines.add(lineData);
 							i++;
 						}
-					/*} else {
-						String[] lineData = new String[9];
-						lineData[0] = String.valueOf(i);
-						lineData[1] = innerStruct.getPackageName();
-						lineData[2] = innerStruct.getClassName();
-						lineData[3] = innerStruct.getClassName().concat("()");
-						lineData[4] = String.valueOf(innerStruct.getNOMmetric());
-						lineData[5] = String.valueOf(innerStruct.getLOCmetric());
-						lineData[6] = String.valueOf(innerStruct.getWMCmetric());
-						lineData[7] = "";
-						lineData[8] = "";
-						lines.add(lineData);
-						i++;
-					}*/
 				}
 			}
 			//

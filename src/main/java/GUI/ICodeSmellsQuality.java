@@ -151,7 +151,7 @@ public class ICodeSmellsQuality {
 		frame = new JFrame("Code Smells Detetion and Quality");
 		frame.setBounds(100, 100, 1300, 720);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//frame.getContentPane().setLayout(new FlowLayout()); //FlowLayout.CENTER, 5, 5
+		
 		
 		definePanelDetentionTableLook();	
 		definePanelDetentionQualityLook();
@@ -194,7 +194,6 @@ public class ICodeSmellsQuality {
 		panelDetentionTable.setLayout(new BorderLayout(0, 0));
 		
 		panelCenterTable = new JPanel();
-		//panelCenterTable.setPreferredSize(new Dimension(700, 300));
 		panelDetentionTable.add(panelCenterTable, BorderLayout.CENTER);
 		
 		defineJTableContent();
@@ -212,7 +211,7 @@ public class ICodeSmellsQuality {
 	 * Define the content of the JTable in the interface.
 	 */
 	private void defineJTableContent() {
-		//Só para testar -> Mai tarde inicializar as colunas e linhas com os dados carregados do exccel
+		
 		 String[] columnNames = { "Class", "is_God_Class", "Classificação", "Method ID", "Method Name", "is_long_method", "Classificação" };
 		 DefaultTableModel model = new DefaultTableModel(); 
 	
@@ -312,7 +311,7 @@ public class ICodeSmellsQuality {
 	    l.setHorizontalGroup(
 			l.createSequentialGroup()
 					.addComponent(codeS)
-					//.addGap(250)
+					
 					.addComponent(codeSmellSelected)
 		);
 		l.setVerticalGroup(
@@ -540,7 +539,7 @@ public class ICodeSmellsQuality {
 						}
 						scrollPaneForJTable.setViewportView(tableInfo);
 					} catch (FileNotFoundException error) {
-					// TODO Auto-generated catch block
+					
 						error.printStackTrace();
 					}
 					statistics = csc.getCodeSmellsStatistics();

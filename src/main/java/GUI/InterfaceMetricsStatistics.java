@@ -410,23 +410,16 @@ public class InterfaceMetricsStatistics extends JFrame {
 				setAllClass(classesData);
 				ListsToInterface.getListsToInterfaceInstance().setDataList(allClass);
 				setPackageJList(ListsToInterface.getListsToInterfaceInstance().getPackageJList());
-				//setClassJList(ListsToInterface.getListsToInterfaceInstance().getClassJList());
+				
 
 				scrollPane_1.setViewportView(packageJList);
-				//scrollPane_2.setViewportView(classJList);
+				
 				statisticsGeneral = new GeneralStatistics(allClass);
 				scrollPane_4.setViewportView(ListsToInterface.getListsToInterfaceInstance().showGeneralMetrics(statisticsGeneral));
-
-				// InterfaceMetricsStatistics i = new
-				// InterfaceMetricsStatistics(ListsToInterface.getListsToInterfaceInstance().getPackageJList(),
-				// ListsToInterface.getListsToInterfaceInstance().getClassJList(),
-				// ListsToInterface.getListsToInterfaceInstance().showGeneralMetrics(statisticsGeneral)
-				// );
 				setVisible(true);
 			}
 		});
 		
-//		selectActionJListPackages();
 	}
 
 	/**

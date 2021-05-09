@@ -12,4 +12,3 @@ Na interface CodeSmells e Regras (ICodeSmellsRules) é possivel escrever nas tabe
 Não é possivel criar novos code smells
 
 erros:
-No runable Jar se tentar abrir a interface CodeSmels e Regras (ICodeSmellsRules) só abre se o ficheiro saveRule.txt estiver na mesma pasta que o .jar

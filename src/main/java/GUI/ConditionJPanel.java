@@ -20,7 +20,6 @@ public class ConditionJPanel extends JPanel {
 	private JLabel metric = new JLabel("Metric");
 	
 	private JComboBox metricsAvailable;
-	//new JComboBox(new String[] {"", "NOM_CLASS", "LOC_CLASS", "WMC_CLASS", "LOC_METHOD", "CYCLO_METHOD"});
 	
 	private JLabel noperator = new JLabel("Numeric Operator");
 	private JComboBox noperatorsAvailable = new JComboBox(new String[] {"", "EQ","NE","GT","GE","LT","LE"});
@@ -58,7 +57,7 @@ public class ConditionJPanel extends JPanel {
         noperatorsAvailable.setSelectedIndex(getNumericOperatorComboBoxIndex(s_numericOperator));
         limit.setText(s_threshold);
         loperatorsAvailable.setSelectedIndex(getLogicalOperatorComboBoxIndex(s_logicalOperator));
-        loperatorsAvailable.setEnabled(false);//ta aqui
+        loperatorsAvailable.setEnabled(false);
         
         l.setHorizontalGroup(l.createSequentialGroup()
         		.addGroup(l.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -89,32 +88,7 @@ public class ConditionJPanel extends JPanel {
         	    		.addComponent(loperatorsAvailable))
         	);
         
-        /*l.setHorizontalGroup(l.createSequentialGroup()
-            .addGroup(l.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                .addComponent(metric)
-                .addComponent(noperator)
-                .addComponent(threshold)
-            	.addComponent(lo))
-            .addGroup(l.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(metricsAvailable)
-                .addComponent(noperatorsAvailable)
-                .addComponent(limit)
-                .addComponent(loperatorsAvailable))
-        );
-       l.setVerticalGroup(l.createSequentialGroup()
-            .addGroup(l.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(metric)
-                .addComponent(metricsAvailable))
-            .addGroup(l.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(noperator)
-                .addComponent(noperatorsAvailable))
-            .addGroup(l.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(threshold)
-                .addComponent(limit))
-            .addGroup(l.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(lo)
-                    .addComponent(loperatorsAvailable))
-        );*/
+       
 
 		
 	}

@@ -111,7 +111,7 @@ public class IMenu {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					/*Correr interface do SA*/
+				
 					frame.dispose();
 					InterfaceMetricsStatistics windowStatistics = new InterfaceMetricsStatistics();
 					
@@ -131,7 +131,7 @@ public class IMenu {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					/*Correr interface ICodeRules*/
+					
 					try {
 						ICodeSmellsRules windowCodeRules= new ICodeSmellsRules();
 						frame.dispose();
@@ -154,7 +154,7 @@ public class IMenu {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					/*Correr interface IMetricsCalculator*/
+					
 					frame.dispose();
 					IMetricsCalculator windowMetrics = new IMetricsCalculator();
 					

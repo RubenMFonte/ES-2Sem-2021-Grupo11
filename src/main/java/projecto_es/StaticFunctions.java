@@ -43,8 +43,7 @@ public class StaticFunctions {
 			out.close();
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
+		
 			return false;
 		}
 		return true;

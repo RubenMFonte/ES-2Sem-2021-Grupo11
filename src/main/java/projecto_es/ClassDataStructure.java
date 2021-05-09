@@ -153,11 +153,7 @@ public class ClassDataStructure extends ClassObjects{
 				innerClassList.add(innerClass);
 			}
 		}
-		/*List<MethodDeclaration> methods = cid.getMethods();
-		for (MethodDeclaration md : methods) {
-			MethodDataStructure mds_part = new MethodDataStructure(md);
-			lmds.add(mds_part);
-		}*/
+	
 	}
 	
 	/**

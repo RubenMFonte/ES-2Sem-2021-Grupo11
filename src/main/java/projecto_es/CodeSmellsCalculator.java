@@ -149,7 +149,6 @@ public class CodeSmellsCalculator {
 		List<Boolean> bol = new ArrayList<>();
 		for (int i = 0; i < conditionsActive.size(); i++) {
 			System.out.println(i + "º" + " condição encontrada " + conditionsActive.get(i));
-			// boolean detectV = checkMetric(conditionsActive.get(i), classToDetect);
 			int metric_value;
 			if(classToDetect==null) {
 				metric_value = giveMethodMetricValue(conditionsActive.get(i), methodToDetect);
@@ -334,7 +333,6 @@ public class CodeSmellsCalculator {
 				List<MethodBoolean> mb = (List<MethodBoolean>) (List<?>) v.getMethods();
 				defineLongMethodValueFromSpecialistToMethod(lmds, mb);
 			}catch(Exception e) {	
-				//e.printStackTrace();
 				System.out.println("NULO");
 				ourClass.setClassClassificationDetected("Não Detetado - Classe Inexistente");
 				for(ClassMethods method : ourClass.getMethods()) {
@@ -353,9 +351,6 @@ public class CodeSmellsCalculator {
 			System.out.println("Neste Método: " + ourMethod.getMethodName());
 			System.out.println("A encontrar o método na lista de [MethodBoolean]...");
 			try {
-				//A encontrar pelo MethodID
-				//MethodBoolean v2 = mb.stream().filter(object -> object.getmethodID()==ourMethod.getmethodID()).findFirst().get();
-				//A encontrar pelo nome
 				MethodBoolean v2 = mb.stream().filter(object -> object.getMethodName().equals(ourMethod.getMethodName())).findFirst().get();
 				System.out.println("Resultado da procura " + v2.getMethodName());
 				System.out.println("[ANTES] Este é o valor do Code_Smell: " + ourMethod.getMethodCodeSmellSpecialistValue("Long_method") );
@@ -363,7 +358,6 @@ public class CodeSmellsCalculator {
 				System.out.println("[DEPOIS] Este é o valor do Code_Smell: " + ourMethod.getMethodCodeSmellSpecialistValue("Long_method"));
 				
 			}catch(Exception e) {
-				//e.printStackTrace();
 				System.out.println("NULO");
 				ourMethod.setMethodClassificationDetected("Não Detetado - Método Inexistente");
 			}

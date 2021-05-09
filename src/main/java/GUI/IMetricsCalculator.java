@@ -165,7 +165,7 @@ public class IMetricsCalculator {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				/* Correr interface do SA */
+				
 				System.out.println("Minha interface: " + path_Exel.getText());
 				InterfaceMetricsStatistics ims = new InterfaceMetricsStatistics(path_Exel.getText());
 				ims.getButtonShowStatistics().doClick();

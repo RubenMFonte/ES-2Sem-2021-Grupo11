@@ -316,7 +316,6 @@ public class IDetetionParameters {
 	}
 
 	private String verifyLastLogicalOperator(String rule) {
-//		12:God_class:false:NOM_CLASS:EQ:5:OR
 		String[] split = rule.split(":");
 		switch (split[split.length - 1]) {
 		case "OR":

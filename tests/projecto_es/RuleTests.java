@@ -128,15 +128,5 @@ class RuleTests {
 		Assertions.assertEquals(operator, rule.getLogicalOperators().get(0));
 	}
 	
-/*	@Test
-	void addCondition() {
-		System.out.println(rule.numberOfConditions());
-		condition = new Condition(metricLOC, operatorEQ, 20);
-		System.out.println(rule.onlyConditions());
-		rule.addCondition(operator, condition);
-		System.out.println(rule.numberOfConditions());
-		Assertions.assertTrue(condition.equals(rule.getCondition(1).toString()));
-		}
-	*/	
 
 }
