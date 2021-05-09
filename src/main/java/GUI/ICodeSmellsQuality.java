@@ -93,19 +93,32 @@ public class ICodeSmellsQuality {
 	private JComboBox codeSmellSelected = new JComboBox(new String[] {"", "God_class", "Long_method"});
 	private JPanel panelLayoutQualityData;
 	private JLabel tp = new JLabel("True Positives [VP]:");
+	/**
+	 * Number of True Positives.
+	 */
 	private JLabel tp_result = new JLabel(Integer.toString(0));
 	private JLabel fp = new JLabel("False Positives [TN]:");
+	/**
+	 * Number of False Positives.
+	 */
 	private JLabel fp_result = new JLabel(Integer.toString(0));
 	private JLabel tn = new JLabel("True Negatives [FP]:");
+	/**
+	 * Number of True Negatives.
+	 */
 	private JLabel tn_result = new JLabel(Integer.toString(0));
 	private JLabel fn = new JLabel("False Negatives [FN]:");
+	/**
+	 * Number of False Negatives. 
+	 */
 	private JLabel fn_result = new JLabel(Integer.toString(0));
 	private JPanel panelQualityGraphic = new JPanel();
 	private Canvas canvas;
-	
 	private ChartPanel graphicPanel;
 	
-		
+	/**
+	 * {@link CodeSmellStatistics}
+	 */
 	private List<CodeSmellStatistics> statistics = new ArrayList<CodeSmellStatistics>(); 
 
 	/**
@@ -161,6 +174,9 @@ public class ICodeSmellsQuality {
 	    frame.setLocationRelativeTo(null);
 	}
 	
+	/**
+	 * Define the content of the SouthPanel in the interface.
+	 */
 	private void definePanelSouthWithGoBackButton() {
 		panelSOUTHFRAME = new JPanel();
 		panelSOUTHFRAME.setLayout(new BorderLayout(0, 0));
@@ -169,6 +185,9 @@ public class ICodeSmellsQuality {
 		panelSOUTHFRAME.add(panelSOUTHWESTFRAME, BorderLayout.WEST);
 	}
 	
+	/**
+	 * Define the content of the panelDetentionTable in the interface.
+	 */
 	private void definePanelDetentionTableLook() {
 		panelDetentionTable = new JPanel();
 		panelDetentionTable.setBorder(BorderFactory.createTitledBorder("Code Smells Status"));
@@ -189,7 +208,9 @@ public class ICodeSmellsQuality {
 		panelDetentionTable.add(panelSouthInfo, BorderLayout.SOUTH);
 		
 	}
-	
+	/**
+	 * Define the content of the JTable in the interface.
+	 */
 	private void defineJTableContent() {
 		//Só para testar -> Mai tarde inicializar as colunas e linhas com os dados carregados do exccel
 		 String[] columnNames = { "Class", "is_God_Class", "Classificação", "Method ID", "Method Name", "is_long_method", "Classificação" };
@@ -207,6 +228,9 @@ public class ICodeSmellsQuality {
 
 	}
 	
+	/**
+	 * Define the content of the panelSouthInfo in the interface.
+	 */
 	private void definePanelSouthInfoContent() {
 		panelSouthInfo = new JPanel();
 		
@@ -244,6 +268,9 @@ public class ICodeSmellsQuality {
         l.setAutoCreateContainerGaps(true);
 	}
 	
+	/**
+	 * Define the content of the panelDetentionQuality in the interface.
+	 */
 	private void definePanelDetentionQualityLook() {
 		panelDetentionQuality = new JPanel();
 		panelDetentionQuality.setBorder((BorderFactory.createTitledBorder("Code Smells Quality")));
@@ -256,6 +283,9 @@ public class ICodeSmellsQuality {
 		panelDetentionQuality.add(panelQualityGraphic);
 	}
 	
+	/**
+	 * Define the content of the panelQualityLabels in the interface.
+	 */
 	private void definePanelQualityLabelsContent() {
 		panelQualityLabels = new JPanel();
 		panelQualityLabels.setLayout(new BoxLayout(panelQualityLabels, BoxLayout.Y_AXIS));
@@ -269,6 +299,9 @@ public class ICodeSmellsQuality {
 		panelQualityLabels.add(Box.createVerticalGlue());
 	}
 	
+	/**
+	 * Define the content of the panelLayoutCodeSmellSelected in the interface.
+	 */
 	private void defineAuxPanelWithChoosenCodeSmell() {
 		panelLayoutCodeSmellSelected = new JPanel();
 		GroupLayout l = new GroupLayout(panelLayoutCodeSmellSelected);
@@ -291,6 +324,9 @@ public class ICodeSmellsQuality {
        
 	}
 	
+	/**
+	 * Define the content of the panelLayoutQualityData in the interface.
+	 */
 	private void defineAuxPanelWithQualityData() {
 		panelLayoutQualityData = new JPanel();
 		GroupLayout l = new GroupLayout(panelLayoutQualityData);
@@ -339,6 +375,9 @@ public class ICodeSmellsQuality {
         	);
 	}
 
+	/**
+	 * Define the content of the panelQualityGraphic in the interface.
+	 */
 	private void definePanelQualityGraphicContent() {
 	
 		graphicPanel = new ChartPanel( new PieChart(Integer.parseInt(tp_result.getText()),Integer.parseInt(fp_result.getText()),Integer.parseInt(tn_result.getText()),Integer.parseInt(fn_result.getText())).pie);
@@ -351,10 +390,21 @@ public class ICodeSmellsQuality {
 		
 	}
 	
-	
+	/**
+	 * PieChart class builds the graphic 
+	 * @author Grupo11
+	 *
+	 */
 	class PieChart {
 		private JFreeChart pie;
 		
+		/**
+		 * 
+		 * @param tp TruePositive
+		 * @param tn TrueNegative
+		 * @param fp FalsePositive
+		 * @param fn FalseNegative
+		 */
 		public PieChart(int tp, int tn, int fp, int fn) {
 			 DefaultPieDataset dataset = dataOnPie(tp, tn, fp, fn);
 			 pie = ChartFactory.createPieChart(      
@@ -369,7 +419,14 @@ public class ICodeSmellsQuality {
 			 
 			 a.setLabelGenerator(labelGenerator); 
 		}
-		
+		/**
+		 * 
+		* @param tp TruePositive
+		 * @param tn TrueNegative
+		 * @param fp FalsePositive
+		 * @param fn FalseNegative
+		 * @return the data to show in the graphic
+		 */
 		private DefaultPieDataset dataOnPie(int tp, int tn, int fp, int fn){
 			 DefaultPieDataset dataset = new DefaultPieDataset( );
 		      dataset.setValue( "True Positives" , new Double( tp ) );  
@@ -382,7 +439,9 @@ public class ICodeSmellsQuality {
 		
 	}
 	
-//goBackButton
+/**
+ * It gives the functionality to the button goBack.
+ */
 	public void goBackButton() {
 		goBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -392,7 +451,9 @@ public class ICodeSmellsQuality {
 			}
 		});	
 	}
-	
+/**
+ * It gives the functionality to the button selectExcelMetrics.
+ */
 	public void selectExcelButton() {
 		selectExcelMetrics.addActionListener(new ActionListener() {
 			
@@ -411,11 +472,17 @@ public class ICodeSmellsQuality {
 			}
 		});
 	}
+	/**
+	 * This method builds a popUp
+	 * @param popUp is string
+	 */
 	public void popUp(String popUp) {
 		JFrame parent = new JFrame();
 		JOptionPane.showMessageDialog(parent, popUp);
 	}
-	
+	/**
+	 * It gives the functionality to the button selectExcelEvaluation.	
+	 */
 	public void selectExcelButtonSpecialists() {
 		selectExcelEvaluation.addActionListener(new ActionListener() {
 			
@@ -434,7 +501,9 @@ public class ICodeSmellsQuality {
 			}
 		});
 	}
-	
+	/**
+	 * It gives the functionality to the button update.
+	 */
 	public void updateTableButton() {
 		update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -486,7 +555,9 @@ public class ICodeSmellsQuality {
 	}
 	
 	
-//	quando estiver a null limpar grafico
+/**
+ * It gives the functionality to the comboBox.
+ */
 	public void selectComboBox() {
 		codeSmellSelected.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -511,7 +582,9 @@ System.out.println("CodeSmell combo selected: "+String.valueOf(codeSmellSelected
 			}
 		});
 	}
-	
+/**
+ * 	It refresh the graphic content.
+ */
 	public void refreshGraphic() {
 		panelQualityGraphic.removeAll();
 		PieChart graphic =new PieChart(Integer.parseInt(tp_result.getText()),Integer.parseInt(fp_result.getText()),Integer.parseInt(tn_result.getText()),Integer.parseInt(fn_result.getText()));
